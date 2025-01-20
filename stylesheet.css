@@ -94,6 +94,8 @@ h2 {
   font-weight: normal;
   font-family: 'Lato', Verdana, Helvetica, sans-serif;
   font-size: 25px;
+  margin-bottom: 20px;
+  margin-top: 10px;
 }
 
 .papertitle {
@@ -107,6 +109,7 @@ h2 {
   margin: 0;
   font-family: 'Lato', Verdana, Helvetica, sans-serif;
   font-size: 32px;
+  margin-bottom: 15px;
 }
 
 .one {
@@ -179,6 +182,11 @@ body {
   background-position: center;
   opacity: 0.3; 
   z-index: -1; 
+}
+
+.scrollable-list {
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .container {
