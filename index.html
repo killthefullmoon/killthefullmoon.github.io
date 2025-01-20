@@ -7,219 +7,306 @@
 
     <meta name="author" content="Hui Shen">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <link rel="shortcut icon" href="images/favicon/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="stylesheet.css">
     
   </head>
 
   <body>
-    <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+
+    <!-- Left Background -->
+    <div class="background"></div>
+
+
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary header">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Cloud Driver 雲端司機</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Publications</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Misc
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Travel Map</a></li>
+                  <li><a class="dropdown-item" href="#">Music</a></li>
+                  <li><a class="dropdown-item" href="#">Game</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+    <!-- <div class="header">
+        <div class="container">
+            <div class="logo">
+                <strong>Cloud Driver 雲端司機</strong>
+            </div>
+            <div class="nav">
+                <a href="#home">Home</a> /
+                <a href="#publications">Publications</a> /
+                <a href="#misc">Misc</a>
+            </div>
+        </div>
+    </div> -->
+
+    <table class="container", style="width:100%;max-width:1000px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
       <tr style="padding:0px">
         <td style="padding:0px">
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+
+        <!-- Introduction -->
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
             <tr style="padding:0px">
-              <td style="padding:2.5%;width:63%;vertical-align:middle">
+                <td style="padding:2.5%;width:63%;vertical-align:middle">
                 <p class="name" style="text-align: center;">
-                  Hui Shen / 沈汇
+                    Hui Shen 沈汇
                 </p>
-                <p>I'm a student researcher at <a href="https://www.hku.hk/">The University of Hong Kong</a>, fortunately advised by Prof. <a href="https://www.eee.hku.hk/~nwong/">Ngai Wong</a>. I also have the fortunate to work closely with Prof. <a href="https://jxing.me/">Jiarong Xing</a>
+                <p>I'm a student researcher at <a href="https://www.hku.hk/">The University of Hong Kong</a>, fortunately advised by Prof. <a href="https://www.eee.hku.hk/~nwong/">Ngai Wong</a>. I also have the fortunate to work closely with Prof. <a href="https://jxing.me/">Jiarong Xing</a> (Rice). I have a broad interest in <strong>Generative Models</strong> and <strong>Machine Learning Systems</strong>. Feel free to contact me if you are interested in my work or want to discuss a potential collaboration.
                 </p>
                 <p>
-                  Previously, I obtained my Bachelor of Science in Computer & Information Science from <a href="https://www.osu.edu/">The Ohio State University</a>, where I was advised by Prof. <a href="https://mi-zhang.github.io/">Mi Zhang</a> and Prof. <a href="https://sites.google.com/view/jingbomeng">Jingbo Meng</a>. I interned at Swire Coca-Cola.
+                    Previously, I obtained my Bachelor of Science in Computer & Information Science from <a href="https://www.osu.edu/">The Ohio State University</a>, where I was advised by Prof. <a href="https://mi-zhang.github.io/">Mi Zhang</a> and Prof. <a href="https://sites.google.com/view/jingbomeng">Jingbo Meng</a>. I interned at Swire Coca-Cola.
                 </p>
                 <p style="text-align:center">
-                  <a href="data/Hui_Shen_CV.pdf">CV</a> &nbsp;/&nbsp;
-                  <a href="https://scholar.google.com/citations?user=iblw0zoAAAAJ&hl=en">Google Scholar</a> &nbsp;/&nbsp;
-                  <a href="https://www.linkedin.com/in/hui-shen-8b4a86260">LinkedIn</a> &nbsp;/&nbsp;
-                  <a href="https://www.instagram.com/qinyan_hai/">Instagram</a> &nbsp;/&nbsp;
-                  <a href="https://github.com/NastyMarcus">Github</a>
+                    <a href="data/Hui_Shen_CV.pdf">CV</a> &nbsp;/&nbsp;
+                    <a href="https://scholar.google.com/citations?user=iblw0zoAAAAJ&hl=en">Google Scholar</a> &nbsp;/&nbsp;
+                    <a href="https://www.linkedin.com/in/hui-shen-8b4a86260">LinkedIn</a> &nbsp;/&nbsp;
+                    <a href="https://www.instagram.com/qinyan_hai/">Instagram</a> &nbsp;/&nbsp;
+                    <a href="https://github.com/NastyMarcus">GitHub</a>
                 </p>
-              </td>
-              <td style="padding:2.5%;width:37%;max-width:37%">
+                </td>
+                <td style="padding:2.5%;width:37%;max-width:37%">
                 <a href="images/huishen.png"><img style="width:100%;max-width:100%;object-fit: cover; border-radius: 50%;" alt="profile photo" src="images/huishen.png" class="hoverZoomLink"></a>
-              </td>
+                </td>
             </tr>
-          </tbody></table>
+        </tbody></table>
 
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+
+        <!-- News -->
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tr>
+                <td style="padding:16px;width:100%;vertical-align:middle">
+                    <h2>News</h2>
+                    <ul>
+                    <li>
+                        <strong>Dec 2023:</strong> I will be joining <a href="https://www.berkeley.edu/">UC Berkeley</a> as a postdoc in <a href="https://www2.eecs.berkeley.edu/Faculty/Homepages/jbhayes.html">Prof. John Hayes</a>'s group.
+                    </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody></table>
+
+
+        <!-- Featured Publications -->
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tr>
+                <td style="padding:16px;width:100%;vertical-align:middle">
+                <h2>Featured Publications</h2>
+
+                </td>
+            </tr>
+        </tbody></table>
+
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tbody>
+                <tr>
+                    <td style="padding:10px;width:30%;vertical-align:middle">
+                        <img src='images/efficient_diffusion_survey.png' width="80%">
+                    </td>
+                <td style="padding:10px;width:70%;vertical-align:middle">
+                    <a href="https://robopil.github.io/adaptigraph/">
+                    <papertitle>
+                        Efficient Diffusion Models: A Survey
+                    </papertitle>
+                    </a>
+                    <br>
+                    <strong>Hui Shen*</strong>,
+                    Jingxuan Zhang*,
+                    Boning Xiong*,
+                    Rui Hu*,
+                    Shoufa Chen,
+                    Zhongwei Wan,
+                    Xin Wang,
+                    Yu Zhang,
+                    Zixuan Gong,
+                    Guangyin Bao,
+                    Chaofan Tao,
+                    Yongfeng Huang,
+                    Ye Yuan,
+                    Mi Zhang
+                    <br>
+                    <em>Under submission to TMLR</em>
+                    <br>
+                    <a href="https://relight-to-reconstruct.github.io/">GitHub Repo</a>
+                    /
+                    <a href="https://arxiv.org/abs/2412.15211">arXiv</a>
+                </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tbody>
+                <tr>
+                    <td style="padding:10px;width:30%;vertical-align:middle">
+                        <img src='images/fambav.png' width="80%">
+                    </td>
+                <td style="padding:10px;width:70%;vertical-align:middle">
+                    <a href="https://www.arxiv.org/pdf/2409.09808">
+                    <papertitle>
+                        Famba-V: Fast Vision Mamba with Cross-Layer Token Fusion
+                    </papertitle>
+                    </a>
+                    <br>
+                    <strong>Hui Shen</strong>,
+                    Zhongwei Wan,
+                    Xin Wang,
+                    Mi Zhang
+                    <br>
+                    <em>ECCV 2024 @ Computational Aspects of Deep Learning</em> <strong><font color='#b70000'>(Best Paper Award)</strong></font>
+                    <br>
+                    <a href="https://github.com/AIoT-MLSys-Lab/Famba-V">Code</a>
+                </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <!-- Services -->
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
             <tr>
             <td style="padding:16px;width:100%;vertical-align:middle">
-              <h2>News</h2>
+              <h2>Services</h2>
               <ul>
                 <li>
-                  <strong>Dec 2023:</strong> I will be joining <a href="https://www.berkeley.edu/">UC Berkeley</a> as a postdoc in <a href="https://www2.eecs.berkeley.edu/Faculty/Homepages/jbhayes.html">Prof. John Hayes</a>'s group.
+                    <strong>Journal Reviewer:</strong> IEEE Transactions on Mobile Computing
+                </li>
+                <li>
+                    <strong>Conference Reviewer:</strong> EMNLP, CVPR, ARR
                 </li>
               </ul>
             </td>
             </tr>
-          </tbody></table>
+        </tbody></table>
 
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-              <tr>
-              <td style="padding:16px;width:100%;vertical-align:middle">
-                <h2>Research</h2>
+
+        <!-- Teaching Experience -->
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tr>
+            <td style="padding:16px;width:100%;vertical-align:middle">
+              <h2>Teaching</h2>
+              <ul>
+                <li>
+                    <strong>Teaching Assistant</strong> @ The Ohio State University.
+                    <br>
+                    Fall 2024: Introduction to Digital Logic (ECE 2060)
+                </li>
+                <li>
+                    <strong>Teaching Assistant</strong> @ The Ohio State University.
+                    <br>
+                    Fall 2024: Systems II: Introduction to Operating Systems (CSE 2431)
+                </li>
+              </ul>
+            </td>
+            </tr>
+        </tbody></table>
+
+        <!-- Contact -->
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tr>
+            <td style="padding:16px;width:100%;vertical-align:middle">
+              <h2>Contact</h2>
                 <p>
-                  I'm interested in computer vision, deep learning, generative AI, and image processing. Most of my research is about inferring the physical world (shape, motion, color, light, etc) from images, usually with radiance fields. Some papers are <span class="highlight">highlighted</span>.
-                </p>
-              </td>
+                    <strong>Email:</strong> huishen011227 [at] gmail [dot] com
+            </td>
             </tr>
-          </tbody></table>
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+        </tbody></table>
 
-    
+          <!-- <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+            <tbody>
+              <tr>
+                <td style="padding:20px;width:30%;vertical-align:middle">
+                  <video autoplay muted loop playsinline width="300px">
+                    <source src="vids/main/adaptigraph.mp4" type="video/mp4">
+                  </video>
+                </td>
+                <td style="padding:20px;width:70%;vertical-align:middle">
+                  <a href="https://robopil.github.io/adaptigraph/">
+                    <papertitle>
+                      AdaptiGraph: Material-Adaptive Graph-Based Neural Dynamics for Robotic Manipulation
+                    </papertitle>
+                  </a>
+                  <br>
+                  <strong><a href="https://kywind.github.io/">Kaifeng Zhang</a>*</strong>,
+                  <a href="https://scholar.google.com/citations?user=pFeywbYAAAAJ&hl=en">Baoyu Li</a>*, 
+                  <a href="https://kkhauser.web.illinois.edu/">Kris Hauser</a>, 
+                  <a href="https://yunzhuli.github.io/">Yunzhu Li</a>
+                  <br>
+                  Robotics: Science and Systems (RSS), 2024
+                  <br>
+                  ICRA RMDO Workshop, 2024 <strong><font color='#b70000'>(Best Abstract Award, Top 1)</strong></font>
+                  <br>
+                  <a href="https://robopil.github.io/adaptigraph/">website</a>
+                  /
+                  <a href="https://arxiv.org/abs/2407.07889">arXiv</a>
+                  /
+                  <a href="https://arxiv.org/pdf/2407.07889.pdf">pdf</a>
+                  /
+                  <a href="https://github.com/Boey-li/AdaptiGraph">code</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
-    <tr onmouseout="r2r_stop()" onmouseover="r2r_start()">
-      <td style="padding:16px;width:20%;vertical-align:middle">
-        <div class="one">
-          <div class="two" id='r2r_image'><video  width=100% muted autoplay loop>
-          <source src="images/r2r.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-          </video></div>
-          <img src='images/r2r.jpg' width=100%>
-        </div>
-        <script type="text/javascript">
-          function r2r_start() {
-            document.getElementById('r2r_image').style.opacity = "1";
-          }
-
-          function r2r_stop() {
-            document.getElementById('r2r_image').style.opacity = "0";
-          }
-          r2r_stop()
-        </script>
-      </td>
-      <td style="padding:8px;width:80%;vertical-align:middle">
-        <a href="https://relight-to-reconstruct.github.io/">
-          <span class="papertitle">Generative Multiview Relighting for
-3D Reconstruction under Extreme Illumination Variation</span>
-        </a>
-        <br>
-        <a href="https://hadizayer.github.io/">Hadi Alzayer</a>,
-        <a href="https://henzler.github.io/">Philipp Henzler</a>,
-				<strong>Jonathan T. Barron</strong>, 
-        <a href="https://jbhuang0604.github.io/">Jia-Bin Huang</a>,
-        <a href="https://pratulsrinivasan.github.io/">Pratul P. Srinivasan</a>, 
-        <a href="https://dorverbin.github.io/">Dor Verbin</a>
-        <br>
-        <em>arXiv</em>, 2024
-        <br>
-        <a href="https://relight-to-reconstruct.github.io/">project page</a>
-        /
-        <a href="https://arxiv.org/abs/2412.15211">arXiv</a>
-        <p></p>
-        <p>
-				Images taken under extreme illumination variation can be made consistent with diffusion, and this enables high-quality 3D reconstruction.
-        </p>
-      </td>
-    </tr>
-
-
-
-
-          </tbody></table>
-
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+            <tbody>
+              <tr>
+                <td style="padding:20px;width:30%;vertical-align:middle">
+                  <img src='images/4drecons.jpg' width="300px">
+                </td>
+                <td style="padding:20px;width:70%;vertical-align:middle">
+                  <a href="https://arxiv.org/abs/2406.10167">
+                    <papertitle>
+                      4DRecons: 4D Neural Implicit Deformable Objects Reconstruction from a single RGB-D Camera with Geometrical and Topological Regularizations
+                    </papertitle>
+                  </a>
+                  <br>
+                  <a href="https://xy-cong.github.io/">Xiaoyan Cong</a>,
+                  <a href="https://yanghtr.github.io/">Haitao Yang</a>,
+                  <a href="https://scholar.google.com/citations?user=ppaEV-8AAAAJ&hl=en">Liyan Chen</a>,
+                  <strong><a href="https://kywind.github.io/">Kaifeng Zhang</a></strong>,
+                  <a href="https://ericyi.github.io/">Li Yi</a>,
+                  <a href="https://www.cs.utexas.edu/~bajaj/cvc/index.shtml">Chandrajit Bajaj</a>,
+                  <a href="https://www.cs.utexas.edu/~huangqx/index.html">Qixing Huang</a>
+                  <br>
+                  Arxiv, 2024
+                  <br>
+                  <a href="https://arxiv.org/abs/2406.10167">arXiv</a>
+                  /
+                  <a href="https://arxiv.org/pdf/2406.10167.pdf">pdf</a>
+                </td>
+              </tr>
+            </tbody>
+          </table> -->
           
-					<table style="width:100%; margin:0 auto; border:0; border-spacing:0; padding:16px;"><tbody>
-            <tr>
-              <td>
-                <h2>Miscellanea</h2>
-              </td>
-            </tr>
-          </tbody></table>
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-            
-           
-            <tr>
-              <td align="center" style="padding:16px;width:20%;vertical-align:middle">
-						     <div class="colored-box" style="background-color: #fcb97d;">
-								 <h2>Micropapers</h2>
-								 </div>
-              </td>
-              <td style="padding:8px;width:80%;vertical-align:middle">
-                <a href="https://arxiv.org/abs/2112.11687">Squareplus: A Softplus-Like Algebraic Rectifier</a>
-                <br>
-                <a href="https://arxiv.org/abs/2010.09714">A Convenient Generalization of Schlick's Bias and Gain Functions</a>
-                <br>
-                <a href="https://arxiv.org/abs/1704.07483">Continuously Differentiable Exponential Linear Units</a>
-                <br>
-                <a href="https://jonbarron.info/data/cvpr2023_llm_workshop_annotated.pdf">Scholars & Big Models: How Can Academics Adapt?</a>
-              </td>
-            </tr>
 
-
-            <tr>
-              <td align="center" style="padding:16px;width:20%;vertical-align:middle">
-						     <div class="colored-box" style="background-color: #aaba9e;">
-								 <h2>Recorded Talks</h2>
-								 </div>
-              </td>
-              <td style="padding:8px;width:80%;vertical-align:center">
-                <a href="https://www.youtube.com/watch?v=h9vq_65eDas">View Dependent Podcast, 2024</a>
-								<br>
-                <a href="https://www.youtube.com/watch?v=4tDhYsFuEqo">Bay Area Robotics Symposium, 2023
-</a>
-								<br>
-                <a href="https://youtu.be/TvWkwDYtBP4?t=7604">EGSR Keynote, 2021</a>
-								<br>
-								<a href="https://www.youtube.com/watch?v=nRyOzHpcr4Q">TUM AI Lecture Series, 2020</a>
-								<br>
-								<a href="https://www.youtube.com/watch?v=HfJpQCBTqZs">Vision & Graphics Seminar at MIT, 2020</a>
-              </td>
-            </tr>
-
-            <tr>
-              <td align="center" style="padding:16px;width:20%;vertical-align:middle">
-						     <div class="colored-box" style="background-color: #c6b89e;">
-								 <h2>Academic Service</h2>
-								 </div>
-              </td>
-              <td style="padding:8px;width:80%;vertical-align:center">
-                <a href="https://cvpr.thecvf.com/Conferences/2025/Organizers">Area Chair, CVPR 2025</a>
-                <br>
-                <a href="https://cvpr.thecvf.com/Conferences/2024/Organizers">Area Chair, CVPR 2024</a>
-                <br>
-                <a href="https://cvpr2023.thecvf.com/Conferences/2023/Organizers">Demo Chair, CVPR 2023</a>
-                <br>
-                <a href="https://cvpr2022.thecvf.com/area-chairs">Area Chair, CVPR 2022</a>
-                <br>
-                <a href="http://cvpr2021.thecvf.com/area-chairs">Area Chair & Award Committee Member, CVPR 2021</a>
-                <br>
-                <a href="http://cvpr2019.thecvf.com/area_chairs">Area Chair, CVPR 2019</a>
-                <br>
-                <a href="http://cvpr2018.thecvf.com/organizers/area_chairs">Area Chair, CVPR 2018</a>
-              </td>
-            </tr>
-						
-						
-           
-            <tr>
-              <td align="center" style="padding:16px;width:20%;vertical-align:middle">
-						     <div class="colored-box" style="background-color: #edd892;">
-								 <h2>Teaching</h2>
-								 </div>
-              </td>
-              <td style="padding:8px;width:80%;vertical-align:center">
-                <a href="http://inst.eecs.berkeley.edu/~cs188/sp11/announcements.html">Graduate Student Instructor, CS188 Spring 2011</a>
-                <br>
-                <a href="http://inst.eecs.berkeley.edu/~cs188/fa10/announcements.html">Graduate Student Instructor, CS188 Fall 2010</a>
-                <br>
-                <a href="http://aima.cs.berkeley.edu/">Figures, "Artificial Intelligence: A Modern Approach", 3rd Edition</a>
-              </td>
-            </tr>
-            
-          </tbody></table>
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-            <tr>
-              <td style="padding:0px">
-                <br>
-                <p style="text-align:right;font-size:small;">
-                  Feel free to steal this website's <a href="https://github.com/jonbarron/jonbarron_website">source code</a>. <strong>Do not</strong> scrape the HTML from this page itself, as it includes analytics tags that you do not want on your own website &mdash; use the github code instead. Also, consider using <a href="https://leonidk.com/">Leonid Keselman</a>'s <a href="https://github.com/leonidk/new_website">Jekyll fork</a> of this page.
-                </p>
-              </td>
-            </tr>
-          </tbody></table>
         </td>
       </tr>
     </table>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
