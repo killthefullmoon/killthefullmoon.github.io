@@ -1,3 +1,19 @@
+@font-face {
+  font-family: 'Raleway-R'; 
+  src: url('./font/Raleway-Regular.ttf') format('ttf'), 
+       url('./font/Raleway-Regular.woff') format('woff');  
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Raleway-B'; 
+  src: url('./font/Raleway-Bold.ttf') format('ttf'), 
+       url('./font/Raleway-Bold.woff') format('woff');  
+  font-weight: bold;
+  font-style: normal;
+}
+
 /* latin-ext */
 @font-face {
   font-family: 'Lato';
@@ -80,26 +96,26 @@ th,
 tr,
 p,
 a {
-  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+  font-family: 'Raleway-R', 'Lato', Verdana, Helvetica, sans-serif;
   font-size: 16px;
 }
 
 strong {
-  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+  font-family: 'Raleway-R', 'Lato', Verdana, Helvetica, sans-serif;
   font-size: 16px;
 }
 
 h2 {
   margin: 0;
   font-weight: normal;
-  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+  font-family: 'Raleway-R', 'Lato', Verdana, Helvetica, sans-serif;
   font-size: 25px;
   margin-bottom: 20px;
   margin-top: 10px;
 }
 
 .papertitle {
-  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+  font-family: 'Raleway-R', 'Lato', Verdana, Helvetica, sans-serif;
   font-size: 16px;
   font-weight: 700;
 }
@@ -107,7 +123,7 @@ h2 {
 .name {
   padding-top: 20px;
   margin: 0;
-  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+  font-family: 'Raleway-R', 'Lato', Verdana, Helvetica, sans-serif;
   font-size: 32px;
   margin-bottom: 15px;
 }
@@ -163,7 +179,7 @@ body {
   max-width: 950px;
   margin: 0 auto;
   display: flex;
-  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+  font-family: 'Raleway-R', 'Lato', Verdana, Helvetica, sans-serif;
 }
 
 .navbar-brand {
