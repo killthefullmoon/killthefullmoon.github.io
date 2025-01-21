@@ -192,3 +192,37 @@ body {
 .container {
   margin-top: 70px;
 }
+
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 40px;
+  height: 40px;
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 1000;
+}
+
+.back-to-top:hover {
+  background-color: #484848; 
+}
+
+.back-to-top svg {
+  stroke: white;
+}
+
+.back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+}
