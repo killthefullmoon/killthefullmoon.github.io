@@ -66,11 +66,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 .attr("fill", "#ccc")
                 .attr("stroke", "#fff")
                 .attr("stroke-width", 0.5)
-                .on("mouseover", function () {
+                .on("mouseover", function (event, d) {
                     d3.select(this).attr("fill", "#90caf9");
+
+                    const regionName = d.properties.name; 
+                    showRegionLabel(regionName);
                 })
                 .on("mouseout", function () {
                     d3.select(this).attr("fill", "#ccc");
+
+                    hideRegionLabel()
                 })
                 .on("click", function (event, d) {
                     const countryId = d.id;

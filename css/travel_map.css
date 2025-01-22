@@ -35,8 +35,8 @@
 
 .fix_container {
     position: fixed;
-    z-index: 1000; /* 确保在最上层 */
-    padding: 10px 0; /* 内边距 */
+    z-index: 1000; 
+    padding: 10px 0; 
     font-family: Raleway-B;
 }
 
