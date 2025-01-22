@@ -1,1 +1,4 @@
-This is the source code to Jon Barron's public academic website: https://jonbarron.info/. Feel free to clone this code for your own personal use.
+# Todo List:
+1. Music Collection: Album card
+2. Offcanvas: contact me via wechat/xiaohongshu/instagram/email
+3. Travel Map: Progress of the whole map
