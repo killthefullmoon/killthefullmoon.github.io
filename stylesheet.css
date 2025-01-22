@@ -243,3 +243,7 @@ body {
   opacity: 1;
   visibility: visible;
 }
+
+.active {
+  font-family: 'Raleway-B', 'Lato', Verdana, Helvetica, sans-serif;
+}
