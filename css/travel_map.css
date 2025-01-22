@@ -58,3 +58,7 @@
 .d-none {
     display: none;
 }
+
+#controls button {
+    min-width: 160px;
+}
