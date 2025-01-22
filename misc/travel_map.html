@@ -41,17 +41,22 @@
     </nav>
 
   <div class="container my-4 travel_map_container">
-    <h2 class="text-center mb-2">Travel Map</h2>
-    <div id="controls" class="row mb-3">
-        <div id="controls" class="d-flex justify-content-center mb-3">
-            <button id="zoom-in" class="btn btn-primary me-2">Zoom In</button>
-            <button id="zoom-out" class="btn btn-primary me-2">Zoom Out</button>
-            <button id="back-to-world" class="btn btn-primary" style="display: none;">Back to World Map</button>
+    <div class="fix_container">
+        <h2 class="mb-2">Travel Map</h2>
+        <div id="controls" class="row mb-3">
+            <div id="controls" class="d-flex justify-content-center mb-3">
+                <button id="zoom-in" class="btn btn-primary me-2">Zoom In</button>
+                <button id="zoom-out" class="btn btn-primary me-2">Zoom Out</button>
+                <button id="back-to-world" class="btn btn-primary" style="display: none;">Back to World Map</button>
+            </div>
         </div>
+
+        <div id="fixedRegionLabel" class="fixed-region-label d-none">Region: N/A</div>
     </div>
+
     <!-- 世界地图容器 -->
     <div id="world-map"></div>
-    <!-- 返回世界地图按钮 -->
+
 
 
   </div>
