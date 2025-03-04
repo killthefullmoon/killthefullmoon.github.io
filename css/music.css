@@ -1,0 +1,10 @@
+.album_card {
+    margin-bottom: 20px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.album_card p {
+    font-family: 'Raleway-B';
+    
+}
