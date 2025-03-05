@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Music Collection</title>
   
-  <link rel="icon" type="image/x-icon" href="images/favicons/favicon.ico">
+  <link rel="icon" type="image/x-icon" href="../images/favicons/favicon.ico">
     
 
   <link rel="stylesheet" href="../css/bootstrap.min.css">
@@ -34,6 +34,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="../publications.html">Publications</a>
                 </li>
+                <li class="nav-item">
+                  <a data-bs-toggle="offcanvas" href="#contact_me" role="button" class="nav-link">Contact Me</a>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link active dropdown-toggle" aria-current="page" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Misc
@@ -49,6 +52,20 @@
         </div>
     </nav>
 
+    <!-- Offcanvas -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="contact_me" aria-labelledby="offcanvasExampleLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Contact Me</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <strong>WeChat:</strong><br>
+        DiudiuandMoon
+        <hr>
+        <strong>RedNote/小红书:</strong><br>
+        9428710724
+      </div>
+    </div>
 
     <table class="container", style="width:100%;max-width:1000px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
         <tr style="padding:0px">
@@ -57,15 +74,15 @@
             <!-- Introduction -->
             <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
                 <tr style="padding:0px">
-                    <td style="padding:2.5%;width:25%;max-width:25%">
+                    <td style="padding:2.5%;width:30%;max-width:30%">
                     <a href="../images/huishen_music.png"><img style="width:100%;max-width:100%;object-fit: cover; border-radius: 50%;" alt="profile photo" src="../images/huishen_music.png" class="hoverZoomLink"></a>
                     </td>
-                    <td style="padding:2.5%;width:75%;vertical-align:middle">
+                    <td style="padding:2.5%;width:70%;vertical-align:middle">
                     <p class="name" style="text-align: left;">
                         雲端司機
                     </p>
                     <p>
-                        I'm mainly into R&B, Soul, HipHop, and Mandarin Pop music. If you enjoy these genres too, feel free to follow my Spotify playlist! Find me on <a href="https://open.spotify.com/user/31aoewszovhyuicvrnh4z3nufifu" target="_blank">Spotify</a>. If you have any music you'd like to share with me, don't hesitate to reach out through <a href="./contact_me.html">Contact Me</a>!
+                        I'm mainly into R&B, Soul, HipHop, and Mandarin Pop music. If you enjoy these genres too, feel free to follow my Spotify playlist! Find me on <a href="https://open.spotify.com/user/31aoewszovhyuicvrnh4z3nufifu" target="_blank">Spotify</a>. If you have any music you'd like to share with me, don't hesitate to reach out through <a data-bs-toggle="offcanvas" href="#contact_me" role="button">Contact Me</a>!
                     </p>
                     <p>
                         For visitors from mainland China without VPN, you can check out my Album Collection with NetEase's iframe by clicking the button.
