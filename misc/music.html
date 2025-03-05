@@ -325,43 +325,78 @@
         });
 
         document.addEventListener("DOMContentLoaded", function() {
+          const cards = document.querySelectorAll('.album_card');
+          const cardsPerPage = 4;
+          const totalPages = Math.ceil(cards.length / cardsPerPage);
+          const pagination = document.getElementById('pagination');
+          let currentPage = 1;
 
-        const cards = document.querySelectorAll('.album_card');
-        const cardsPerPage = 4;
-        const totalPages = Math.ceil(cards.length / cardsPerPage);
-        const pagination = document.getElementById('pagination');
-
-        pagination.innerHTML = '';
-        for (let i = 1; i <= totalPages; i++) {
-          pagination.innerHTML += `
-            <li class="page-item"><a class="page-link" href="#" data-page="${i}">${i}</a></li>
-          `;
-        }
-
-        function showPage(page) {
-          cards.forEach(card => card.style.display = 'none');
-          const start = (page - 1) * cardsPerPage;
-          const end = start + cardsPerPage;
-          for (let i = start; i < end && i < cards.length; i++) {
-            cards[i].style.display = 'block';
-          }
-        }
-
-        showPage(1);
-
-        pagination.addEventListener('click', function(e) {
-          e.preventDefault();
-          const target = e.target;
-          if (target.tagName.toLowerCase() === 'a') {
-            const page = parseInt(target.getAttribute('data-page'));
-            if (!isNaN(page)) {
-              showPage(page);
-              document.querySelectorAll('.page-item').forEach(li => li.classList.remove('active'));
-              target.parentElement.classList.add('active');
+          function showPage(page) {
+            cards.forEach(card => card.style.display = 'none');
+            const start = (page - 1) * cardsPerPage;
+            const end = start + cardsPerPage;
+            for (let i = start; i < end && i < cards.length; i++) {
+              cards[i].style.display = 'block';
             }
           }
+
+          function updatePagination(page) {
+            currentPage = page;
+            let paginationHTML = '';
+
+            paginationHTML += `<li class="page-item ${page === 1 ? 'disabled' : ''}">
+              <a class="page-link" href="#" data-page="${page - 1}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>`;
+
+            let startPage, endPage;
+            if (totalPages <= 9) {
+              startPage = 1;
+              endPage = totalPages;
+            } else {
+              if (page <= 5) {
+                startPage = 1;
+                endPage = 9;
+              } else if (page + 4 >= totalPages) {
+                startPage = totalPages - 8;
+                endPage = totalPages;
+              } else {
+                startPage = page - 4;
+                endPage = page + 4;
+              }
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+              paginationHTML += `<li class="page-item ${i === page ? 'active' : ''}">
+                <a class="page-link" href="#" data-page="${i}">${i}</a>
+              </li>`;
+            }
+
+            paginationHTML += `<li class="page-item ${page === totalPages ? 'disabled' : ''}">
+              <a class="page-link" href="#" data-page="${page + 1}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>`;
+
+            pagination.innerHTML = paginationHTML;
+          }
+
+          showPage(currentPage);
+          updatePagination(currentPage);
+
+          pagination.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = e.target;
+            if (target.tagName.toLowerCase() === 'a') {
+              const page = parseInt(target.getAttribute('data-page'));
+              if (!isNaN(page) && page >= 1 && page <= totalPages) {
+                showPage(page);
+                updatePagination(page);
+              }
+            }
+          });
         });
-      });
     </script>
 
   <script src="../js/bootstrap.bundle.min.js"></script>
