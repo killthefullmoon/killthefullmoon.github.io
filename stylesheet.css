@@ -247,3 +247,18 @@ body {
 .active {
   font-family: 'Raleway-B', 'Lato', Verdana, Helvetica, sans-serif;
 }
+
+.a_hku {
+  color: rgb(111, 170, 145);
+  font-family: 'Raleway-B', 'Lato', Verdana, Helvetica, sans-serif;
+}
+
+.a_osu {
+  color: rgb(201, 0, 22);
+  font-family: 'Raleway-B', 'Lato', Verdana, Helvetica, sans-serif;
+}
+
+.a_umich {
+  color: rgb(65, 134, 231);
+  font-family: 'Raleway-B', 'Lato', Verdana, Helvetica, sans-serif;
+}
