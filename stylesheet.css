@@ -263,3 +263,18 @@ body {
   font-family: 'Raleway-B', 'Lato', Verdana, Helvetica, sans-serif;
 }
 
+@media only screen and (max-width: 768px) {
+  body,
+  td,
+  th,
+  tr,
+  p,
+  strong,
+  a {
+    font-size: 12px; 
+  }
+
+  .album_nav {
+    width: 100%;
+  }
+}
