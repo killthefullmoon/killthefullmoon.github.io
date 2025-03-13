@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 创建一个统一的 zoom 行为
     const zoom = d3.zoom()
-        .scaleExtent([1, 8])
+        .scaleExtent([1, 40])
         .on("zoom", zoomed);
 
     // 创建基础 SVG 元素，并保持其引用不变
