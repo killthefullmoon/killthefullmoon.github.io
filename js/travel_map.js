@@ -141,34 +141,34 @@ document.addEventListener("DOMContentLoaded", () => {
             .attr("rx", 5);
             
         // 已访问区域图例
-        legend.append("rect")
-            .attr("x", 10)
-            .attr("y", 10)
-            .attr("width", 20)
-            .attr("height", 20)
-            .attr("fill", COLORS.VISITED);
+        // legend.append("rect")
+        //     .attr("x", 10)
+        //     .attr("y", 10)
+        //     .attr("width", 20)
+        //     .attr("height", 20)
+        //     .attr("fill", COLORS.VISITED);
             
-        legend.append("text")
-            .attr("x", 40)
-            .attr("y", 25)
-            .text("已访问地区")
-            .attr("font-family", "Lato")
-            .attr("font-size", "12px");
+        // legend.append("text")
+        //     .attr("x", 40)
+        //     .attr("y", 25)
+        //     .text("已访问地区")
+        //     .attr("font-family", "Lato")
+        //     .attr("font-size", "12px");
             
         // 未访问区域图例
-        legend.append("rect")
-            .attr("x", 10)
-            .attr("y", 35)
-            .attr("width", 20)
-            .attr("height", 20)
-            .attr("fill", COLORS.DEFAULT);
+        // legend.append("rect")
+        //     .attr("x", 10)
+        //     .attr("y", 35)
+        //     .attr("width", 20)
+        //     .attr("height", 20)
+        //     .attr("fill", COLORS.DEFAULT);
             
-        legend.append("text")
-            .attr("x", 40)
-            .attr("y", 50)
-            .text("未访问地区")
-            .attr("font-family", "Lato")
-            .attr("font-size", "12px");
+        // legend.append("text")
+        //     .attr("x", 40)
+        //     .attr("y", 50)
+        //     .text("未访问地区")
+        //     .attr("font-family", "Lato")
+        //     .attr("font-size", "12px");
     }
 
     // 加载世界地图的函数
