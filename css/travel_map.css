@@ -4,7 +4,6 @@
 }
 
 .country {
-    fill: #ccc;
     stroke: #666;
     stroke-width: 0.5px;
     cursor: pointer;

@@ -4,6 +4,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const width = worldMapContainer.node().clientWidth;
     const height = 800;
+    
+    // 已访问区域的缓存
+    let visitedRegions = new Set();
+
+    // 加载已访问的区域列表
+    function loadVisitedRegions() {
+        return fetch('../data/visited_regions.json')
+            .then(response => response.json())
+            .then(data => {
+                visitedRegions = new Set(data);
+                console.log("Loaded visited regions:", Array.from(visitedRegions));
+                return visitedRegions;
+            })
+            .catch(error => {
+                console.error('Error loading visited regions:', error);
+                return new Set(); // 返回空集合
+            });
+    }
 
     // 创建一个统一的 zoom 行为
     const zoom = d3.zoom()
@@ -43,39 +61,160 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const fixedRegionLabel = document.getElementById("fixedRegionLabel");
 
-    function showRegionLabel(regionName) {
-        fixedRegionLabel.textContent = `Region: ${regionName}`;
+    function showRegionLabel(regionName, isVisited) {
+        let labelText = `Region: ${regionName}`;
+        if (isVisited) {
+            labelText += " (✓ Visited)";
+        }
+        fixedRegionLabel.textContent = labelText;
         fixedRegionLabel.classList.remove("d-none");
+        
+        // 如果是已访问区域，可以添加一个特殊的样式
+        if (isVisited) {
+            fixedRegionLabel.classList.add("visited-label");
+        } else {
+            fixedRegionLabel.classList.remove("visited-label");
+        }
     }
 
     function hideRegionLabel() {
         fixedRegionLabel.classList.add("d-none");
+        fixedRegionLabel.classList.remove("visited-label");
+    }
+
+    // 颜色配置
+    const COLORS = {
+        DEFAULT: "#ccc",
+        HOVER: "#90caf9",
+        VISITED: "#7cb342",  // 绿色表示已访问
+        VISITED_HOVER: "#aed581"  // 较浅的绿色表示已访问且鼠标悬停
+    };
+
+    // 获取已访问的国家列表
+    function getVisitedCountries() {
+        const visitedCountries = new Set();
+        visitedRegions.forEach(regionKey => {
+            // 假设格式为 "XXX" 或 "XXX_region"
+            const parts = regionKey.split('_');
+            const countryCode = parts[0];
+            if (countryCode) {
+                visitedCountries.add(countryCode);
+            }
+        });
+        return visitedCountries;
+    }
+
+    // 检查国家是否已访问（世界地图级别）
+    function isCountryVisited(countryCode) {
+        if (!countryCode) return false;
+        
+        // 1. 检查是否直接有国家级的旅行笔记
+        if (visitedRegions.has(countryCode)) return true;
+        
+        // 2. 检查是否有任何以该国家代码开头的区域
+        for (const regionKey of visitedRegions) {
+            if (regionKey.startsWith(countryCode + "_")) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    // 检查具体区域是否已访问
+    function isRegionVisited(countryCode, regionName) {
+        return visitedRegions.has(`${countryCode}_${regionName.toLowerCase()}`);
+    }
+
+    // 添加图例
+    function addLegend() {
+        const legend = svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", "translate(20, 20)");
+            
+        // 添加白色背景以提高可读性
+        legend.append("rect")
+            .attr("width", 120)
+            .attr("height", 65)
+            .attr("fill", "white")
+            .attr("opacity", 0.7)
+            .attr("rx", 5);
+            
+        // 已访问区域图例
+        legend.append("rect")
+            .attr("x", 10)
+            .attr("y", 10)
+            .attr("width", 20)
+            .attr("height", 20)
+            .attr("fill", COLORS.VISITED);
+            
+        legend.append("text")
+            .attr("x", 40)
+            .attr("y", 25)
+            .text("已访问地区")
+            .attr("font-family", "Lato")
+            .attr("font-size", "12px");
+            
+        // 未访问区域图例
+        legend.append("rect")
+            .attr("x", 10)
+            .attr("y", 35)
+            .attr("width", 20)
+            .attr("height", 20)
+            .attr("fill", COLORS.DEFAULT);
+            
+        legend.append("text")
+            .attr("x", 40)
+            .attr("y", 50)
+            .text("未访问地区")
+            .attr("font-family", "Lato")
+            .attr("font-size", "12px");
     }
 
     // 加载世界地图的函数
     function loadWorldMap() {
         d3.json("../data/world-map.json").then(world => {
             const countries = topojson.feature(world, world.objects.countries);
+            
+            // 获取已访问的国家列表
+            const visitedCountries = getVisitedCountries();
+            console.log("Visited countries:", Array.from(visitedCountries));
 
             svg.selectAll(".country")
                 .data(countries.features)
                 .enter()
                 .append("path")
                 .attr("d", path)
-                .attr("class", "country")
-                .attr("fill", "#ccc")
+                .attr("class", function(d) {
+                    const countryId = d.id;
+                    const countryCode = idToCountryCode[countryId];
+                    return isCountryVisited(countryCode) ? "country visited" : "country";
+                })
+                .attr("fill", function(d) {
+                    const countryId = d.id;
+                    const countryCode = idToCountryCode[countryId];
+                    console.log("isCountryVisited", countryCode, isCountryVisited(countryCode));
+                    return isCountryVisited(countryCode) ? COLORS.VISITED : COLORS.DEFAULT;
+                })
                 .attr("stroke", "#fff")
                 .attr("stroke-width", 0.5)
                 .on("mouseover", function (event, d) {
-                    d3.select(this).attr("fill", "#90caf9");
+                    const countryId = d.id;
+                    const countryCode = idToCountryCode[countryId];
+                    const visited = isCountryVisited(countryCode);
+                    
+                    d3.select(this).attr("fill", visited ? COLORS.VISITED_HOVER : COLORS.HOVER);
 
                     const regionName = d.properties.name; 
-                    showRegionLabel(regionName);
+                    showRegionLabel(regionName, visited);
                 })
-                .on("mouseout", function () {
-                    d3.select(this).attr("fill", "#ccc");
-
-                    hideRegionLabel()
+                .on("mouseout", function (event, d) {
+                    const countryId = d.id;
+                    const countryCode = idToCountryCode[countryId];
+                    const visited = isCountryVisited(countryCode);
+                    
+                    d3.select(this).attr("fill", visited ? COLORS.VISITED : COLORS.DEFAULT);
+                    hideRegionLabel();
                 })
                 .on("click", function (event, d) {
                     const countryId = d.id;
@@ -101,12 +240,20 @@ document.addEventListener("DOMContentLoaded", () => {
                             .on("end", () => loadCountryMap(countryCode, countryName));
                     }
                 });
+                
+            // 添加图例
+            addLegend();
         });
     }
 
     // 加载数字 ID 到字母代码的映射
     let idToCountryCode = {};
-    fetch('../data/id-to-country-code.json')
+    
+    // 主函数 - 加载数据并初始化地图
+    loadVisitedRegions()
+        .then(() => {
+            return fetch('../data/id-to-country-code.json');
+        })
         .then(response => response.json())
         .then(data => {
             idToCountryCode = data;
@@ -148,13 +295,22 @@ document.addEventListener("DOMContentLoaded", () => {
                     .enter()
                     .append("path")
                     .attr("d", path)
-                    .attr("class", "boundary")
-                    .attr("fill", "#ccc")
+                    .attr("class", function(d) {
+                        const regionName = d.properties.NAME_1;
+                        return isRegionVisited(countryCode, regionName) ? "boundary visited" : "boundary";
+                    })
+                    .attr("fill", function(d) {
+                        const regionName = d.properties.NAME_1;
+                        return isRegionVisited(countryCode, regionName) ? COLORS.VISITED : COLORS.DEFAULT;
+                    })
                     .attr("stroke", "black")
                     .attr("stroke-width", 0.1)
                     .on("mouseover", function (event, d) {
+                        const regionName = d.properties.NAME_1;
+                        const visited = isRegionVisited(countryCode, regionName);
+                        
                         // 鼠标悬停时改变颜色
-                        d3.select(this).attr("fill", "#90caf9");
+                        d3.select(this).attr("fill", visited ? COLORS.VISITED_HOVER : COLORS.HOVER);
                 
                         // 动态显示 region-label
                         svg.append("text")
@@ -166,78 +322,38 @@ document.addEventListener("DOMContentLoaded", () => {
                             .attr("font-weight", "bold")
                             .attr("fill", "#333")
                             .style("font-size", `${calculateFontSize(d)}px`)
-                            .text(d.properties.NAME_1 || "");
+                            .text(regionName || "");
                         
-                            const regionName = d.properties.NAME_1; 
-                            showRegionLabel(regionName);
+                        showRegionLabel(regionName, visited);
                     })
-                    .on("mouseout", function () {
-                        d3.select(this).attr("fill", "#ccc");
+                    .on("mouseout", function (event, d) {
+                        const regionName = d.properties.NAME_1;
+                        const visited = isRegionVisited(countryCode, regionName);
+                        
+                        d3.select(this).attr("fill", visited ? COLORS.VISITED : COLORS.DEFAULT);
 
                         // 移除 region-label
                         svg.selectAll(".region-label").remove();
 
                         // 隐藏固定位置的 label
-                        hideRegionLabel()
+                        hideRegionLabel();
                     })
                     .on("click", function (event, d) {
                         const regionName = d.properties.NAME_1;
-                        const regionUrl = `../travel_notes/${countryCode}_${regionName.toLowerCase()}.html`;
-                        window.location.href = regionUrl;
+                        const regionKey = `${countryCode}_${regionName.toLowerCase()}`;
+                        const regionUrl = `../travel_notes/${regionKey}.html`;
+                        
+                        if (visitedRegions.has(regionKey)) {
+                            // 如果已访问，导航到旅行笔记
+                            window.location.href = regionUrl;
+                        } else {
+                            // 如果未访问，显示提示
+                            alert(`你还没有去过${regionName}或没有为此地区创建旅行笔记。`);
+                        }
                     });
-
-                    // // 创建标签分层显示系统
-                    // svg.selectAll(".region-label")
-                    //     .data(countryBoundaryData.features)
-                    //     .enter()
-                    //     .append("text")
-                    //     .attr("class", "region-label")
-                    //     .attr("data-id", d => d.properties.ID_1)
-                    //     .attr("x", d => path.centroid(d)[0])
-                    //     .attr("y", d => path.centroid(d)[1])
-                    //     .attr("text-anchor", "middle")
-                    //     .attr("font-family", "Lato")
-                    //     .attr("font-weight", "bold")
-                    //     .attr("fill", "#333")
-                    //     .attr("opacity", function(d) {
-                    //         const fontSize = calculateFontSize(d);
-                    //         // // 太小的标签设置为透明
-                    //         // return fontSize < 0.8 ? 0 : 1;
-                    //     })
-                    //     .style("font-size", d => `${calculateFontSize(d)}px`)
-                    //     .text(d => d.properties.NAME_1 || "")
-                    //     .each(function(d) {
-                    //         const label = d3.select(this);
-                    //         const fontSize = calculateFontSize(d);
-                            
-                    //         // 如果文本长度超过区域宽度，尝试换行或缩短
-                    //         const bbox = this.getBBox();
-                    //         const regionBounds = path.bounds(d);
-                    //         const regionWidth = regionBounds[1][0] - regionBounds[0][0];
-                            
-                    //         if (bbox.width > regionWidth * 0.8) {  // 如果文本宽度超过区域宽度的80%
-                    //             const text = d.properties.NAME_1;
-                    //             if (text.includes(" ")) {
-                    //                 // 如果有空格，尝试换行
-                    //                 const words = text.split(" ");
-                    //                 const middle = Math.floor(words.length / 2);
-                    //                 label.text("")  // 清除原有文本
-                    //                     .append("tspan")
-                    //                     .attr("x", path.centroid(d)[0])
-                    //                     .attr("dy", `-${fontSize/2}px`)
-                    //                     .text(words.slice(0, middle).join(" "));
-                    //                 label.append("tspan")
-                    //                     .attr("x", path.centroid(d)[0])
-                    //                     .attr("dy", `${fontSize}px`)
-                    //                     .text(words.slice(middle).join(" "));
-                    //             } else if (text.length > 6) {
-                    //                 // 如果文本太长，截断并添加省略号
-                    //                 label.text(text.slice(0, 4) + "..");
-                    //             }
-                    //         }
-                    //     })
-                    //     .style("pointer-events", "none");
-
+                    
+                // 添加国家地图的图例
+                addLegend();
             })
             .catch(error => {
                 console.error("Error loading country boundaries:", error);
