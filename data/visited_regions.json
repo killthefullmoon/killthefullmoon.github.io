@@ -2,8 +2,16 @@
     "CHN",
     "CHN_zhejiang",
     "CHN_beijing",
+    "CHN_shanghai",
+    "CHN_hongkong",
+    "CHN_anhui",
+    "CHN_jiangsu",
+    "CHN_chongqing",
     "JPN",
     "JPN_tokyo",
     "USA_california",
-    "ITA"
+    "ITA",
+    "ITA_milano",
+    "BEL",
+    "BEL_brussels"
 ]
