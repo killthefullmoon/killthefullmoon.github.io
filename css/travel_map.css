@@ -61,3 +61,28 @@
 #controls button {
     min-width: 190px;
 }
+
+@media only screen and (max-width: 768px) {
+    .fix_container {
+        position: fixed;
+        bottom: 50px;
+        z-index: 1000; 
+        right: 30px;
+        font-family: Raleway-B;
+    }
+    
+    .fix_container h2 {
+        font-family: Raleway-B;
+        font-size: 30px;
+    }
+    
+    .fix_container button {
+        display: none;
+    }
+
+    #back-to-world {
+        position: fixed;
+        top: 100px;
+        left: 30px;
+    }
+}
