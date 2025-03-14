@@ -400,6 +400,21 @@
             }
           });
         });
+
+        function removePaginationLgOnMobile() {
+          const pagination = document.getElementById('pagination'); 
+          const screenWidth = window.innerWidth; 
+
+          if (screenWidth < 768) {
+              pagination.classList.remove('pagination-lg');
+          } else {
+              pagination.classList.add('pagination-lg');
+          }
+        }
+
+        removePaginationLgOnMobile();
+
+        window.addEventListener('resize', removePaginationLgOnMobile);
     </script>
 
   <script src="../js/bootstrap.bundle.min.js"></script>
