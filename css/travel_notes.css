@@ -74,3 +74,19 @@
 .bd-mode-toggle .dropdown-menu .active .bi {
     display: block !important;
 } 
+
+  /* 按钮活动状态样式 */
+.filter-btn.active {
+    background-color: #0d6efd;
+    color: white !important;
+}
+  
+  /* 卡片过渡动画 */
+.col {
+    transition: all 0.3s ease;
+}
+  
+  /* 隐藏的卡片 */
+.col.hidden {
+    display: none;
+}
