@@ -1,4 +1,46 @@
-#map { height: 800px; width: 100%; }
+.map-title {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+               "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.6rem, 1.1rem + 2.2vw, 2.6rem);
+  letter-spacing: 0.2px;
+  color: #2F3E46; /* 深莫兰迪绿 */
+  margin-bottom: 1rem;
+}
+.map-subtitle {
+  color: #6c757d;
+  font-size: 0.98rem;
+  margin-bottom: 1.1rem;
+}
+.title-underline {
+  height: 6px;
+  width: 200px;
+  background: linear-gradient(90deg, #A3B18A, #A78A9A); /* 访问(绿) → 居住(梅子灰) */
+  border-radius: 999px;
+  margin-bottom: .75rem;
+}
+
+/* --- Map card & border --- */
+.map-card {
+  background: #fff;
+  border: 1px solid #E6ECE5;        /* 柔和边框 */
+  border-radius: 16px;
+  padding: 12px 12px 0;              /* 让边框和地图之间有呼吸感 */
+  box-shadow: 0 8px 24px rgba(0,0,0,.06);
+  padding-bottom: 12px;
+}
+#map {
+  height: clamp(420px, 60vh, 680px);
+  width: 100%;
+  border-radius: 12px;               /* 圆角让视觉更轻 */
+  border: 2px solid #DFE6DD;         /* 地图本身的细边框 */
+  overflow: hidden;                  /* 裁掉瓦片边缘毛边 */
+}
+
+/* 可选：地图底色更雅致（瓦片没覆盖处） */
+.leaflet-container {
+  background: #F7FAF6;
+}
 
 /* Base circle style */
 .modern-marker {
@@ -54,91 +96,3 @@
 .legend .dot.visited { background: #A3B18A; }
 .legend .dot.lived   { background: #A78A9A; }
 
-#world-map {
-    width: 100%;
-    height: 800px;
-}
-
-.country {
-    stroke: #666;
-    stroke-width: 0.5px;
-    cursor: pointer;
-}
-
-.country:hover {
-    fill: #90caf9;
-}
-
-.highlight-country {
-    fill: #ffcc00; /* 高亮的国家颜色 */
-}
-
-.city {
-    fill: red;
-    stroke: black;
-    stroke-width: 0.5px;
-    cursor: pointer;
-}
-  
-.city:hover {
-    fill: orange;
-}
-
-.travel_map_container {
-    padding-top: 50px;
-}
-
-.fix_container {
-    position: fixed;
-    z-index: 1000; 
-    padding: 10px 0; 
-    font-family: Raleway-B;
-}
-
-.fix_container h2 {
-    font-family: Raleway-B;
-    font-size: 30px;
-}
-
-.fixed-region-label {
-    color: #000000;
-    border-radius: 8px;
-    font-size: 25px;
-    font-weight: bold;
-    font-family: Raleway-B;
-    z-index: 1000;
-    pointer-events: none;
-}
-
-.d-none {
-    display: none;
-}
-
-#controls button {
-    min-width: 190px;
-}
-
-@media only screen and (max-width: 768px) {
-    .fix_container {
-        position: fixed;
-        bottom: 50px;
-        z-index: 1000; 
-        right: 30px;
-        font-family: Raleway-B;
-    }
-    
-    .fix_container h2 {
-        font-family: Raleway-B;
-        font-size: 30px;
-    }
-    
-    .fix_container button {
-        display: none;
-    }
-
-    #back-to-world {
-        position: fixed;
-        top: 100px;
-        left: 30px;
-    }
-}

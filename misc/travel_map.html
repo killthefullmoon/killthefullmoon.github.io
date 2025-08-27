@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hui Shen's Travel Map</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hui Shen's Travel Map</title>
 
-  <link rel="icon" type="image/x-icon" href="../images/favicons/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="../images/favicons/favicon.ico">
+        
     
-  
-  <link rel="stylesheet" href="../css/bootstrap.min.css">
-  <link rel="stylesheet" href="../stylesheet.css">
-  <link rel="stylesheet" href="../css/travel_map.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../stylesheet.css">
+    <link rel="stylesheet" href="../css/travel_map.css">
 
-  <link rel="stylesheet" href="../leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="../leaflet/dist/leaflet.css" />
+    <script src="../leaflet/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -67,12 +68,16 @@
         </div>
     </div>
 
-  <div class="container my-4 travel_map_container">
-    <h1>Places I Have Visited</h1>
-    <div id="map"></div>
+  <div class="container">
+    <div class="map-header text-center">
+        <h1 class="map-title">My Travel Map</h1>
+        <div class="title-underline mx-auto"></div>
+        <p class="map-subtitle">Visited & Lived · 旅行足迹与居住地</p>
+    </div>
+    <div class="map-card">
+        <div id="map"></div>
+    </div>
 
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="../leaflet/dist/leaflet.js"></script>
     <script>
         // Create map with horizontal wrap behavior (left-right loops).
         const map = L.map('map', { worldCopyJump: true });
@@ -83,8 +88,12 @@
         }).addTo(map);
 
         // Fit a single world to the viewport, then lock that as the minimum zoom
-        map.fitWorld();                 // make one full world visible
-        map.setView([20, 0]); // start near 20N; ensure >= fitWorld zoom
+        map.fitWorld({ animate: false });
+        const worldZoom = map.getZoom();
+        map.setMinZoom(worldZoom);
+
+        // 初始略微 zoom in（想再近一点用 +2）
+        map.setView([20, 0], worldZoom + 1);
 
         // Build legend (bottom-right)
         const Legend = L.Control.extend({
