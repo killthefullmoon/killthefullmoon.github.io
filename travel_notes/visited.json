@@ -1,0 +1,19 @@
+[
+  { "name": "Tokyo, Japan", "coords": [35.6895, 139.6917], "type": "visited" },
+  { "name": "Osaka, Japan", "coords": [34.6937, 135.5023], "type": "visited" },
+  { "name": "Kyoto, Japan", "coords": [35.0116, 135.7681], "type": "visited" },
+  { "name": "Nara, Japan", "coords": [34.6851, 135.8048], "type": "visited" },
+  { "name": "New York City, USA", "coords": [40.7128, -74.0060], "type": "visited" },
+  { "name": "Chicago, USA", "coords": [41.8781, -87.6298], "type": "visited" },
+  { "name": "Nanjing, China", "coords": [32.0603, 118.7969], "type": "visited" },
+  { "name": "Shanghai, China", "coords": [31.2304, 121.4737], "type": "visited" },
+  { "name": "Beijing, China", "coords": [39.9042, 116.4074], "type": "visited" },
+  { "name": "Hong Kong, China", "coords": [22.3193, 114.1694], "type": "visited" },
+  { "name": "Guangzhou, China", "coords": [23.1291, 113.2644], "type": "visited" },
+  { "name": "Shenzhen, China", "coords": [22.5431, 114.0579], "type": "visited" },
+  { "name": "Huangshan, Anhui, China", "coords": [29.7147, 118.3375], "type": "visited" },
+
+  { "name": "Hangzhou, China", "coords": [30.2741, 120.1551], "type": "lived" },
+  { "name": "Columbus, Ohio, USA", "coords": [39.9612, -82.9988], "type": "lived" },
+  { "name": "Ann Arbor, Michigan, USA", "coords": [42.2808, -83.7430], "type": "lived" }
+]

@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="../css/bootstrap.min.css">
   <link rel="stylesheet" href="../stylesheet.css">
   <link rel="stylesheet" href="../css/travel_map.css">
+
+  <link rel="stylesheet" href="../leaflet/dist/leaflet.css" />
 </head>
 <body>
 
@@ -66,7 +68,114 @@
     </div>
 
   <div class="container my-4 travel_map_container">
-    <div class="fix_container">
+    <h1>Places I Have Visited</h1>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="../leaflet/dist/leaflet.js"></script>
+    <script>
+        // Create map with horizontal wrap behavior (left-right loops).
+        const map = L.map('map', { worldCopyJump: true });
+
+        // Base tiles (horizontal wrap allowed by default)
+        const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: ''
+        }).addTo(map);
+
+        // Fit a single world to the viewport, then lock that as the minimum zoom
+        map.fitWorld();                 // make one full world visible
+        map.setView([20, 0]); // start near 20N; ensure >= fitWorld zoom
+
+        // Build legend (bottom-right)
+        const Legend = L.Control.extend({
+        options: { position: 'bottomright' },
+        onAdd: function() {
+            const div = L.DomUtil.create('div', 'legend');
+            div.innerHTML = `
+            <div class="row"><span class="dot visited"></span>Visited</div>
+            <div class="row"><span class="dot lived"></span>Lived</div>
+            `;
+            // Prevent map dragging when interacting with legend (good for mobile)
+            L.DomEvent.disableClickPropagation(div);
+            return div;
+        }
+        });
+        map.addControl(new Legend());
+
+        // Create a factory to build DivIcons by type
+        function makeIcon(type) {
+        const className = `modern-marker ${type === 'lived' ? 'lived' : 'visited'}`;
+        return L.divIcon({ className, iconSize: [25, 25] });
+        }
+
+        // Tooltip timers per marker
+        const hideTimers = new WeakMap();
+        const markers = [];
+
+        function openTooltipWithCancel(marker) {
+        const t = hideTimers.get(marker);
+        if (t) clearTimeout(t);
+        marker.openTooltip();
+        }
+        function scheduleCloseTooltip(marker, delay = 2000) {
+        const timer = setTimeout(() => marker.closeTooltip(), delay);
+        hideTimers.set(marker, timer);
+        }
+
+        fetch('../travel_notes/visited.json')
+        .then(res => {
+            if (!res.ok) throw new Error('Failed to load visited.json');
+            return res.json();
+        })
+        .then(places => {
+            // Render markers with desktop hover + mobile tap behaviors
+            places.forEach(place => {
+            const type = (place.type || 'visited').toLowerCase();
+            const marker = L.marker(place.coords, { icon: makeIcon(type) })
+                .addTo(map)
+                .bindTooltip(place.name, {
+                direction: 'top',
+                offset: [0, -12],
+                opacity: 0.95,
+                className: 'my-tooltip',
+                sticky: false
+                });
+
+            // Desktop hover / leave
+            marker.on('mouseover', () => openTooltipWithCancel(marker));
+            marker.on('mouseout',  () => scheduleCloseTooltip(marker, 2000));
+
+            // Keyboard accessibility
+            marker.on('focus', () => openTooltipWithCancel(marker));
+            marker.on('blur',  () => scheduleCloseTooltip(marker, 2000));
+
+            // Mobile tap to show, tap map to hide after 2s
+            marker.on('click', (e) => {
+                L.DomEvent.stopPropagation(e);
+                openTooltipWithCancel(marker);
+            });
+
+            markers.push(marker);
+            });
+
+            // Map interactions to close tooltips on tap/drag after 2s
+            map.on('click',     () => markers.forEach(m => scheduleCloseTooltip(m, 2000)));
+            map.on('dragstart', () => markers.forEach(m => scheduleCloseTooltip(m, 2000)));
+        })
+        .catch(err => {
+            console.error(err);
+            // Optional: tell the user in-page (non-blocking)
+            const warn = L.control({ position: 'topright' });
+            warn.onAdd = function() {
+            const div = L.DomUtil.create('div', 'legend');
+            div.innerHTML = `<strong>Could not load visited.json</strong><div>Please check the file path & format.</div>`;
+            return div;
+            };
+            warn.addTo(map);
+        });
+    </script>
+
+    <!-- <div class="fix_container">
         <h2 class="mb-2">Travel Map</h2>
         <div id="controls" class="row mb-3">
             <div id="controls" class="d-flex justify-content-center mb-3">
@@ -76,14 +185,12 @@
             </div>
         </div>
 
-        <div id="fixedRegionLabel" class="fixed-region-label d-none">Region: N/A</div>
-    </div>
+        <div id="fixedRegionLabel" class="fixed-region-label d-none">Region: N/A</div> -->
+    <!-- </div> -->
+
 
     <!-- World Map Container -->
-    <div id="world-map"></div>
-
-
-
+    <!-- <div id="world-map"></div> -->
   </div>
 
   <script src="../js/bootstrap.bundle.min.js"></script>
