@@ -71,6 +71,9 @@
         <h1 class="map-title">My Travel Map</h1>
         <div class="title-underline mx-auto"></div>
         <p class="map-subtitle">Visited & Lived · 旅行足迹与居住地</p>
+        <p class="text-center text-muted" style="margin-top:-6px;">
+        Click any marker to open my travel notes and photos for that place.
+        </p>
     </div>
     <div class="map-card">
         <div id="map"></div>
@@ -122,7 +125,7 @@
         if (t) clearTimeout(t);
         marker.openTooltip();
         }
-        function scheduleCloseTooltip(marker, delay = 2000) {
+        function scheduleCloseTooltip(marker, delay = 1000) {
         const timer = setTimeout(() => marker.closeTooltip(), delay);
         hideTimers.set(marker, timer);
         }
@@ -133,39 +136,76 @@
             return res.json();
         })
         .then(places => {
-            // Render markers with desktop hover + mobile tap behaviors
-            places.forEach(place => {
+        const entries = []; // 统一收拢以处理 map 点击/拖动时延迟关闭
+
+        places.forEach(place => {
             const type = (place.type || 'visited').toLowerCase();
-            const marker = L.marker(place.coords, { icon: makeIcon(type) })
-                .addTo(map)
-                .bindTooltip(place.name, {
-                direction: 'top',
-                offset: [0, -12],
-                opacity: 0.95,
-                className: 'my-tooltip',
-                sticky: false
+            const marker = L.marker(place.coords, { icon: makeIcon(type) }).addTo(map);
+
+            // 生成 tooltip HTML：标题 + 小按钮（如果提供了 url）
+            const linkHTML = place.url
+            ? `<a href="${place.url}" target="_blank" rel="noopener" class="tt-btn" title="Open notes & photos">View notes & photos →</a>`
+            : '';
+            const html = `<div class="tt-wrap">
+                            <div class="tt-title">${place.name}</div>
+                            ${linkHTML}
+                        </div>`;
+
+            // 手动控制的 tooltip（支持交互）
+            const tt = L.tooltip({
+            direction: 'top',
+            offset: [0, -12],
+            opacity: 0.95,
+            className: 'my-tooltip',
+            interactive: true         // 允许鼠标进入 tooltip
+            }).setContent(html);
+
+            let hideTimer = null;
+
+            const showTT = () => {
+            if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+            tt.setLatLng(marker.getLatLng());
+            if (!map.hasLayer(tt)) {
+                tt.addTo(map);
+                // 第一次渲染后给 tooltip DOM 绑定事件，防止移入时立刻消失
+                const el = tt.getElement();
+                if (el && !el.dataset.wired) {
+                el.dataset.wired = '1';
+                el.addEventListener('mouseenter', () => {
+                    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
                 });
+                el.addEventListener('mouseleave', () => scheduleHideTT(2000));
+                // 避免点击按钮触发 map 的 click（会安排关闭）
+                el.addEventListener('click', (e) => e.stopPropagation(), true);
+                }
+            }
+            };
 
-            // Desktop hover / leave
-            marker.on('mouseover', () => openTooltipWithCancel(marker));
-            marker.on('mouseout',  () => scheduleCloseTooltip(marker, 2000));
+            const scheduleHideTT = (delay = 2000) => {
+            if (hideTimer) clearTimeout(hideTimer);
+            hideTimer = setTimeout(() => {
+                if (map.hasLayer(tt)) map.removeLayer(tt);
+                hideTimer = null;
+            }, delay);
+            };
 
-            // Keyboard accessibility
-            marker.on('focus', () => openTooltipWithCancel(marker));
-            marker.on('blur',  () => scheduleCloseTooltip(marker, 2000));
+            // 桌面：悬停显示，离开 2s 后隐藏
+            marker.on('mouseover', showTT);
+            marker.on('mouseout',  () => scheduleHideTT(2000));
 
-            // Mobile tap to show, tap map to hide after 2s
-            marker.on('click', (e) => {
-                L.DomEvent.stopPropagation(e);
-                openTooltipWithCancel(marker);
-            });
+            // 无障碍：键盘焦点
+            marker.on('focus', showTT);
+            marker.on('blur',  () => scheduleHideTT(2000));
 
-            markers.push(marker);
-            });
+            // 移动端：点 marker 显示；点空白处/拖动后 2s 关闭
+            marker.on('click', (e) => { L.DomEvent.stopPropagation(e); showTT(); });
 
-            // Map interactions to close tooltips on tap/drag after 2s
-            map.on('click',     () => markers.forEach(m => scheduleCloseTooltip(m, 2000)));
-            map.on('dragstart', () => markers.forEach(m => scheduleCloseTooltip(m, 2000)));
+            entries.push({ scheduleHideTT, tt });
+        });
+
+        // 点击空白或开始拖动 -> 2s 后统一关闭（给移动端良好体验）
+        map.on('click',     () => entries.forEach(e => e.scheduleHideTT(2000)));
+        map.on('dragstart', () => entries.forEach(e => e.scheduleHideTT(2000)));
         })
         .catch(err => {
             console.error(err);
@@ -180,22 +220,6 @@
         });
     </script>
 
-    <!-- <div class="fix_container">
-        <h2 class="mb-2">Travel Map</h2>
-        <div id="controls" class="row mb-3">
-            <div id="controls" class="d-flex justify-content-center mb-3">
-                <button id="zoom-in" class="btn btn-primary me-2">Zoom In</button>
-                <button id="zoom-out" class="btn btn-primary me-2">Zoom Out</button>
-                <button id="back-to-world" class="btn btn-primary" style="display: none;">Back to World Map</button>
-            </div>
-        </div>
-
-        <div id="fixedRegionLabel" class="fixed-region-label d-none">Region: N/A</div> -->
-    <!-- </div> -->
-
-
-    <!-- World Map Container -->
-    <!-- <div id="world-map"></div> -->
   </div>
 
   <script src="../js/bootstrap.bundle.min.js"></script>

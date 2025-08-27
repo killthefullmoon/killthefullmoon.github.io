@@ -77,6 +77,15 @@
     border-top-color: #2d2f2e;
 }
 
+.my-tooltip .tt-title{font-weight:600;margin-bottom:6px}
+.my-tooltip .tt-btn{
+  display:inline-block;background:#fff;color:#2d2f2e;text-decoration:none;
+  font-weight:600;font-size:12px;padding:4px 8px;border-radius:6px
+}
+.my-tooltip .tt-btn:focus,.my-tooltip .tt-btn:hover{
+  text-decoration:none;filter:brightness(0.95)
+}
+
 /* Legend */
 .legend {
     background: rgba(255,255,255,0.92);
