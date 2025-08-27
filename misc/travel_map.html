@@ -81,9 +81,7 @@
         const map = L.map('map', { worldCopyJump: true });
 
         // Base tiles (horizontal wrap allowed by default)
-        const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: ''
-        }).addTo(map);
+        const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
 
         // Fit a single world to the viewport, then lock that as the minimum zoom
         map.fitWorld({ animate: false });

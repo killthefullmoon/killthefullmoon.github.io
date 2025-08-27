@@ -13,7 +13,7 @@
   { "name": "Shenzhen, China", "coords": [22.5431, 114.0579], "type": "visited" },
   { "name": "Huangshan, Anhui, China", "coords": [29.7147, 118.3375], "type": "visited" },
 
-  { "name": "Hangzhou, China", "coords": [30.2741, 120.1551], "type": "lived" },
+  { "name": "Hangzhou, Zhejiang, China", "coords": [30.2741, 120.1551], "type": "lived" },
   { "name": "Columbus, Ohio, USA", "coords": [39.9612, -82.9988], "type": "lived" },
   { "name": "Ann Arbor, Michigan, USA", "coords": [42.2808, -83.7430], "type": "lived" }
 ]
