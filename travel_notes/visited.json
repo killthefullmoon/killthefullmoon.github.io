@@ -1,0 +1,33 @@
+[
+  { "name": "Tokyo, Japan", "coords": [35.6895, 139.6917], "type": "visited", "url": "./notes/tokyo.html" },
+  { "name": "Osaka, Japan", "coords": [34.6937, 135.5023], "type": "visited", "url": "./notes/osaka.html" },
+  { "name": "Kyoto, Japan", "coords": [35.0116, 135.7681], "type": "visited", "url": "./notes/kyoto.html" },
+  { "name": "Nara, Japan", "coords": [34.6851, 135.8048], "type": "visited", "url": "./notes/nara.html" },
+
+  { "name": "New York City, New York, USA", "coords": [40.7128, -74.0060], "type": "visited", "region": "New York", "country": "USA", "url": "./notes/new-york-city.html" },
+  { "name": "Chicago, Illinois, USA", "coords": [41.8781, -87.6298], "type": "visited", "region": "Illinois", "country": "USA", "url": "./notes/chicago.html" },
+  { "name": "Detroit, Michigan, USA", "coords": [42.3314, -83.0458], "type": "visited", "region": "Michigan", "country": "USA", "url": "./notes/detroit.html" },
+
+  { "name": "Nanjing, Jiangsu, China", "coords": [32.0603, 118.7969], "type": "visited", "region": "Jiangsu", "country": "China", "url": "./notes/nanjing.html" },
+  { "name": "Shanghai, China", "coords": [31.2304, 121.4737], "type": "visited", "region": "Shanghai Municipality", "country": "China", "url": "./notes/shanghai.html" },
+  { "name": "Beijing, China", "coords": [39.9042, 116.4074], "type": "visited", "region": "Beijing Municipality", "country": "China", "url": "./notes/beijing.html" },
+  { "name": "Hong Kong SAR, China", "coords": [22.3193, 114.1694], "type": "visited", "region": "Hong Kong SAR", "country": "China", "url": "./notes/hong-kong-sar.html" },
+  { "name": "Guangzhou, Guangdong, China", "coords": [23.1291, 113.2644], "type": "visited", "region": "Guangdong", "country": "China", "url": "./notes/guangzhou.html" },
+  { "name": "Shenzhen, Guangdong, China", "coords": [22.5431, 114.0579], "type": "visited", "region": "Guangdong", "country": "China", "url": "./notes/shenzhen.html" },
+  { "name": "Huangshan, Anhui, China", "coords": [29.7147, 118.3375], "type": "visited", "region": "Anhui", "country": "China", "url": "./notes/huangshan.html" },
+  { "name": "Macau SAR, China", "coords": [22.1987, 113.5439], "type": "visited", "region": "Macau SAR", "country": "China", "url": "./notes/macau-sar.html" },
+  { "name": "Xiamen, Fujian, China", "coords": [24.4798, 118.0894], "type": "visited", "region": "Fujian", "country": "China", "url": "./notes/xiamen.html" },
+  { "name": "Chongqing, China", "coords": [29.5630, 106.5516], "type": "visited", "region": "Chongqing Municipality", "country": "China", "url": "./notes/chongqing.html" },
+  { "name": "Ningbo, Zhejiang, China", "coords": [29.8683, 121.5440], "type": "visited", "region": "Zhejiang", "country": "China", "url": "./notes/ningbo.html" },
+  { "name": "Shaoxing, Zhejiang, China", "coords": [30.0035, 120.5802], "type": "visited", "region": "Zhejiang", "country": "China", "url": "./notes/shaoxing.html" },
+
+  { "name": "Brussels, Belgium", "coords": [50.8503, 4.3517], "type": "visited", "country": "Belgium", "url": "./notes/brussels.html" },
+  { "name": "Istanbul, Turkey", "coords": [41.0082, 28.9784], "type": "visited", "country": "Turkey", "url": "./notes/istanbul.html" },
+  { "name": "Malé, Maldives", "coords": [4.1755, 73.5093], "type": "visited", "country": "Maldives", "url": "./notes/male.html" },
+  { "name": "Kuala Lumpur, Malaysia", "coords": [3.1390, 101.6869], "type": "visited", "country": "Malaysia", "url": "./notes/kuala-lumpur.html" },
+  { "name": "Milan, Italy", "coords": [45.4642, 9.1900], "type": "visited", "country": "Italy", "url": "./notes/milan.html" },
+
+  { "name": "Hangzhou, Zhejiang, China", "coords": [30.2741, 120.1551], "type": "lived", "url": "./notes/hangzhou.html" },
+  { "name": "Columbus, Ohio, USA", "coords": [39.9612, -82.9988], "type": "lived", "url": "./notes/columbus.html" },
+  { "name": "Ann Arbor, Michigan, USA", "coords": [42.2808, -83.7430], "type": "lived", "url": "./notes/ann-arbor.html" }
+]
