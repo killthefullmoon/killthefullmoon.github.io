@@ -14,58 +14,11 @@
     <link rel="stylesheet" type="text/css" href="stylesheet.css">
   </head>
 
-  <body>
+  <body data-root-path="." data-page="publications">
         <!-- Left Background -->
         <div class="background"></div>
 
-        <!-- Header -->
-        <nav class="navbar navbar-expand-lg bg-body-tertiary header">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">Cloud Driver 雲端司機</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarText">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html">Home🧐</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="../publications.html">Publications📕</a>
-                    </li>
-                    <li class="nav-item">
-                        <a data-bs-toggle="offcanvas" href="#contact_me" role="button" class="nav-link">Contact Me🌻</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" aria-current="page" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        When I'm Not Doing Research🌊
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="./misc/travel_map.html">Travel Map</a></li>
-                            <li><a class="dropdown-item" href="./misc/music.html">Music</a></li>
-                            <li><a class="dropdown-item" href="./misc/transfer_guide.html">Transfer Guide</a></li>
-                            <!-- <li><a class="dropdown-item" href="./game.html">Game</a></li> -->
-                        </ul>
-                    </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Offcanvas -->
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="contact_me" aria-labelledby="offcanvasExampleLabel">
-            <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Contact Me</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-            <strong>WeChat:</strong><br>
-            DiudiuandMoon
-            <hr>
-            <strong>RedNote/小红书:</strong><br>
-            9428710724
-            </div>
-        </div>
+        <div data-include="site-header"></div>
 
         <table class="container", style="width:100%;max-width:1200px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
             <tr style="padding:0px">
@@ -95,6 +48,56 @@
                       <div data-bs-spy="scroll" data-bs-target="#navbar-example3" data-bs-smooth-scroll="true" class="scrollspy-example-2" tabindex="0">
                         <div id="item-1">
                           <h4>2025</h4>
+
+                            <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding:10px;width:30%;vertical-align:middle">
+                                            <img src='images/papers/atts.png' width="80%">
+                                        </td>
+                                    <td style="padding:10px;width:70%;vertical-align:middle">
+                                        <strong>
+                                        <papertitle>
+                                            ATTS: Asynchronous Test-Time Scaling via Conformal Prediction
+                                        </papertitle>
+                                        </strong>
+                                        <br>
+                                        Jing Xiong, Qiujiang Chen, Fanghua Ye, Zhongwei Wan, Chuanyang Zheng, Chenyang Zhao, <strong>Hui Shen</strong>, Alexander Hanbo Li, Chaofan Tao, Haochen Tan, Haoli Bai, Lifeng Shang, Lingpeng Kong, Ngai Wong
+                                        <br>
+                                        arXiv preprint, 2025
+                                        <br>
+                                        <!-- <a href="https://github.com/SUSTechBruce/SRPO_MLLMs">Code</a>
+                                        / -->
+                                        <a href="https://arxiv.org/pdf/2509.15148">Paper</a>
+                                    </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding:10px;width:30%;vertical-align:middle">
+                                            <img src='images/papers/long_emotion.png' width="80%">
+                                        </td>
+                                    <td style="padding:10px;width:70%;vertical-align:middle">
+                                        <strong>
+                                        <papertitle>
+                                            LongEmotion: Measuring Emotional Intelligence of Large Language Models in Long-Context Interaction
+                                        </papertitle>
+                                        </strong>
+                                        <br>
+                                        Weichu Liu, Jing Xiong, Yuxuan Hu, Zixuan Li, Minghuan Tan, Ningning Mao, Chenyang Zhao, Zhongwei Wan, Chaofan Tao, Wendong Xu, <strong>Hui Shen</strong>, Chengming Li, Lingpeng Kong, Ngai Wong
+                                        <br>
+                                        arXiv preprint, 2025
+                                        <br>
+                                        <a href="https://github.com/LongEmotion/LongEmotion">Code</a>
+                                        /
+                                        <a href="https://arxiv.org/pdf/2509.07403">Paper</a>
+                                    </td>
+                                    </tr>
+                                </tbody>
+                            </table>
 
                             <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
                                 <tbody>
@@ -207,10 +210,10 @@
                                         <strong>Hui Shen</strong>, 
                                         Jing Xiong, Yi Xin, Yifan Jiang, Yangfan He, Mi Zhang, Shen Yan
                                         <br>
-                                        arXiv preprint, 2025
+                                        <strong><em>NeurIPS 2025</em></strong>
                                         <br>
-                                        <!-- <a href="https://github.com/AIoT-MLSys-Lab/MEDA">Code</a>
-                                        / -->
+                                        <a href="https://github.com/SUSTechBruce/SRPO_MLLMs">Code</a>
+                                        /
                                         <a href="https://arxiv.org/pdf/2506.01713">Paper</a>
                                     </td>
                                     </tr>
@@ -234,7 +237,7 @@
                                         <strong>Hui Shen</strong>, 
                                         Xin Wang, Che Liu, Zheda Mai, Mi Zhang
                                         <br>
-                                        <em>NAACL 2025</em>
+                                        <strong><em>NAACL 2025</em></strong>
                                         <br>
                                         <a href="https://github.com/AIoT-MLSys-Lab/MEDA">Code</a>
                                         /
@@ -261,7 +264,7 @@
                                         <strong>Hui Shen</strong>, 
                                         Mi Zhang
                                         <br>
-                                        <em>NAACL 2025</em>
+                                        <strong><em>NAACL 2025</em></strong>
                                         <br>
                                         <a href="https://github.com/AIoT-MLSys-Lab/SVD-LLM">Code</a>
                                         /
@@ -288,7 +291,7 @@
                                         <strong>Hui Shen</strong>, 
                                         Haozhe Wang, Kangyu Zheng, Mi Zhang, Rossella Arcucci
                                         <br>
-                                        <em>ACL 2025 Findings</em>
+                                        <strong><em>ACL 2025 Findings</em></strong>
                                         <br>
                                         <a href="https://arxiv.org/abs/2406.07146">Paper</a>
                                     </td>
@@ -313,7 +316,7 @@
                                         <strong>Hui Shen</strong>, 
                                         Zhenwu Peng, Jie Fu, Rossella Arcucci, Huaxiu Yao, Mi Zhang 
                                         <br>
-                                        <em>ACL 2025 Findings</em>
+                                        <strong><em>ACL 2025 Findings</em></strong>
                                         <br>
                                         <a href="https://github.com/AIoT-MLSys-Lab/MEIT">Code</a>
                                         /
@@ -338,7 +341,7 @@
                                         <br>
                                         <strong>Hui Shen*</strong>, Jingxuan Zhang*, Boning Xiong*, Rui Hu*, Shoufa Chen, Zhongwei Wan, Xin Wang, Yu Zhang, Zixuan Gong, Guangyin Bao, Chaofan Tao, Yongfeng Huang, Ye Yuan, Mi Zhang
                                         <br>
-                                        <em>Transactions on Machine Learning Research (TMLR-2025)</em>
+                                        <strong><em>Transactions on Machine Learning Research (TMLR-2025)</em></strong>
                                         <br>
                                         <a href="https://github.com/AIoT-MLSys-Lab/Efficient-Diffusion-Model-Survey">GitHub Repo</a>
                                         /
@@ -368,7 +371,7 @@
                                         <strong>Hui Shen</strong>, 
                                         Zhongwei Wan, Jinfa Huang, Chaofan Tao, Shen Yan, Huaxiu Yao, Lingpeng Kong, Hongxia Yang, Mi Zhang, Guillermo Sapiro, Jiebo Luo, Ping Luo, Ngai Wong
                                         <br>
-                                        <em>Transactions on Machine Learning Research (TMLR-2025)</em>
+                                        <strong><em>Transactions on Machine Learning Research (TMLR-2025)</em></strong>
                                         <br>
                                         <a href="https://github.com/ChaofanTao/Autoregressive-Models-in-Vision-Survey">GitHub Repo</a>
                                         /
@@ -395,7 +398,7 @@
                                         <strong>Hui Shen</strong>, 
                                         Zhichao Cao, Ness Shroff, Bhaskar Krishnamachari, Mani Srivastava, Mi Zhang
                                         <br>
-                                        <em>ACM Transactions on Sensor Networks (TOSN)</em>
+                                        <strong><em>ACM Transactions on Sensor Networks (TOSN)</em></strong>
                                         <br>
                                         <a href="https://github.com/AIoT-MLSys-Lab/AIoT-Survey">GitHub Repo</a>
                                         /
@@ -423,7 +426,7 @@
                                         Xin Wang,
                                         Mi Zhang
                                         <br>
-                                        <em>ECCV 2024 @ Computational Aspects of Deep Learning</em> <strong><font color='#b70000'>(Best Paper Award)</strong></font>
+                                        <strong><em>ECCV 2024 @ Computational Aspects of Deep Learning</em></strong> <strong><font color='#b70000'>(Best Paper Award)</strong></font>
                                         <br>
                                         <a href="https://github.com/AIoT-MLSys-Lab/Famba-V">Code</a>
                                         /
@@ -453,7 +456,7 @@
                                           <strong>Hui Shen</strong>,
                                           Zhichao Cao, Dong Zhao, JeongGil Ko, Kiran Somasundaram, Shrikanth S Narayanan, Salman Avestimehr, Mi Zhang
                                           <br>
-                                          <em>Journal of Data-centric Machine Learning Research (DMLR)</em>
+                                          <strong><em>Journal of Data-centric Machine Learning Research (DMLR)</em></strong>
                                           <br>
                                           <a href="https://github.com/AIoT-MLSys-Lab/FedAIoT">Code</a>
                                           /
@@ -513,5 +516,6 @@
             });
         </script>
 
-        <script src="./js/bootstrap.bundle.min.js"></script>
+        <script src="js/header.js"></script>
+  <script src="./js/bootstrap.bundle.min.js"></script>
     </body>

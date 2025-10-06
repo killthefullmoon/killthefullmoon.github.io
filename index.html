@@ -18,60 +18,13 @@
     
   </head>
 
-  <body>
+  <body data-root-path="." data-page="home">
 
     <!-- Left Background -->
     <div class="background"></div>
 
 
-    <!-- Header -->
-    <nav class="navbar navbar-expand-lg bg-body-tertiary header">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">Cloud Driver 雲端司機</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarText">
-              <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                  <a class="nav-link active" href="../index.html">Home🧐</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="../publications.html">Publications📕</a>
-              </li>
-              <li class="nav-item">
-                <a data-bs-toggle="offcanvas" href="#contact_me" role="button" class="nav-link">Contact Me🌻</a>
-              </li>
-              <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" aria-current="page" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  When I'm Not Doing Research🌊
-                  </a>
-                  <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="./misc/travel_map.html">Travel Map</a></li>
-                      <li><a class="dropdown-item" href="./misc/music.html">Music</a></li>
-                      <li><a class="dropdown-item" href="./misc/transfer_guide.html">Transfer Guide</a></li>
-                      <!-- <li><a class="dropdown-item" href="./game.html">Game</a></li> -->
-                  </ul>
-              </li>
-              </ul>
-          </div>
-        </div>
-    </nav>
-
-    <!-- Offcanvas -->
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="contact_me" aria-labelledby="offcanvasExampleLabel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Contact Me</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body">
-        <strong>WeChat:</strong><br>
-        DiudiuandMoon
-        <hr>
-        <strong>RedNote/小红书:</strong><br>
-        9428710724
-      </div>
-    </div>
+    <div data-include="site-header"></div>
 
     <table class="container", style="width:100%;max-width:1000px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
       <tr style="padding:0px">
@@ -114,6 +67,9 @@
                     <h2>What's New</h2>
                     <div class="scrollable-list border p-3">
                       <ul>
+                        <li>
+                          <strong>Sep 2025:</strong> One paper has been accepted by NeurIPS 2025.
+                        </li>
                         <li>
                           <strong>May 2025:</strong> Released paper <a href="https://arxiv.org/pdf/2505.15929">PhyX: Does Your Model Have the "Wits" for Physical Reasoning?</a>, the dataset of PhyX at <a href="https://huggingface.co/datasets/Cloudriver/PhyX">Huggingface Dataset</a>, and the <a href="https://github.com/NastyMarcus/PhyX">evaluation code</a>.
                         </li>
@@ -335,10 +291,15 @@
               <h2>Services</h2>
               <ul>
                 <li>
-                    <strong>Journal Reviewer:</strong> IEEE Transactions on Mobile Computing
+                    <strong>Journal Reviewer:</strong> 
+                     <br> IEEE Transactions on Mobile Computing
                 </li>
                 <li>
-                    <strong>Conference Reviewer:</strong> EMNLP, CVPR, ACL
+                    <strong>Conference Reviewer:</strong> 
+                    <br>EMNLP 2025
+                    <br>CVPR 2025
+                    <br>ACL Rolling Review 
+                    <br>ICLR 2025
                 </li>
               </ul>
             </td>
@@ -488,6 +449,7 @@
       });
     </script>
 
+    <script src="js/header.js"></script>
     <script src="./js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
