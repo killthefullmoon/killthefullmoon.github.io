@@ -100,6 +100,7 @@
 }
 
 .game-card {
+  position: relative;
   background: rgba(255, 255, 255, 0.92);
   border-radius: 12px;
   box-shadow: 0 18px 40px rgba(17, 24, 39, 0.12);
@@ -238,3 +239,26 @@
   }
 }
 
+
+
+.game-card.status-main::before,
+.game-card.status-complete::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 48px;
+  height: 48px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none;
+}
+
+.game-card.status-main::before {
+  background-image: url('../images/icons/trophy_silver.svg');
+}
+
+.game-card.status-complete::before {
+  background-image: url('../images/icons/trophy_gold.svg');
+}
