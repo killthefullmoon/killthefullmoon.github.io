@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Save Point</title>
+
+  <link rel="icon" type="image/x-icon" href="../images/favicons/favicon.ico">
+
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../stylesheet.css">
+  <link rel="stylesheet" href="../css/game.css">
+</head>
+<body data-root-path=".." data-page="game">
+
+  <div class="background"></div>
+
+  <div data-include="site-header"></div>
+
+  <main class="game-page container py-5">
+    <header class="page-intro mb-5">
+      <div class="intro-content text-center">
+        <span class="intro-pill">雲端司機 Game Log</span>
+        <h1 class="mb-3">Game Save Point</h1>
+        <p class="lead">Finding Myself in Other Worlds.</p>
+        <div class="intro-meta">
+          <div class="meta-item">
+            <span class="meta-label">Total Games</span>
+            <span class="meta-value" data-role="total-games">--</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Online</span>
+            <span class="meta-value" data-role="online-games">--</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Single-player</span>
+            <span class="meta-value" data-role="single-games">--</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Main Story Clear</span>
+            <span class="meta-value" data-role="main-clear">--</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">All Achievements</span>
+            <span class="meta-value" data-role="all-achievements">--</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Hours Played</span>
+            <span class="meta-value" data-role="total-hours">--</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="game-section mb-5" id="online-games">
+      <div class="section-header d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-3 mb-4">
+        <div>
+          <h2 class="mb-2">Online Games</h2>
+        </div>
+      </div>
+      <div class="game-grid">
+        <article class="game-card">
+          <div class="game-cover">
+            <img src="../images/games/dota2.png" alt="Dota 2 cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Dota 2</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-playtime">1,435 hrs</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card">
+          <div class="game-cover">
+            <img src="../images/games/warframe.png" alt="Warframe placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Warframe</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-playtime">173 hrs</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card">
+          <div class="game-cover">
+            <img src="../images/games/cs2.png" alt="Counter-Strike 2 placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Counter-Strike 2</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-playtime">54 hrs</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="game-section" id="single-player-games">
+      <div class="section-header d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-3 mb-4">
+        <div>
+          <h2 class="mb-2">Single-Player Games</h2>
+        </div>
+      </div>
+      <div class="game-grid">
+        <article class="game-card status-complete">
+          <div class="game-cover">
+            <img src="../images/games/bloodstained.png" alt="Bloodstained: Ritual of the Night placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Bloodstained: Ritual of the Night</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 45 / 45</li>
+              <li class="tag tag-playtime">24 hrs</li>
+              <li class="tag tag-status tag-status-complete">All Achievements</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card status-complete">
+          <div class="game-cover">
+            <img src="../images/games/dave.png" alt="Dave the Diver placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Dave the Diver</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 43 / 43</li>
+              <li class="tag tag-playtime">35 hrs</li>
+              <li class="tag tag-status tag-status-complete">All Achievements</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card status-complete">
+          <div class="game-cover">
+            <img src="../images/games/celeste.png" alt="Celeste placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Celeste</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 32 / 32</li>
+              <li class="tag tag-playtime">28 hrs</li>
+              <li class="tag tag-status tag-status-complete">All Achievements</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card status-main">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="The Legend of Zelda: Tears of the Kingdom placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">The Legend of Zelda: Breath of the Wild</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Nintendo Switch</li>
+              <li class="tag tag-achievement">🏆 132 / 152</li>
+              <li class="tag tag-playtime">95 hrs</li>
+              <li class="tag tag-status tag-status-main">Main Story Clear</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card status-main">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Elden Ring placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Elden Ring</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 63 / 90</li>
+              <li class="tag tag-playtime">145 hrs</li>
+              <li class="tag tag-status tag-status-main">Main Story Clear</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card status-main">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Baldur's Gate 3 placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Baldur's Gate 3</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 45 / 53</li>
+              <li class="tag tag-playtime">130 hrs</li>
+              <li class="tag tag-status tag-status-main">Main Story Clear</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card status-main">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Cyberpunk 2077 placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Cyberpunk 2077</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 38 / 57</li>
+              <li class="tag tag-playtime">95 hrs</li>
+              <li class="tag tag-status tag-status-main">Main Story Clear</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card status-main">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="The Witcher 3: Wild Hunt placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">The Witcher 3: Wild Hunt</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 45 / 78</li>
+              <li class="tag tag-playtime">210 hrs</li>
+              <li class="tag tag-status tag-status-main">Main Story Clear</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card status-main">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Cult of the Lamb placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Cult of the Lamb</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 32 / 37</li>
+              <li class="tag tag-playtime">70 hrs</li>
+              <li class="tag tag-status tag-status-main">Main Story Clear</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card status-complete">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="It Takes Two placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">It Takes Two</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 21 / 21</li>
+              <li class="tag tag-playtime">26 hrs</li>
+              <li class="tag tag-status tag-status-complete">All Achievements</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card status-complete">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Slay the Spire placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Slay the Spire</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 46 / 46</li>
+              <li class="tag tag-playtime">160 hrs</li>
+              <li class="tag tag-status tag-status-complete">All Achievements</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card status-complete">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Hades placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Hades</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 49 / 49</li>
+              <li class="tag tag-playtime">110 hrs</li>
+              <li class="tag tag-status tag-status-complete">All Achievements</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Hollow Knight placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Hollow Knight</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 45 / 63</li>
+              <li class="tag tag-playtime">80 hrs</li>
+              <li class="tag tag-status tag-status-playing">Playing</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Starbound placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Starbound</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 35 / 44</li>
+              <li class="tag tag-playtime">82 hrs</li>
+              <li class="tag tag-status tag-status-playing">Playing</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Stardew Valley placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Stardew Valley</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 28 / 40</li>
+              <li class="tag tag-playtime">150 hrs</li>
+              <li class="tag tag-status tag-status-playing">Playing</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Tale of Immortal placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Tale of Immortal</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 12 / 46</li>
+              <li class="tag tag-playtime">48 hrs</li>
+              <li class="tag tag-status tag-status-playing">Playing</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Don't Starve placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Don't Starve</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 30 / 60</li>
+              <li class="tag tag-playtime">90 hrs</li>
+              <li class="tag tag-status tag-status-playing">Playing</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Cultist Simulator placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Cultist Simulator</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 20 / 49</li>
+              <li class="tag tag-playtime">60 hrs</li>
+              <li class="tag tag-status tag-status-playing">Playing</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Sultan's Game placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Sultan's Game</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 18 / 60</li>
+              <li class="tag tag-playtime">40 hrs</li>
+              <li class="tag tag-status tag-status-playing">Playing</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Risk of Rain 2 placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Risk of Rain 2</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 60 / 112</li>
+              <li class="tag tag-playtime">180 hrs</li>
+              <li class="tag tag-status tag-status-playing">Playing</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Darkest Dungeon placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Darkest Dungeon</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 45 / 85</li>
+              <li class="tag tag-playtime">110 hrs</li>
+              <li class="tag tag-status tag-status-playing">Playing</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="The Binding of Isaac: Rebirth placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">The Binding of Isaac: Rebirth</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 420 / 637</li>
+              <li class="tag tag-playtime">300 hrs</li>
+              <li class="tag tag-status tag-status-playing">Playing</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Palworld placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Palworld</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 7 / 68</li>
+              <li class="tag tag-playtime">28 hrs</li>
+              <li class="tag tag-status tag-status-playing">Playing</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="game-card">
+          <div class="game-cover">
+            <img src="../images/games/placeholder.png" alt="Valheim placeholder cover" loading="lazy">
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Valheim</h3>
+            <ul class="game-tags">
+              <li class="tag tag-platform">Steam</li>
+              <li class="tag tag-achievement">🏆 40 / 92</li>
+              <li class="tag tag-playtime">95 hrs</li>
+              <li class="tag tag-status tag-status-playing">Playing</li>
+            </ul>
+          </div>
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = Array.from(document.querySelectorAll('.game-card'));
+      if (!cards.length) {
+        return;
+      }
+
+      const sections = {
+        online: document.querySelectorAll('#online-games .game-card'),
+        single: document.querySelectorAll('#single-player-games .game-card'),
+      };
+
+      const parseHours = (card) => {
+        const tag = card.querySelector('.tag-playtime');
+        if (!tag) {
+          return 0;
+        }
+        const numeric = tag.textContent.replace(/[^0-9.]/g, '');
+        return Number.parseFloat(numeric) || 0;
+      };
+
+      const totalHours = cards.reduce((sum, card) => sum + parseHours(card), 0);
+      const roundedHours = Math.round(totalHours * 10) / 10;
+      const isWholeHour = Math.abs(roundedHours - Math.round(roundedHours)) < 1e-6;
+      const formatNumber = (value, options) => Number(value).toLocaleString(undefined, options);
+      const formattedHours = isWholeHour
+        ? formatNumber(Math.round(roundedHours))
+        : formatNumber(roundedHours, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+
+      const setValue = (role, value) => {
+        const el = document.querySelector(`[data-role="${role}"]`);
+        if (el) {
+          el.textContent = value;
+        }
+      };
+
+      const statusCounts = cards.reduce(
+        (acc, card) => {
+          if (card.classList.contains('status-main')) acc.main += 1;
+          if (card.classList.contains('status-complete')) acc.complete += 1;
+          return acc;
+        },
+        { main: 0, complete: 0 }
+      );
+
+      setValue('total-games', `${formatNumber(cards.length)} titles`);
+      setValue('online-games', `${formatNumber(sections.online.length)} titles`);
+      setValue('single-games', `${formatNumber(sections.single.length)} titles`);
+      setValue('main-clear', `${formatNumber(statusCounts.main)} titles`);
+      setValue('all-achievements', `${formatNumber(statusCounts.complete)} titles`);
+      setValue('total-hours', `${formattedHours} hrs`);
+    });
+  </script>
+
+  <script src="../js/header.js"></script>
+  <script src="../js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
