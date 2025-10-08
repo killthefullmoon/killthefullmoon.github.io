@@ -270,6 +270,21 @@ body {
   margin-top: 70px;
 }
 
+.site-footer {
+  margin-top: 60px;
+  padding: 24px 16px 32px;
+  background-color: rgba(15, 23, 42, 0.04);
+  border-top: 1px solid rgba(15, 23, 42, 0.1);
+  color: #334155;
+  font-size: 14px;
+}
+
+.site-footer .footer-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  letter-spacing: 0.04em;
+}
+
 .back-to-top {
   position: fixed;
   bottom: 30px;
