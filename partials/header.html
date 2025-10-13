@@ -14,7 +14,7 @@
           <a class="nav-link" data-path="publications.html" data-nav="publications">Publications📕</a>
         </li>
         <li class="nav-item">
-          <a data-bs-toggle="offcanvas" href="#contact_me" role="button" class="nav-link" data-nav="contact">Contact Me🌻</a>
+          <a href="#" class="nav-link" data-nav="contact" data-contact-trigger>Contact Me🌻</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-nav="misc-root">
@@ -32,24 +32,33 @@
   </div>
 </nav>
 
-<!-- Offcanvas -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="contact_me" aria-labelledby="offcanvasExampleLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Contact Me</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <strong>WeChat:</strong><br>
-    DiudiuandMoon
-    <hr>
-    <strong>RedNote/小红书:</strong><br>
-    9428710724
-    <hr>
-    <strong>Email 1:</strong><br>
-    huishen011227@gmail.com
-    <hr>
-    <strong>Email 2:</strong><br>
-    huishen@umich.edu
-
+<div class="contact-modal" id="contactModal" aria-hidden="true">
+  <div class="contact-modal__overlay" data-contact-close></div>
+  <div class="contact-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle" tabindex="-1">
+    <button type="button" class="contact-modal__close" aria-label="Close" data-contact-close>
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M6 6l12 12m0-12L6 18" />
+      </svg>
+    </button>
+    <h2 class="contact-modal__title" id="contactModalTitle">Contact Me</h2>
+    <p class="contact-modal__subtitle">Let's connect - I'm always excited to talk about research, collaborations, or anything fun.</p>
+    <ul class="contact-modal__list">
+      <li>
+        <span class="contact-modal__label">WeChat</span>
+        <span class="contact-modal__value">DiudiuandMoon</span>
+      </li>
+      <li>
+        <span class="contact-modal__label">RedNote/小红书</span>
+        <span class="contact-modal__value">9428710724</span>
+      </li>
+      <li>
+        <span class="contact-modal__label">Email</span>
+        <a class="contact-modal__value" href="mailto:huishen011227@gmail.com">huishen011227@gmail.com</a>
+      </li>
+      <li>
+        <span class="contact-modal__label">School Email</span>
+        <a class="contact-modal__value" href="mailto:huishen@umich.edu">huishen@umich.edu</a>
+      </li>
+    </ul>
   </div>
 </div>
