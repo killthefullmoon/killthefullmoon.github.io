@@ -1,3 +1,83 @@
+const HEADER_TEMPLATE = /* html */ `
+<nav class="navbar navbar-expand-lg bg-body-tertiary header">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#" data-path="index.html" data-nav="brand">Cloud Driver 雲端司機</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarText"
+      aria-controls="navbarText"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" data-path="index.html" data-nav="home">Home🧐</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-path="publications.html" data-nav="publications">Publications📕</a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link" data-nav="contact" data-contact-trigger>Contact Me🌻</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            data-nav="misc-root"
+          >
+            When I'm Not Doing Research🌊
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" data-path="misc/travel_map.html" data-nav="travel_map">Travel Map</a></li>
+            <li><a class="dropdown-item" data-path="misc/music.html" data-nav="music">Music</a></li>
+            <li><a class="dropdown-item" data-path="misc/transfer_guide.html" data-nav="transfer_guide">Transfer Guide</a></li>
+            <li><a class="dropdown-item" data-path="misc/game.html" data-nav="game">Game</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="contact-modal" id="contactModal" aria-hidden="true">
+  <div class="contact-modal__overlay" data-contact-close></div>
+  <div class="contact-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle" tabindex="-1">
+    <button type="button" class="contact-modal__close" aria-label="Close" data-contact-close>
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M6 6l12 12m0-12L6 18" />
+      </svg>
+    </button>
+    <h2 class="contact-modal__title" id="contactModalTitle">Contact Me</h2>
+    <p class="contact-modal__subtitle">Let's connect - I'm always excited to talk about research, collaborations, or anything fun.</p>
+    <ul class="contact-modal__list">
+      <li>
+        <span class="contact-modal__label">WeChat</span>
+        <span class="contact-modal__value">DiudiuandMoon</span>
+      </li>
+      <li>
+        <span class="contact-modal__label">RedNote/小红书</span>
+        <span class="contact-modal__value">9428710724</span>
+      </li>
+      <li>
+        <span class="contact-modal__label">Email</span>
+        <a class="contact-modal__value" href="mailto:huishen011227@gmail.com">huishen011227@gmail.com</a>
+      </li>
+      <li>
+        <span class="contact-modal__label">School Email</span>
+        <a class="contact-modal__value" href="mailto:huishen@umich.edu">huishen@umich.edu</a>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
 function resolvePath(base, target) {
   if (!base || base === '.' || base === './') {
     return target;
@@ -154,31 +234,26 @@ function setupContactModal() {
   });
 }
 
-async function injectHeader() {
+function injectHeader() {
   const placeholder = document.querySelector('[data-include="site-header"]');
   if (!placeholder) {
     return;
   }
 
   const rootPath = document.body?.dataset?.rootPath || '.';
-  const headerPath = resolvePath(rootPath, 'partials/header.html');
+  const fragmentHost = document.createElement('div');
+  fragmentHost.innerHTML = HEADER_TEMPLATE.trim();
 
-  try {
-    const response = await fetch(headerPath);
-    if (!response.ok) {
-      throw new Error(`Failed to load header include: ${response.status}`);
-    }
-    const fragment = document.createElement('div');
-    fragment.innerHTML = await response.text();
+  rewriteHrefAttributes(rootPath, fragmentHost);
+  applyActiveState(document.body?.dataset?.page, fragmentHost);
 
-    rewriteHrefAttributes(rootPath, fragment);
-    applyActiveState(document.body?.dataset?.page, fragment);
-
-    placeholder.replaceWith(...fragment.childNodes);
-    setupContactModal();
-  } catch (error) {
-    console.error(error);
-  }
+  const nodes = Array.from(fragmentHost.childNodes);
+  placeholder.replaceWith(...nodes);
+  setupContactModal();
 }
 
-document.addEventListener('DOMContentLoaded', injectHeader);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', injectHeader);
+} else {
+  injectHeader();
+}
