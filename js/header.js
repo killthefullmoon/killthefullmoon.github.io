@@ -248,11 +248,19 @@ function setupContactModal() {
   });
 }
 
+let headerInitialized = false;
+
 function injectHeader() {
+  if (headerInitialized) {
+    return true;
+  }
+
   const placeholder = document.querySelector('[data-include="site-header"]');
   if (!placeholder) {
-    return;
+    return false;
   }
+
+  headerInitialized = true;
 
   const rootPath = document.body?.dataset?.rootPath || '.';
   const fragmentHost = document.createElement('div');
@@ -265,10 +273,9 @@ function injectHeader() {
   placeholder.replaceWith(...nodes);
   setupContactModal();
   setupHeaderFrosting();
+  return true;
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', injectHeader);
-} else {
-  injectHeader();
+if (!injectHeader() && document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', injectHeader, { once: true });
 }
