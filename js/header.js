@@ -90,7 +90,6 @@ function applyActiveState(currentPage, headerRoot) {
   if (!currentPage) {
     return;
   }
-
   const activeLink = headerRoot.querySelector(`[data-nav="${currentPage}"]`);
   if (!activeLink) {
     return;
