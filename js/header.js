@@ -119,6 +119,21 @@ function rewriteHrefAttributes(rootPath, headerRoot) {
   });
 }
 
+function setupHeaderFrosting() {
+  const header = document.querySelector('.header');
+  if (!header) {
+    return;
+  }
+
+  const toggleFrost = () => {
+    const shouldFrost = window.scrollY > 24;
+    header.classList.toggle('header--frosted', shouldFrost);
+  };
+
+  toggleFrost();
+  window.addEventListener('scroll', toggleFrost, { passive: true });
+}
+
 function setupContactModal() {
   const modal = document.getElementById('contactModal');
   const trigger = document.querySelector('[data-contact-trigger]');
@@ -250,6 +265,7 @@ function injectHeader() {
   const nodes = Array.from(fragmentHost.childNodes);
   placeholder.replaceWith(...nodes);
   setupContactModal();
+  setupHeaderFrosting();
 }
 
 if (document.readyState === 'loading') {
