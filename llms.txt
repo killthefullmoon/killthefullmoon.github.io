@@ -1,0 +1,26 @@
+# Hui Shen
+
+- [Hui Shen - Home](https://killthefullmoon.github.io/): The academic portfolio of Hui Shen, a Ph.D. student at the University of Michigan specializing in Efficient MLSys, LLM Agents, and Reasoning.
+- [Publications](https://killthefullmoon.github.io/publications.html): A comprehensive list of Hui Shen's research publications and academic work.
+- [Curriculum Vitae](https://killthefullmoon.github.io/data/Hui_Shen_CV.pdf): Hui Shen's detailed CV, including education, research experience, and awards.
+
+- [PhyX Project](https://phyx-bench.github.io/): Project page for "PhyX: Does Your Model Have the 'Wits' for Physical Reasoning?", a benchmark for physical reasoning in models.
+- [Transfer God](https://transfergod.com/): A platform co-founded by Hui Shen to provide guidance for students transferring to US undergraduate institutions.
+- [DoPE: Denoising Rotary Position Embedding](https://arxiv.org/pdf/2511.09146): Paper on denoising rotary position embedding (arXiv 2025).
+- [ATTS: Asynchronous Test-Time Scaling](https://arxiv.org/pdf/2509.15148): Paper on asynchronous test-time scaling via conformal prediction (arXiv 2025).
+- [LongEmotion](https://arxiv.org/pdf/2509.07403): Paper on measuring emotional intelligence of LLMs in long-context interaction (arXiv 2025).
+- [SwingArena](https://swing-bench.github.io/): Competitive programming arena for long-context GitHub issue solving (arXiv 2025).
+- [SRPO: Enhancing Multimodal LLM Reasoning](https://arxiv.org/pdf/2506.01713): Paper on enhancing multimodal LLM reasoning via reflection-aware reinforcement learning (NeurIPS 2025).
+- [MEDA: Dynamic KV Cache Allocation](https://arxiv.org/pdf/2502.17599): Paper on dynamic KV cache allocation for efficient multimodal long-context inference (NAACL 2025).
+- [SVD-LLM V2](https://arxiv.org/pdf/2503.12340): Paper on optimizing singular value truncation for LLM compression (NAACL 2025).
+- [Argus: Benchmarking Vision-Language Models](https://arxiv.org/abs/2406.07146): Paper on benchmarking and enhancing VLMs for 3D radiology report generation (ACL 2025 Findings).
+- [MEIT: Multi-modal ECG Instruction Tuning](https://arxiv.org/pdf/2403.04945): Paper on multi-modal electrocardiogram instruction tuning on LLMs (ACL 2025 Findings).
+- [Efficient Diffusion Models Survey](https://arxiv.org/pdf/2502.06805): A survey paper titled "Efficient Diffusion Models: A Survey" accepted by TMLR 2025.
+- [Autoregressive Models in Vision Survey](https://arxiv.org/abs/2411.05902): A survey paper on autoregressive models in vision (TMLR 2025).
+- [Artificial Intelligence of Things Survey](https://dl.acm.org/doi/abs/10.1145/3690639): A survey paper on AIoT accepted by ACM Transactions on Sensor Networks.
+- [Famba-V Paper](https://www.arxiv.org/pdf/2409.09808): The paper "Famba-V: Fast Vision Mamba with Cross-Layer Token Fusion", winner of the Best Paper Award at ECCV 2024 Workshop.
+- [FedAIoT Benchmark](https://arxiv.org/abs/2310.00109): A federated learning benchmark for Artificial Intelligence of Things (DMLR).
+
+- [Travel Map](https://killthefullmoon.github.io/misc/travel_map.html): A map showing places visited and lived by Hui Shen.
+- [Music Collection](https://killthefullmoon.github.io/misc/music.html): A collection of favorite albums and music preferences.
+- [Game Save Point](https://killthefullmoon.github.io/misc/game.html): A log of video games played and achievements unlocked.

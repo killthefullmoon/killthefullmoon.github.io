@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://killthefullmoon.github.io/sitemap.xml
