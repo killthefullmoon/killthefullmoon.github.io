@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hui Shen's Travel Map</title>
+    <meta name="description"
+        content="Hui Shen Travel Map showcases places visited and lived. Explore his journey across the globe, from the US to Asia, with personal notes and photos.">
 
     <link rel="icon" type="image/x-icon" href="../images/favicons/favicon.ico">
-        
-    
+
+
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../stylesheet.css">
     <link rel="stylesheet" href="../css/travel_map.css">
@@ -15,170 +18,172 @@
     <link rel="stylesheet" href="../leaflet/dist/leaflet.css" />
     <script src="../leaflet/dist/leaflet.js"></script>
 </head>
+
 <body data-root-path=".." data-page="travel_map">
 
     <div data-include="site-header"></div>
     <script src="../js/header.js"></script>
 
-  <div class="container">
-    <div class="map-header text-center">
-        <h1 class="map-title">My Travel Map</h1>
-        <div class="title-underline mx-auto"></div>
-        <p class="map-subtitle">Visited & Lived · 旅行足迹与居住地</p>
-        <p class="text-center text-muted" style="margin-top:-6px;">
-        Click any marker to open my travel notes and photos for that place.
-        </p>
-    </div>
-    <div class="map-card">
-        <div id="map"></div>
-    </div>
+    <div class="container">
+        <div class="map-header text-center">
+            <h1 class="map-title">My Travel Map</h1>
+            <div class="title-underline mx-auto"></div>
+            <p class="map-subtitle">Visited & Lived · 旅行足迹与居住地</p>
+            <p class="text-center text-muted" style="margin-top:-6px;">
+                Click any marker to open my travel notes and photos for that place.
+            </p>
+        </div>
+        <div class="map-card">
+            <div id="map"></div>
+        </div>
 
-    <script>
-        // Create map with horizontal wrap behavior (left-right loops).
-        const map = L.map('map', { worldCopyJump: true });
+        <script>
+            // Create map with horizontal wrap behavior (left-right loops).
+            const map = L.map('map', { worldCopyJump: true });
 
-        // Base tiles (horizontal wrap allowed by default)
-        const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
+            // Base tiles (horizontal wrap allowed by default)
+            const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
 
-        // Fit a single world to the viewport, then lock that as the minimum zoom
-        map.fitWorld({ animate: false });
-        const worldZoom = map.getZoom();
-        map.setMinZoom(worldZoom);
+            // Fit a single world to the viewport, then lock that as the minimum zoom
+            map.fitWorld({ animate: false });
+            const worldZoom = map.getZoom();
+            map.setMinZoom(worldZoom);
 
-        // 初始略微 zoom in（想再近一点用 +2）
-        map.setView([20, 0], worldZoom + 1);
+            // 初始略微 zoom in（想再近一点用 +2）
+            map.setView([20, 0], worldZoom + 1);
 
-        // Build legend (bottom-right)
-        const Legend = L.Control.extend({
-        options: { position: 'bottomright' },
-        onAdd: function() {
-            const div = L.DomUtil.create('div', 'legend');
-            div.innerHTML = `
+            // Build legend (bottom-right)
+            const Legend = L.Control.extend({
+                options: { position: 'bottomright' },
+                onAdd: function () {
+                    const div = L.DomUtil.create('div', 'legend');
+                    div.innerHTML = `
             <div class="row"><span class="dot visited"></span>Visited</div>
             <div class="row"><span class="dot lived"></span>Lived</div>
             `;
-            // Prevent map dragging when interacting with legend (good for mobile)
-            L.DomEvent.disableClickPropagation(div);
-            return div;
-        }
-        });
-        map.addControl(new Legend());
+                    // Prevent map dragging when interacting with legend (good for mobile)
+                    L.DomEvent.disableClickPropagation(div);
+                    return div;
+                }
+            });
+            map.addControl(new Legend());
 
-        // Create a factory to build DivIcons by type
-        function makeIcon(type) {
-        const className = `modern-marker ${type === 'lived' ? 'lived' : 'visited'}`;
-        return L.divIcon({ className, iconSize: [25, 25] });
-        }
+            // Create a factory to build DivIcons by type
+            function makeIcon(type) {
+                const className = `modern-marker ${type === 'lived' ? 'lived' : 'visited'}`;
+                return L.divIcon({ className, iconSize: [25, 25] });
+            }
 
-        // Tooltip timers per marker
-        const hideTimers = new WeakMap();
-        const markers = [];
+            // Tooltip timers per marker
+            const hideTimers = new WeakMap();
+            const markers = [];
 
-        function openTooltipWithCancel(marker) {
-        const t = hideTimers.get(marker);
-        if (t) clearTimeout(t);
-        marker.openTooltip();
-        }
-        function scheduleCloseTooltip(marker, delay = 1000) {
-        const timer = setTimeout(() => marker.closeTooltip(), delay);
-        hideTimers.set(marker, timer);
-        }
+            function openTooltipWithCancel(marker) {
+                const t = hideTimers.get(marker);
+                if (t) clearTimeout(t);
+                marker.openTooltip();
+            }
+            function scheduleCloseTooltip(marker, delay = 1000) {
+                const timer = setTimeout(() => marker.closeTooltip(), delay);
+                hideTimers.set(marker, timer);
+            }
 
-        fetch('../travel_notes/visited.json')
-        .then(res => {
-            if (!res.ok) throw new Error('Failed to load visited.json');
-            return res.json();
-        })
-        .then(places => {
-        const entries = []; // 统一收拢以处理 map 点击/拖动时延迟关闭
+            fetch('../travel_notes/visited.json')
+                .then(res => {
+                    if (!res.ok) throw new Error('Failed to load visited.json');
+                    return res.json();
+                })
+                .then(places => {
+                    const entries = []; // 统一收拢以处理 map 点击/拖动时延迟关闭
 
-        places.forEach(place => {
-            const type = (place.type || 'visited').toLowerCase();
-            const marker = L.marker(place.coords, { icon: makeIcon(type) }).addTo(map);
+                    places.forEach(place => {
+                        const type = (place.type || 'visited').toLowerCase();
+                        const marker = L.marker(place.coords, { icon: makeIcon(type) }).addTo(map);
 
-            // 生成 tooltip HTML：标题 + 小按钮（如果提供了 url）
-            const linkHTML = place.url
-            ? `<a href="${place.url}" target="_blank" rel="noopener" class="tt-btn" title="Open notes & photos">View notes & photos →</a>`
-            : '';
-            const html = `<div class="tt-wrap">
+                        // 生成 tooltip HTML：标题 + 小按钮（如果提供了 url）
+                        const linkHTML = place.url
+                            ? `<a href="${place.url}" target="_blank" rel="noopener" class="tt-btn" title="Open notes & photos">View notes & photos →</a>`
+                            : '';
+                        const html = `<div class="tt-wrap">
                             <div class="tt-title">${place.name}</div>
                             ${linkHTML}
                         </div>`;
 
-            // 手动控制的 tooltip（支持交互）
-            const tt = L.tooltip({
-            direction: 'top',
-            offset: [0, -12],
-            opacity: 0.95,
-            className: 'my-tooltip',
-            interactive: true         // 允许鼠标进入 tooltip
-            }).setContent(html);
+                        // 手动控制的 tooltip（支持交互）
+                        const tt = L.tooltip({
+                            direction: 'top',
+                            offset: [0, -12],
+                            opacity: 0.95,
+                            className: 'my-tooltip',
+                            interactive: true         // 允许鼠标进入 tooltip
+                        }).setContent(html);
 
-            let hideTimer = null;
+                        let hideTimer = null;
 
-            const showTT = () => {
-            if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
-            tt.setLatLng(marker.getLatLng());
-            if (!map.hasLayer(tt)) {
-                tt.addTo(map);
-                // 第一次渲染后给 tooltip DOM 绑定事件，防止移入时立刻消失
-                const el = tt.getElement();
-                if (el && !el.dataset.wired) {
-                el.dataset.wired = '1';
-                el.addEventListener('mouseenter', () => {
-                    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+                        const showTT = () => {
+                            if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+                            tt.setLatLng(marker.getLatLng());
+                            if (!map.hasLayer(tt)) {
+                                tt.addTo(map);
+                                // 第一次渲染后给 tooltip DOM 绑定事件，防止移入时立刻消失
+                                const el = tt.getElement();
+                                if (el && !el.dataset.wired) {
+                                    el.dataset.wired = '1';
+                                    el.addEventListener('mouseenter', () => {
+                                        if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+                                    });
+                                    el.addEventListener('mouseleave', () => scheduleHideTT(2000));
+                                    // 避免点击按钮触发 map 的 click（会安排关闭）
+                                    el.addEventListener('click', (e) => e.stopPropagation(), true);
+                                }
+                            }
+                        };
+
+                        const scheduleHideTT = (delay = 2000) => {
+                            if (hideTimer) clearTimeout(hideTimer);
+                            hideTimer = setTimeout(() => {
+                                if (map.hasLayer(tt)) map.removeLayer(tt);
+                                hideTimer = null;
+                            }, delay);
+                        };
+
+                        // 桌面：悬停显示，离开 2s 后隐藏
+                        marker.on('mouseover', showTT);
+                        marker.on('mouseout', () => scheduleHideTT(2000));
+
+                        // 无障碍：键盘焦点
+                        marker.on('focus', showTT);
+                        marker.on('blur', () => scheduleHideTT(2000));
+
+                        // 移动端：点 marker 显示；点空白处/拖动后 2s 关闭
+                        marker.on('click', (e) => { L.DomEvent.stopPropagation(e); showTT(); });
+
+                        entries.push({ scheduleHideTT, tt });
+                    });
+
+                    // 点击空白或开始拖动 -> 2s 后统一关闭（给移动端良好体验）
+                    map.on('click', () => entries.forEach(e => e.scheduleHideTT(2000)));
+                    map.on('dragstart', () => entries.forEach(e => e.scheduleHideTT(2000)));
+                })
+                .catch(err => {
+                    console.error(err);
+                    // Optional: tell the user in-page (non-blocking)
+                    const warn = L.control({ position: 'topright' });
+                    warn.onAdd = function () {
+                        const div = L.DomUtil.create('div', 'legend');
+                        div.innerHTML = `<strong>Could not load visited.json</strong><div>Please check the file path & format.</div>`;
+                        return div;
+                    };
+                    warn.addTo(map);
                 });
-                el.addEventListener('mouseleave', () => scheduleHideTT(2000));
-                // 避免点击按钮触发 map 的 click（会安排关闭）
-                el.addEventListener('click', (e) => e.stopPropagation(), true);
-                }
-            }
-            };
+        </script>
 
-            const scheduleHideTT = (delay = 2000) => {
-            if (hideTimer) clearTimeout(hideTimer);
-            hideTimer = setTimeout(() => {
-                if (map.hasLayer(tt)) map.removeLayer(tt);
-                hideTimer = null;
-            }, delay);
-            };
+    </div>
 
-            // 桌面：悬停显示，离开 2s 后隐藏
-            marker.on('mouseover', showTT);
-            marker.on('mouseout',  () => scheduleHideTT(2000));
-
-            // 无障碍：键盘焦点
-            marker.on('focus', showTT);
-            marker.on('blur',  () => scheduleHideTT(2000));
-
-            // 移动端：点 marker 显示；点空白处/拖动后 2s 关闭
-            marker.on('click', (e) => { L.DomEvent.stopPropagation(e); showTT(); });
-
-            entries.push({ scheduleHideTT, tt });
-        });
-
-        // 点击空白或开始拖动 -> 2s 后统一关闭（给移动端良好体验）
-        map.on('click',     () => entries.forEach(e => e.scheduleHideTT(2000)));
-        map.on('dragstart', () => entries.forEach(e => e.scheduleHideTT(2000)));
-        })
-        .catch(err => {
-            console.error(err);
-            // Optional: tell the user in-page (non-blocking)
-            const warn = L.control({ position: 'topright' });
-            warn.onAdd = function() {
-            const div = L.DomUtil.create('div', 'legend');
-            div.innerHTML = `<strong>Could not load visited.json</strong><div>Please check the file path & format.</div>`;
-            return div;
-            };
-            warn.addTo(map);
-        });
-    </script>
-
-  </div>
-
-  <script src="../js/bootstrap.bundle.min.js"></script>
-  <script src="../js/d3.v7.min.js"></script>
-  <script src="../js/topojson.min.js"></script>
-  <script src="../js/travel_map.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/d3.v7.min.js"></script>
+    <script src="../js/topojson.min.js"></script>
+    <script src="../js/travel_map.js"></script>
 </body>
+
 </html>
