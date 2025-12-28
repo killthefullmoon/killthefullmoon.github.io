@@ -25,6 +25,8 @@
 
   <!-- Left Background -->
   <div class="background"></div>
+  <!-- Dark mode overlay for unified look -->
+  <div class="dark-overlay"></div>
 
 
   <div data-include="site-header"></div>
@@ -37,7 +39,7 @@
         <td style="padding:0px">
 
           <!-- Introduction -->
-          <table
+          <table class="intro-section"
             style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
             <tbody>
               <tr style="padding:0px">
@@ -48,22 +50,22 @@
                 </td>
                 <td style="padding:2.5%;width:63%;vertical-align:middle">
                   <p class="name" style="text-align: center;">
-                    Hui Shen 沈汇
+                    Hui Shen 沈匯
                   </p>
                   <p>
-                    I'm a first year Ph.D. student at the <a href="https://umich.edu/" class="a_umich">University of
-                      Michigan〽️</a> in Computer Science and Engineering, fortunate to be advised by Prof. <a
-                      href="https://web.eecs.umich.edu/~zmao/">Z. Morley Mao</a>. I have a broad interest in
-                    <strong>Efficient MLSys</strong>, <strong>LLM Agents and Reasoning</strong>. Feel free to contact me
+                    I'm a first year CS Ph.D. student at the <a href="https://umich.edu/" class="a_umich">University of
+                      Michigan</a>, working with Prof. <a href="https://web.eecs.umich.edu/~zmao/">Z. Morley Mao</a>. My
+                    research focus on
+                    <strong>Efficient MLSys</strong> and <strong>LLM Agents</strong>. Feel free to contact me
                     if want to discuss a potential collaboration. :P
                   </p>
                   <p>
-                    Previously, I obtained my Bachelor of Science in Computer & Information Science from <a
-                      href="https://www.osu.edu/" class="a_osu">The Ohio State University</a>🌰, where I was advised by
+                    Previously, I obtained my B.S. in Computer Science from <a href="https://www.osu.edu/"
+                      class="a_osu">The Ohio State University</a>, where I was advised by
                     Prof. <a href="https://mi-zhang.github.io/">Mi Zhang</a> and Prof. <a
                       href="https://sites.google.com/view/cwell-lab/people?authuser=0">Jingbo Meng</a>. I also work
                     closely with Prof. <a href="https://www.eee.hku.hk/~nwong/">Ngai Wong</a> at <a
-                      href="https://www.hku.hk/" class="a_hku">The University of Hong Kong📖</a>.
+                      href="https://www.hku.hk/" class="a_hku">The University of Hong Kong</a>.
                   </p>
                   <p style="text-align:center">
                     <a href="data/Hui_Shen_CV.pdf">CV</a> &nbsp;/&nbsp;
@@ -81,324 +83,217 @@
           </table>
 
 
-          <!-- News -->
-          <table
-            style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-            <tbody>
-              <tr>
-                <td style="padding:16px;width:100%;vertical-align:middle">
-                  <h2>What's New</h2>
-                  <div class="scrollable-list border p-3">
-                    <ul>
-                      <li>
-                        <strong>Sep 2025:</strong> One paper has been accepted by NeurIPS 2025.
-                      </li>
-                      <li>
-                        <strong>May 2025:</strong> Released paper <a href="https://arxiv.org/pdf/2505.15929">PhyX: Does
-                          Your Model Have the "Wits" for Physical Reasoning?</a>, the dataset of PhyX at <a
-                          href="https://huggingface.co/datasets/Cloudriver/PhyX">Huggingface Dataset</a>, and the <a
-                          href="https://github.com/NastyMarcus/PhyX">evaluation code</a>.
-                      </li>
-                      <li>
-                        <strong>May 2025:</strong> Two papers have been accepted by ACL 2025.
-                      </li>
-                      <li>
-                        <strong>Apr 2025:</strong> <a href="https://arxiv.org/pdf/2502.06805">Efficient Diffusion
-                          Models: A Survey</a> has been accepted by TMLR 2025.
-                      </li>
-                      <li>
-                        <strong>Mar 2025:</strong> <a href="https://arxiv.org/pdf/2411.05902">Autoregressive Models in
-                          Vision: A Survey</a> has been accepted by TMLR 2025.
-                      </li>
-                      <li>
-                        <strong>Jan 2025:</strong> Research Assistant advised by Prof. <a
-                          href="https://www.eee.hku.hk/~nwong/">Ngai Wong</a>.
-                      </li>
-                      <li>
-                        <strong>Dec 2024:</strong> Graduated from The Ohio State University with a Bachelor of Science
-                        in Computer & Information Science. Always a Buckeye🌰!
-                      </li>
-                      <li>
-                        <strong>Aug 2024:</strong> <a href="https://www.arxiv.org/pdf/2409.09808">Famba-V</a> has been
-                        accepted by ECCV 2024 The Fourth Workshop on Computational Aspects of Deep Learning (CADL) with
-                        <strong>
-                          <font color='#b70000'>Best Paper Award
-                        </strong></font>
-                      </li>
-                      <li>
-                        <strong>Aug 2024:</strong> <a href="">Artificial Intelligence of Things: A Survey</a> has been
-                        accepted by ACM Transactions on Sensor Networks (TOSN).
-                      </li>
-                      <li>
-                        <strong>Sep 2023:</strong> Research Assistant advised by Prof. <a
-                          href="https://sites.google.com/view/cwell-lab/people?authuser=0">Jingbo Meng</a>.
-                      </li>
-                      <li>
-                        <strong>Apr 2023:</strong> Research Assistant @ <a href="https://aiot-mlsys-lab.github.io/">AIoT
-                          & Machine Learning System Lab</a> advised by Prof. <a href="https://mi-zhang.github.io/">Mi
-                          Zhang</a>.
-                      </li>
-                      <li>
-                        <strong>Jun 2022:</strong> Information Technology Intern @ Swire Coca-Cola China
-                      </li>
-                    </ul>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <!-- Tab Navigation -->
+          <div class="tab-navigation">
+            <button class="tab-btn active" data-tab="news">News</button>
+            <button class="tab-btn" data-tab="education">Education</button>
+            <button class="tab-btn" data-tab="services">Services</button>
+            <button class="tab-btn" data-tab="media">Media Coverage</button>
+            <button class="tab-btn" data-tab="teaching">Teaching</button>
+            <button class="tab-btn" data-tab="stats">Visit Statistic</button>
+          </div>
 
-          <!-- Education -->
-          <table
-            style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-            <tbody>
-              <tr>
-                <td style="padding:16px;width:100%;vertical-align:middle">
-                  <h2>Education</h2>
+          <!-- Tab Panels Container -->
+          <div class="tab-panels">
 
-                  <table
-                    style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-                    <tbody>
-                    <tbody>
-                      <tr>
-                        <td style="padding:10px;width:20%;vertical-align:middle">
-                          <img src='./images/U-M_Logo2.svg' width="80%">
-                        </td>
-                        <td style="padding:10px;width:70%;vertical-align:middle">
-                          <p>
-                            <strong>University of Michigan, USA</strong><br />
-                            Ph.D. Student in Computer Science <br />
-                            Advised by Prof. <a href="https://web.eecs.umich.edu/~zmao/">Z. Morley Mao</a>
-                          </p>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                  <br>
-                  <br>
-
-
-                  <table
-                    style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-                    <tbody>
-                    <tbody>
-                      <tr>
-                        <td style="padding:10px;width:20%;vertical-align:middle">
-                          <img src='./images/OSU_Logo2.svg' width="80%">
-                        </td>
-                        <td style="padding:10px;width:70%;vertical-align:middle">
-                          <p>
-                            <strong>The Ohio State University, USA</strong><br />
-                            B.S. in Computer & Information Science <br />
-                            <strong>Summa Cum Laude</strong><br />
-                            Advised by Prof. <a href="https://mi-zhang.github.io/">Mi Zhang</a> and Prof. <a
-                              href="https://sites.google.com/view/jingbomeng">Jingbo Meng</a>
-                          </p>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-
-          <!-- Featured Publications -->
-          <table
-            style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-            <tbody>
-              <tr>
-                <td style="padding:16px;width:100%;vertical-align:middle">
-                  <h2>Featured Publications</h2>
-                  See full list in <a href="./publications.html">Publications</a>.
-
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <table
-            style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-            <tbody>
-            <tbody>
-              <tr>
-                <td style="padding:10px;width:30%;vertical-align:middle">
-                  <img src='images/papers/phyx.png' width="80%">
-                </td>
-                <td style="padding:10px;width:70%;vertical-align:middle">
-                  <a href="https://arxiv.org/pdf/2505.15929">
-                    <papertitle>
-                      PhyX: Does Your Model Have the "Wits" for Physical Reasoning?
-                    </papertitle>
-                  </a>
-                  <br>
-                  <strong>Hui Shen</strong>,
-                  Taiqiang Wu,
-                  Qi Han,
-                  Yunta Hsieh,
-                  Jizhou Wang,
-                  Yuyue Zhang,
-                  Yuxin Cheng,
-                  Zijian Hao,
-                  Yuansheng Ni,
-                  Xin Wang,
-                  Zhongwei Wan,
-                  Kai Zhang,
-                  Wendong Xu,
-                  Jing Xiong,
-                  Ping Luo,
-                  Wenhu Chen,
-                  Chaofan Tao,
-                  Z. Morley Mao,
-                  Ngai Wong
-                  <br>
-                  arXiv preprint, 2025
-                  <br>
-                  <a href="https://phyx-bench.github.io/">Project Page</a>
-                  /
-                  <a href="https://huggingface.co/datasets/Cloudriver/PhyX">Data</a>
-                  /
-                  <a href="https://github.com/NastyMarcus/PhyX">Code</a>
-                  /
-                  <a href="https://arxiv.org/abs/2505.15929">Paper</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <table
-            style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-            <tbody>
-            <tbody>
-              <tr>
-                <td style="padding:10px;width:30%;vertical-align:middle">
-                  <img src='images/papers/efficient_diffusion_survey.png' width="80%">
-                </td>
-                <td style="padding:10px;width:70%;vertical-align:middle">
-                  <a href="https://arxiv.org/pdf/2502.06805">
-                    <papertitle>
-                      Efficient Diffusion Models: A Survey
-                    </papertitle>
-                  </a>
-                  <br>
-                  <strong>Hui Shen*</strong>,
-                  Jingxuan Zhang*,
-                  Boning Xiong*,
-                  Rui Hu*,
-                  Shoufa Chen,
-                  Zhongwei Wan,
-                  Xin Wang,
-                  Yu Zhang,
-                  Zixuan Gong,
-                  Guangyin Bao,
-                  Chaofan Tao,
-                  Yongfeng Huang,
-                  Ye Yuan,
-                  Mi Zhang
-                  <br>
-                  <em>Transactions on Machine Learning Research (TMLR-2025)</em>
-                  <br>
-                  <a href="https://github.com/AIoT-MLSys-Lab/Efficient-Diffusion-Model-Survey">GitHub Repo</a>
-                  /
-                  <a href="https://arxiv.org/pdf/2502.06805">Paper</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <table
-            style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-            <tbody>
-            <tbody>
-              <tr>
-                <td style="padding:10px;width:30%;vertical-align:middle">
-                  <img src='images/papers/fambav.png' width="80%">
-                </td>
-                <td style="padding:10px;width:70%;vertical-align:middle">
-                  <a href="https://www.arxiv.org/pdf/2409.09808">
-                    <papertitle>
-                      Famba-V: Fast Vision Mamba with Cross-Layer Token Fusion
-                    </papertitle>
-                  </a>
-                  <br>
-                  <strong>Hui Shen</strong>,
-                  Zhongwei Wan,
-                  Xin Wang,
-                  Mi Zhang
-                  <br>
-                  <em>ECCV 2024 @ Computational Aspects of Deep Learning</em> <strong>
-                    <font color='#b70000'>(Best Paper Award)
-                  </strong></font>
-                  <br>
-                  <a href="https://github.com/AIoT-MLSys-Lab/Famba-V">Code</a>
-                  /
-                  <a href="https://www.arxiv.org/pdf/2409.09808">Paper</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-
-          <!-- Services -->
-          <table
-            style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-            <tbody>
-              <tr>
-                <td style="padding:16px;width:100%;vertical-align:middle">
-                  <h2>Services</h2>
-                  <ul>
-                    <li>
-                      <strong>Journal Reviewer:</strong>
-                      <br> IEEE Transactions on Mobile Computing
-                      <br> IEEE Transactions on Circuits and Systems for Video Technology
-                    </li>
-                    <li>
-                      <strong>Conference Reviewer:</strong>
-                      <br>EMNLP 2025
-                      <br>CVPR 2025, 2026
-                      <br>ACL Rolling Review
-                      <br>ICLR 2025, 2026
-                    </li>
-                  </ul>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <!-- Media Coverage -->
-          <table
-            style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-            <tbody>
-              <tr>
-                <td style="padding:16px;width:100%;vertical-align:middle">
-                  <h2>Media Coverage</h2>
-                  <ul>
-                    <li>
-                      <a href="https://mp.weixin.qq.com/s/okKn6WrWilPmo0_yOcDP3Q">PhyX: Does Your Model Have the "Wits"
-                        for Physical Reasoning?</a> - 新智元 (in Mandarin)
-                    </li>
-                    <li>
-                      <a href="https://mp.weixin.qq.com/s/MLcvrQc8h-ve8lWTZB2VjA">PhyX: Does Your Model Have the "Wits"
-                        for Physical Reasoning?</a> - 量子位 (in Mandarin)
-                    </li>
-                    <li>
-                      <a href="https://mp.weixin.qq.com/s/_O8W1qgvMZu37IKwgtskMA">Autoregressive Models in Vision: A
-                        Survey</a> - 机器之心 (in Mandarin)
-                    </li>
-                  </ul>
-                </td>
-              </tr>
-
-              <!-- Teaching Experience -->
+            <!-- News -->
+            <div class="tab-content active" data-tab="news">
               <table
                 style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
                 <tbody>
                   <tr>
                     <td style="padding:16px;width:100%;vertical-align:middle">
-                      <h2>Teaching</h2>
+                      <div class="scrollable-list">
+                        <ul>
+                          <li>
+                            <strong>Sep 2025:</strong> One paper has been accepted by NeurIPS 2025.
+                          </li>
+                          <li>
+                            <strong>May 2025:</strong> Released paper <a href="https://arxiv.org/pdf/2505.15929">PhyX:
+                              Does
+                              Your Model Have the "Wits" for Physical Reasoning?</a>, the dataset of PhyX at <a
+                              href="https://huggingface.co/datasets/Cloudriver/PhyX">Huggingface Dataset</a>, and the <a
+                              href="https://github.com/NastyMarcus/PhyX">evaluation code</a>.
+                          </li>
+                          <li>
+                            <strong>May 2025:</strong> Two papers have been accepted by ACL 2025.
+                          </li>
+                          <li>
+                            <strong>Apr 2025:</strong> <a href="https://arxiv.org/pdf/2502.06805">Efficient Diffusion
+                              Models: A Survey</a> has been accepted by TMLR 2025.
+                          </li>
+                          <li>
+                            <strong>Mar 2025:</strong> <a href="https://arxiv.org/pdf/2411.05902">Autoregressive Models
+                              in
+                              Vision: A Survey</a> has been accepted by TMLR 2025.
+                          </li>
+                          <li>
+                            <strong>Jan 2025:</strong> Research Assistant advised by Prof. <a
+                              href="https://www.eee.hku.hk/~nwong/">Ngai Wong</a>.
+                          </li>
+                          <li>
+                            <strong>Dec 2024:</strong> Graduated from The Ohio State University with a Bachelor of
+                            Science
+                            in Computer & Information Science. Always a Buckeye🌰!
+                          </li>
+                          <li>
+                            <strong>Aug 2024:</strong> <a href="https://www.arxiv.org/pdf/2409.09808">Famba-V</a> has
+                            been
+                            accepted by ECCV 2024 The Fourth Workshop on Computational Aspects of Deep Learning (CADL)
+                            with
+                            <strong>
+                              <font color='#b70000'>Best Paper Award
+                            </strong></font>
+                          </li>
+                          <li>
+                            <strong>Aug 2024:</strong> <a href="">Artificial Intelligence of Things: A Survey</a> has
+                            been
+                            accepted by ACM Transactions on Sensor Networks (TOSN).
+                          </li>
+                          <li>
+                            <strong>Sep 2023:</strong> Research Assistant advised by Prof. <a
+                              href="https://sites.google.com/view/cwell-lab/people?authuser=0">Jingbo Meng</a>.
+                          </li>
+                          <li>
+                            <strong>Apr 2023:</strong> Research Assistant @ <a
+                              href="https://aiot-mlsys-lab.github.io/">AIoT
+                              & Machine Learning System Lab</a> advised by Prof. <a
+                              href="https://mi-zhang.github.io/">Mi
+                              Zhang</a>.
+                          </li>
+                          <li>
+                            <strong>Jun 2022:</strong> Information Technology Intern @ Swire Coca-Cola China
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Education -->
+            <div class="tab-content" data-tab="education">
+              <table
+                style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+                <tbody>
+                  <tr>
+                    <td style="padding:16px;width:100%;vertical-align:middle">
+
+
+                      <table
+                        style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+                        <tbody>
+                        <tbody>
+                          <tr>
+                            <td style="padding:10px;width:20%;vertical-align:middle">
+                              <img src='./images/U-M_Logo2.svg' width="80%">
+                            </td>
+                            <td style="padding:10px;width:70%;vertical-align:middle">
+                              <p>
+                                <strong>University of Michigan, USA</strong><br />
+                                Ph.D. Student in Computer Science <br />
+                                Advised by Prof. <a href="https://web.eecs.umich.edu/~zmao/">Z. Morley Mao</a>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                      <table
+                        style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+                        <tbody>
+                        <tbody>
+                          <tr>
+                            <td style="padding:10px;width:20%;vertical-align:middle">
+                              <img src='./images/OSU_Logo2.svg' width="80%">
+                            </td>
+                            <td style="padding:10px;width:70%;vertical-align:middle">
+                              <p>
+                                <strong>The Ohio State University, USA</strong><br />
+                                B.S. in Computer & Information Science <br />
+                                <strong>Summa Cum Laude</strong><br />
+                                Advised by Prof. <a href="https://mi-zhang.github.io/">Mi Zhang</a> and Prof. <a
+                                  href="https://sites.google.com/view/jingbomeng">Jingbo Meng</a>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+            <!-- Services -->
+            <div class="tab-content" data-tab="services">
+              <table
+                style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+                <tbody>
+                  <tr>
+                    <td style="padding:16px;width:100%;vertical-align:middle">
+
+                      <ul>
+                        <li>
+                          <strong>Journal Reviewer:</strong>
+                          <br> IEEE Transactions on Mobile Computing
+                          <br> IEEE Transactions on Circuits and Systems for Video Technology
+                        </li>
+                        <li>
+                          <strong>Conference Reviewer:</strong>
+                          <br>EMNLP 2025
+                          <br>CVPR 2025, 2026
+                          <br>ACL Rolling Review
+                          <br>ICLR 2025, 2026
+                        </li>
+                      </ul>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Media Coverage -->
+            <div class="tab-content" data-tab="media">
+              <table
+                style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+                <tbody>
+                  <tr>
+                    <td style="padding:16px;width:100%;vertical-align:middle">
+
+                      <ul>
+                        <li>
+                          <a href="https://mp.weixin.qq.com/s/okKn6WrWilPmo0_yOcDP3Q">PhyX: Does Your Model Have the
+                            "Wits"
+                            for Physical Reasoning?</a> - 新智元 (in Mandarin)
+                        </li>
+                        <li>
+                          <a href="https://mp.weixin.qq.com/s/MLcvrQc8h-ve8lWTZB2VjA">PhyX: Does Your Model Have the
+                            "Wits"
+                            for Physical Reasoning?</a> - 量子位 (in Mandarin)
+                        </li>
+                        <li>
+                          <a href="https://mp.weixin.qq.com/s/_O8W1qgvMZu37IKwgtskMA">Autoregressive Models in Vision: A
+                            Survey</a> - 机器之心 (in Mandarin)
+                        </li>
+                      </ul>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Teaching Experience -->
+            <div class="tab-content" data-tab="teaching">
+              <table
+                style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+                <tbody>
+                  <tr>
+                    <td style="padding:16px;width:100%;vertical-align:middle">
+
                       <ul>
                         <li>
                           <strong>Teaching Assistant</strong> @ The Ohio State University.
@@ -415,9 +310,10 @@
                   </tr>
                 </tbody>
               </table>
+            </div>
 
-              <!-- Contact -->
-              <!-- <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <!-- Contact -->
+            <!-- <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
             <tr>
             <td style="padding:16px;width:100%;vertical-align:middle">
               <h2>Contact</h2>
@@ -427,19 +323,23 @@
             </tr>
         </tbody></table> -->
 
-              <!-- Visit Statistic -->
+            <!-- Visit Statistic -->
+            <div class="tab-content" data-tab="stats">
               <table
                 style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
                 <tbody>
                   <tr>
                     <td style="padding:16px;width:100%;vertical-align:middle;text-align:center;">
-                      <h2>Visit Statistic</h2>
+
                       <script type='text/javascript' id='clustrmaps'
                         src='//cdn.clustrmaps.com/map_v2.js?cl=080808&w=600&t=tt&d=tw2_506UT1zXRgjtkp68qPMgFK-ObI3n7spI-i0b1Rg&co=ffffff&cmo=3acc3a&cmn=ff5353&ct=808080'></script>
                     </td>
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+          </div><!-- End of tab-panels -->
 
 
         </td>
@@ -461,6 +361,26 @@
   </button>
 
   <script>
+
+    // Tab Navigation Logic
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetTab = button.getAttribute('data-tab');
+
+        // Remove active class from all buttons and contents
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+
+        // Add active class to clicked button and corresponding content
+        button.classList.add('active');
+        document.querySelector(`.tab-content[data-tab="${targetTab}"]`).classList.add('active');
+      });
+    });
+
+    // Back to Top Button Logic
     const backToTopButton = document.getElementById('backToTop');
     window.addEventListener('scroll', () => {
       if (window.scrollY > 300) {

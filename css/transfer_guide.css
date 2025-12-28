@@ -1,0 +1,204 @@
+/* Transfer Guide Page Styles */
+
+/* Container spacing */
+.transfer-page .container {
+    margin-top: 100px;
+}
+
+/* Title Link Styling */
+.transfer-title {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.transfer-title a {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-color);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.transfer-title a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #a8d5ba, #7ec8e3);
+    transition: width 0.3s ease;
+}
+
+.transfer-title a:hover {
+    color: var(--link-hover);
+}
+
+.transfer-title a:hover::after {
+    width: 100%;
+}
+
+/* Carousel Container */
+.carousel {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+    margin: 2rem 0 3rem;
+}
+
+.carousel-inner {
+    border-radius: 20px;
+}
+
+.carousel-item img {
+    border-radius: 20px;
+}
+
+/* Carousel Caption Styling */
+.carousel-caption {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    bottom: 1.5rem;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: auto;
+}
+
+.carousel-caption h5 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+/* Carousel Indicators */
+.carousel-indicators {
+    margin-bottom: 1rem;
+}
+
+.carousel-indicators button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 0 6px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.carousel-indicators button.active {
+    background-color: #fff;
+    transform: scale(1.2);
+}
+
+/* Carousel Controls */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 50px;
+    height: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.carousel:hover .carousel-control-prev,
+.carousel:hover .carousel-control-next {
+    opacity: 1;
+}
+
+.carousel-control-prev {
+    left: 1rem;
+}
+
+.carousel-control-next {
+    right: 1rem;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+/* Dark Mode Styles */
+[data-theme="dark"] .transfer-title a {
+    background: rgba(30, 30, 35, 0.9);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .transfer-title a:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .carousel {
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .carousel-control-prev,
+[data-theme="dark"] .carousel-control-next {
+    background: rgba(40, 40, 45, 0.9);
+}
+
+[data-theme="dark"] .carousel-control-prev:hover,
+[data-theme="dark"] .carousel-control-next:hover {
+    background: rgba(50, 50, 55, 1);
+}
+
+[data-theme="dark"] .carousel-control-prev-icon {
+    filter: invert(1);
+}
+
+[data-theme="dark"] .carousel-control-next-icon {
+    filter: invert(1);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .transfer-page .container {
+        margin-top: 80px;
+    }
+
+    .transfer-title a {
+        font-size: 1.3rem;
+        padding: 0.8rem 1.5rem;
+    }
+
+    .carousel {
+        border-radius: 16px;
+        margin: 1.5rem 0 2rem;
+    }
+
+    .carousel-item img {
+        border-radius: 16px;
+    }
+
+    .carousel-caption {
+        padding: 0.5rem 1rem;
+        bottom: 1rem;
+    }
+
+    .carousel-caption h5 {
+        font-size: 0.85rem;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 40px;
+        height: 40px;
+        opacity: 0.7;
+    }
+}

@@ -1,11 +1,175 @@
+/* Music Page - Modern Clean Aesthetic */
+
+.music-intro {
+    margin-top: 100px;
+    margin-bottom: 2rem;
+}
+
+/* Section Title */
+.music-section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+}
+
+/* Album Grid Layout */
+.album-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Album Card - Glassmorphism with fresh accent */
 .album_card {
-    margin-bottom: 20px;
-    padding: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    position: relative;
+    overflow: hidden;
 }
 
+.album_card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+    border-color: #a8d5ba;
+}
+
+/* Album Info Text */
 .album_card p {
-    font-family: 'Raleway-B';
-    
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-secondary);
 }
 
+.artist_name {
+    color: #5ba88f;
+    font-weight: 600;
+}
+
+/* Spotify Embed Styling */
+.album_card iframe {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Pagination Clean Style */
+.album_nav {
+    margin-bottom: 2rem;
+}
+
+.album_nav .pagination {
+    gap: 0.25rem;
+    flex-wrap: wrap;
+}
+
+.album_nav .page-link {
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    border-radius: 10px !important;
+    padding: 0.5rem 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.album_nav .page-link:hover {
+    background: linear-gradient(135deg, #a8d5ba, #7ec8e3);
+    color: white;
+    border-color: transparent;
+}
+
+.album_nav .page-item.active .page-link {
+    background: linear-gradient(135deg, #a8d5ba, #7ec8e3);
+    border-color: transparent;
+    color: white;
+}
+
+.album_nav .page-item.disabled .page-link {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Profile Section Enhancement */
+.music-profile {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.music-profile-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #a8d5ba;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Dark Mode Styles */
+[data-theme="dark"] .album_card {
+    background: rgba(30, 30, 35, 0.9);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .album_card:hover {
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+    border-color: #7ec8e3;
+}
+
+[data-theme="dark"] .artist_name {
+    color: #7ec8e3;
+}
+
+[data-theme="dark"] .music-profile {
+    background: rgba(30, 30, 35, 0.8);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .album_nav .page-link {
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="dark"] .music-profile-img {
+    border-color: #7ec8e3;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .music-intro {
+        margin-top: 80px;
+    }
+
+    .album-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .music-profile {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .music-profile-img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .album_nav .page-link {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+    }
+}
