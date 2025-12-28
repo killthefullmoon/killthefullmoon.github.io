@@ -842,4 +842,24 @@ body.contact-modal-open {
     margin: 0 auto;
     display: block;
   }
+
+  /* Publications page: hide sidebar nav on mobile */
+  #navbar-example3 {
+    display: none !important;
+  }
+
+  .col-2:has(#navbar-example3) {
+    display: none !important;
+  }
+
+  .col-10:has(.scrollspy-example-2) {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Alternative selector for wider browser support */
+  [data-bs-spy="scroll"].scrollspy-example-2 {
+    width: 100%;
+  }
 }
