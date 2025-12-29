@@ -243,6 +243,7 @@
 
 
 
+/* Trophy icons removed per user request
 .game-card.status-main::before,
 .game-card.status-complete::before {
   content: "";
@@ -264,6 +265,7 @@
 .game-card.status-complete::before {
   background-image: url('../images/icons/trophy_gold.svg');
 }
+*/
 
 /* Dark Mode Styles */
 [data-theme="dark"] .game-card {
