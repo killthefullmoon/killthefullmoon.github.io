@@ -674,6 +674,131 @@ body.contact-modal-open {
   font-family: 'Raleway-B', 'Lato', Verdana, Helvetica, sans-serif;
 }
 
+/* Laptop Screens (MacBook, etc.) - 1024px to 1440px */
+@media only screen and (min-width: 769px) and (max-width: 1440px) {
+
+  body,
+  td,
+  th,
+  tr,
+  p {
+    font-size: 14px;
+  }
+
+  strong {
+    font-size: 14px;
+  }
+
+  h2 {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+
+  .name {
+    font-size: 26px;
+    margin-bottom: 12px;
+  }
+
+  .container {
+    max-width: 700px;
+    padding: 70px 16px 50px;
+  }
+
+  .tab-navigation {
+    gap: 4px 12px;
+    padding: 12px;
+  }
+
+  .tab-btn {
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+
+  .tab-panels {
+    max-height: calc(100vh - 280px);
+  }
+
+  .scrollable-list {
+    max-height: 160px;
+    padding: 14px 18px;
+  }
+
+  .header .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 14px;
+  }
+
+  .contact-modal__title {
+    font-size: 22px;
+  }
+
+  .contact-modal__value {
+    font-size: 16px;
+  }
+
+  /* Avatar and intro layout adjustment for laptops */
+  .intro-section td:first-child {
+    width: 30% !important;
+    max-width: 30% !important;
+    padding: 2% !important;
+  }
+
+  .intro-section td:last-child {
+    width: 70% !important;
+    padding: 2% !important;
+  }
+
+  .intro-section td:first-child img {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Medium Laptop Screens (smaller laptops) - 1024px to 1200px */
+@media only screen and (min-width: 769px) and (max-width: 1200px) {
+
+  body,
+  td,
+  th,
+  tr,
+  p {
+    font-size: 13px;
+  }
+
+  strong {
+    font-size: 13px;
+  }
+
+  .name {
+    font-size: 24px;
+  }
+
+  .container {
+    max-width: 650px;
+  }
+
+  .scrollable-list {
+    max-height: 140px;
+  }
+
+  /* Avatar and intro layout adjustment for smaller laptops */
+  .intro-section td:first-child {
+    width: 28% !important;
+    max-width: 28% !important;
+    padding: 1.5% !important;
+  }
+
+  .intro-section td:last-child {
+    width: 72% !important;
+    padding: 1.5% !important;
+  }
+
+  .intro-section td:first-child img {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
 @media only screen and (max-width: 768px) {
 
   body,
