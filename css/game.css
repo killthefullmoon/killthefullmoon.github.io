@@ -148,8 +148,15 @@
   justify-content: center;
   text-align: center;
   line-height: 1.35;
-  min-height: 3.2rem;
+  min-height: unset;
   color: var(--text-color);
+}
+
+.game-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: -0.2rem 0 0.3rem 0;
+  text-align: center;
 }
 
 .game-tags {
