@@ -295,8 +295,7 @@
                   <tr>
                     <td style="padding:16px;width:100%;vertical-align:middle;text-align:center;">
 
-                      <script type='text/javascript' id='clustrmaps'
-                        src='//cdn.clustrmaps.com/map_v2.js?cl=080808&w=600&t=tt&d=tw2_506UT1zXRgjtkp68qPMgFK-ObI3n7spI-i0b1Rg&co=ffffff&cmo=3acc3a&cmn=ff5353&ct=808080'></script>
+                      <div id="clustrmaps-container"></div>
                     </td>
                   </tr>
                 </tbody>
@@ -329,6 +328,7 @@
     // Tab Navigation Logic
     const tabButtons = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
+    let clustrmapsLoaded = false;
 
     tabButtons.forEach(button => {
       button.addEventListener('click', () => {
@@ -341,6 +341,17 @@
         // Add active class to clicked button and corresponding content
         button.classList.add('active');
         document.querySelector(`.tab-content[data-tab="${targetTab}"]`).classList.add('active');
+
+        // Lazy load ClustrMaps when Visit Statistic tab is clicked for the first time
+        if (targetTab === 'stats' && !clustrmapsLoaded) {
+          clustrmapsLoaded = true;
+          const container = document.getElementById('clustrmaps-container');
+          const script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.id = 'clustrmaps';
+          script.src = '//cdn.clustrmaps.com/map_v2.js?cl=080808&w=600&t=tt&d=tw2_506UT1zXRgjtkp68qPMgFK-ObI3n7spI-i0b1Rg&co=ffffff&cmo=3acc3a&cmn=ff5353&ct=808080';
+          container.appendChild(script);
+        }
       });
     });
 
