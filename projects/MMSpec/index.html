@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://kit.fontawesome.com/fff5b27ec1.js" crossorigin="anonymous"></script>
+  <meta charset="utf-8">
+  <meta name="description"
+    content="MMSpec is a benchmark for evaluating speculative decoding in vision-language models and introduces ViSkip for vision-aware acceleration.">
+  <meta name="keywords"
+    content="MMSpec, ViSkip, speculative decoding, vision-language models, VLM, multimodal inference, benchmark">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MMSpec</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/MMSpec_Logo.png">
+</head>
+
+<body>
+  <nav class="navbar mmspec-topnav" role="navigation" aria-label="main navigation">
+    <div class="navbar-menu is-active">
+      <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+        <a class="navbar-item" href="../../index.html">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">More Projects</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="../MMSpec/index.html">MMSpec</a>
+            <a class="navbar-item" href="../PhyX/index.html">PhyX</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title is-bold">
+              <img src="./static/images/MMSpec_Logo.png" style="width:1.05em;vertical-align: middle" alt="MMSpec logo">
+              <span class="mmmu" style="vertical-align: middle">MMSpec</span>
+            </h1>
+            <h2 class="subtitle is-3 publication-subtitle">
+              Benchmarking Speculative Decoding for Vision-Language Models
+            </h2>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><a href="https://nastymarcus.github.io/">Hui Shen</a><sup>1,*</sup>,</span>
+              <span class="author-block"><a
+                  href="https://scholar.google.com/citations?user=Q7yOQTMAAAAJ&hl=en">Xin
+                  Wang</a><sup>2,*</sup>,</span>
+              <span class="author-block">Ping Zhang<sup>2,*</sup>,</span>
+              <span class="author-block">Yunta Hsieh<sup>1</sup>,</span>
+              <span class="author-block">Qi Han<sup>3</sup>,</span>
+              <span class="author-block"><a
+                  href="https://scholar.google.com/citations?user=EVj1cNoAAAAJ&hl=en">Zhongwei
+                  Wan</a><sup>2</sup>,</span>
+              <span class="author-block">Ziheng Zhang<sup>2</sup>,</span>
+              <br>
+              <span class="author-block">Jingxuan Zhang<sup>4</sup>,</span>
+              <span class="author-block"><a
+                  href="https://scholar.google.com/citations?user=dFX1hXkAAAAJ&hl=en">Jing
+                  Xiong</a><sup>3</sup>,</span>
+              <span class="author-block">Ziyuan Liu<sup>5</sup>,</span>
+              <span class="author-block">Yifan Zhang<sup>1</sup>,</span>
+              <span class="author-block">Hangrui Cao<sup>6</sup>,</span>
+              <span class="author-block">Chenyang Zhao<sup>7</sup>,</span>
+              <span class="author-block">Mi Zhang<sup>2</sup></span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>University of Michigan,</span>
+              <span class="author-block"><sup>2</sup>The Ohio State University,</span>
+              <span class="author-block"><sup>3</sup>The University of Hong Kong,</span>
+              <br>
+              <span class="author-block"><sup>4</sup>Indiana University,</span>
+              <span class="author-block"><sup>5</sup>Peking University,</span>
+              <span class="author-block"><sup>6</sup>Carnegie Mellon University,</span>
+              <span class="author-block"><sup>7</sup>LMSYS Org</span>
+            </div>
+
+            <div class="is-size-6 publication-authors">
+              <span class="author-block"><sup>*</sup>Equal contribution.</span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links mmspec-links">
+                <span class="link-block">
+                  <a href="../MMSpec_arXiv/neurips_2025.pdf" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://github.com/killthefullmoon/MMSpec"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://huggingface.co/collections/Cloudriver/multimodal-speculative-decoding"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span>🤗 Checkpoints</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="#bibtex" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-quote-right"></i>
+                    </span>
+                    <span>BibTeX</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="#" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon has-text-white">
+                      <i class="fa-brands fa-x-twitter"></i>
+                    </span>
+                    <span>Twitter</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section mmspec-summary-section">
+    <div class="container is-max-desktop">
+      <div class="mmspec-summary-card">
+        <p>
+          <b>MMSpec</b> is the first benchmark dedicated to speculative decoding for vision-language models.
+          It contains <b>600 multimodal samples</b> from <b>6 task categories</b>, integrates
+          <b>10 representative speculative decoding algorithms</b> under a unified framework, and introduces
+          <b>ViSkip</b>, a plug-and-play method that adaptively disables drafting on vision-critical decoding steps.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero teaser">
+    <div class="container">
+      <div class="is-max-desktop has-text-centered">
+        <img src="./static/images/mmspec/spec_radar_qwen.png" alt="MMSpec radar comparison"
+          style="max-width: 78%; height: auto;">
+        <p>
+          Performance comparison of speculative decoding methods with Qwen2.5-VL-7B on MMSpec.
+          Vision-aware methods are consistently stronger, and ViSkip is designed from the benchmark findings.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="margin-bottom: 2vh;">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Vision-language models achieve strong performance on multimodal tasks but still suffer from high
+              inference latency due to large model sizes and long multimodal contexts. MMSpec benchmarks speculative
+              decoding in this setting with a unified evaluation protocol over six representative multimodal workloads.
+              The benchmark reveals three core findings: methods built for text-only LLMs degrade in multimodal
+              scenarios, vision awareness becomes increasingly important at larger batch sizes, and throughput speedup
+              alone does not reliably reflect latency performance.
+            </p>
+            <p>
+              Motivated by these results, the project introduces <b>ViSkip</b>, a vision-aware speculative decoding
+              strategy that estimates whether the current decoding step depends heavily on image tokens and dynamically
+              switches between speculative decoding and standard autoregressive decoding.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+      <h1 class="title is-1 mmmu">
+        <img src="./static/images/MMSpec_Logo.png" style="width:1em;vertical-align: middle" alt="MMSpec logo">
+        <span class="mmmu">Benchmark Design</span>
+      </h1>
+    </div>
+  </section>
+
+  <section class="section" id="benchmark">
+    <div class="container">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">The MMSpec Benchmark</h2>
+          <div class="content has-text-justified">
+            <p>
+              MMSpec is built for fair third-party comparison of multimodal speculative decoding methods. All methods
+              are evaluated on the same device setup, in the same software environment, with the same measurement
+              protocol. The benchmark is designed around workload diversity, balanced topic coverage, explicit
+              multi-turn support, and method-agnostic measurement.
+            </p>
+          </div>
+          <div class="content has-text-centered">
+            <img src="./static/images/mmspec/data_sample.png" alt="Sampled data from MMSpec" class="center">
+            <p> Sampled data across the six MMSpec task categories.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <div class="mmspec-topic-grid">
+            <div class="mmspec-topic-card">
+              <h3>General VQA</h3>
+              <p>100 samples from GQA.</p>
+              <span>Avg. output: 46.98 tokens</span>
+            </div>
+            <div class="mmspec-topic-card">
+              <h3>Text VQA</h3>
+              <p>100 samples from TextVQA.</p>
+              <span>Avg. output: 63.15 tokens</span>
+            </div>
+            <div class="mmspec-topic-card">
+              <h3>Image Captioning</h3>
+              <p>100 samples from COCO.</p>
+              <span>Avg. output: 191.90 tokens</span>
+            </div>
+            <div class="mmspec-topic-card">
+              <h3>Chart VQA</h3>
+              <p>100 samples from CharXiv.</p>
+              <span>Avg. output: 68.56 tokens</span>
+            </div>
+            <div class="mmspec-topic-card">
+              <h3>Complex Reasoning</h3>
+              <p>100 samples from MMMU-Pro.</p>
+              <span>Avg. output: 285.60 tokens</span>
+            </div>
+            <div class="mmspec-topic-card">
+              <h3>Multi-turn Conversation</h3>
+              <p>100 samples from ConvBench and MM-MT-Bench.</p>
+              <span>Avg. output: 747.65 tokens</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns is-centered m-6">
+        <div class="column is-four-fifths has-text-centered content">
+          <h2 class="title is-3">Algorithms Under Comparison</h2>
+          <div class="content has-text-justified">
+            <p>
+              MMSpec unifies ten representative <b>lossless</b> speculative decoding methods, spanning training-based
+              and training-free approaches. This makes the benchmark suitable for apples-to-apples comparison rather
+              than isolated case studies.
+            </p>
+          </div>
+          <img src="./static/images/mmspec/methods.png" alt="Overview of speculative decoding algorithms" class="center">
+          <p> Overview of speculative decoding algorithms evaluated in the MMSpec framework.</p>
+        </div>
+      </div>
+
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <div class="table-wrapper">
+            <table class="mmspec-method-table">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Key Idea</th>
+                  <th>Drafting</th>
+                  <th>Vision Awareness</th>
+                  <th>Category</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>ViSpec</td>
+                  <td>Vision-token compression for efficient multimodal drafting.</td>
+                  <td>Linear</td>
+                  <td>Vision-aware</td>
+                  <td>Training-based</td>
+                </tr>
+                <tr>
+                  <td>MSD</td>
+                  <td>Train a multimodal draft model with staged VLM training.</td>
+                  <td>Linear</td>
+                  <td>Vision-aware</td>
+                  <td>Training-based</td>
+                </tr>
+                <tr>
+                  <td>EAGLE-1 / 2 / 3</td>
+                  <td>Feature-level or token-level drafting from target hidden states.</td>
+                  <td>Linear / Tree</td>
+                  <td>Vision-agnostic</td>
+                  <td>Training-based</td>
+                </tr>
+                <tr>
+                  <td>Medusa</td>
+                  <td>Multi-head tree proposals from a single forward pass.</td>
+                  <td>Tree</td>
+                  <td>Vision-agnostic</td>
+                  <td>Training-based</td>
+                </tr>
+                <tr>
+                  <td>SAM Decoding</td>
+                  <td>Suffix-automaton continuation retrieval for draft generation.</td>
+                  <td>Linear</td>
+                  <td>Vision-agnostic</td>
+                  <td>Training-free</td>
+                </tr>
+                <tr>
+                  <td>Lookahead</td>
+                  <td>Trie-based retrieval of multi-token continuations with tree verification.</td>
+                  <td>Tree</td>
+                  <td>Vision-agnostic</td>
+                  <td>Training-free</td>
+                </tr>
+                <tr>
+                  <td>Recycling</td>
+                  <td>Reuses discarded candidates as speculative draft tree nodes.</td>
+                  <td>Tree</td>
+                  <td>Vision-agnostic</td>
+                  <td>Training-free</td>
+                </tr>
+                <tr>
+                  <td>PLD</td>
+                  <td>Prompt n-gram lookup replaces an external draft model.</td>
+                  <td>Linear</td>
+                  <td>Vision-agnostic</td>
+                  <td>Training-free</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+      <h1 class="title is-1 mmmu">
+        <img src="./static/images/MMSpec_Logo.png" style="width:1em;vertical-align: middle" alt="MMSpec logo">
+        <span class="mmmu">Experimental Findings</span>
+      </h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <div class="mmspec-finding-grid">
+            <div class="mmspec-finding-card">
+              <h3>Finding 1</h3>
+              <p>Model-free methods provide very limited gains and sometimes slow down multimodal decoding.</p>
+            </div>
+            <div class="mmspec-finding-card">
+              <h3>Finding 2</h3>
+              <p>Training-based methods that ignore visual information still underperform in VLM inference.</p>
+            </div>
+            <div class="mmspec-finding-card">
+              <h3>Finding 3</h3>
+              <p>Throughput speedup alone is not enough. Stable latency behavior matters for real deployments.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns is-centered m-6">
+        <div class="column is-four-fifths has-text-centered content">
+          <h2 class="title is-3">Overall Comparison</h2>
+          <div class="content has-text-justified">
+            <p>
+              The main evaluations are conducted on <b>Qwen2.5-VL-7B-Instruct</b> and <b>LLaVA-1.5-7B</b>.
+              MMSpec reports both <b>Mean Accepted Tokens (MAT)</b> and <b>Walltime Speedup Ratio</b>, highlighting
+              that speculative decoding should be judged from both token acceptance and end-to-end latency efficiency.
+            </p>
+          </div>
+          <div class="mmspec-metric-grid">
+            <div class="mmspec-metric-card">
+              <h3>Qwen2.5-VL-7B</h3>
+              <p class="metric-number">2.58×</p>
+              <p>Best overall speedup in the main table, achieved by <b>MSD</b>.</p>
+            </div>
+            <div class="mmspec-metric-card">
+              <h3>LLaVA-1.5-7B</h3>
+              <p class="metric-number">2.58×</p>
+              <p>Best overall speedup in the main table, achieved by <b>ViSpec</b>.</p>
+            </div>
+            <div class="mmspec-metric-card">
+              <h3>Benchmark Scale</h3>
+              <p class="metric-number">10</p>
+              <p>Representative speculative decoding algorithms evaluated under one framework.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns is-centered m-6">
+        <div class="column is-four-fifths has-text-centered content">
+          <h2 class="title is-3">Batch Size Sensitivity</h2>
+          <img src="./static/images/mmspec/batch_size_exp.png" alt="Batch size comparison" class="center">
+          <p>
+            Vision-aware methods remain the most robust as batch size increases, while non-vision-aware methods
+            degrade more sharply.
+          </p>
+        </div>
+      </div>
+
+      <div class="columns is-centered m-6">
+        <div class="column is-four-fifths has-text-centered content">
+          <h2 class="title is-3">Latency Analysis</h2>
+          <img src="./static/images/mmspec/cdf_exp.png" alt="Latency CDF comparison" class="center">
+          <p>
+            Latency CDFs show that methods with higher average throughput do not always yield the best or most stable
+            wall-clock behavior.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+      <h1 class="title is-1 mmmu">
+        <img src="./static/images/MMSpec_Logo.png" style="width:1em;vertical-align: middle" alt="MMSpec logo">
+        <span class="mmmu">ViSkip</span>
+      </h1>
+    </div>
+  </section>
+
+  <section class="section" id="viskip">
+    <div class="container">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">A Plug-and-Play Vision-Aware Method</h2>
+          <div class="content has-text-justified">
+            <p>
+              ViSkip dynamically alternates between standard autoregressive decoding and speculative drafting according
+              to the current token state's visual relevance. At each decoding step, it computes cross-attention between
+              the decoder hidden state and visual tokens, extracts a visual relevance score, and only enables
+              speculation when that score is below a threshold.
+            </p>
+            <p>
+              In short: <b>when the next token strongly depends on the image, skip speculative drafting</b>; otherwise,
+              draft aggressively and verify with the full model.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <div class="mmspec-viskip-grid">
+            <div class="mmspec-viskip-card">
+              <img src="./static/images/mmspec/viskip_batch_size_exp.png" alt="ViSkip batch size results">
+              <h3>Better Scaling</h3>
+              <p>ViSkip improves speedup trends across batch sizes when combined with existing methods.</p>
+            </div>
+            <div class="mmspec-viskip-card">
+              <img src="./static/images/mmspec/viskip_cdf_exp.png" alt="ViSkip latency CDF">
+              <h3>Lower Latency</h3>
+              <p>Latency CDFs shift left after integrating ViSkip, indicating faster completion for most samples.</p>
+            </div>
+            <div class="mmspec-viskip-card">
+              <img src="./static/images/mmspec/viskip_breakdown_exp.png" alt="ViSkip latency breakdown">
+              <h3>Target-Model Savings</h3>
+              <p>Latency breakdowns show that ViSkip primarily reduces expensive full-model verification time.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <div class="mmspec-summary-card">
+            <p>
+              The central takeaway of ViSkip is simple: speculative decoding is least reliable exactly when generation
+              is most grounded in visual evidence. By detecting these steps and skipping drafting only when needed,
+              ViSkip improves existing methods without changing their core speculative decoding mechanics.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="bibtex">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@article{shen2025mmspec,
+  title={MMSpec: Benchmarking Speculative Decoding for Vision-Language Models},
+  author={Hui Shen and Xin Wang and Ping Zhang and Yunta Hsieh and Qi Han and Zhongwei Wan and Ziheng Zhang and Jingxuan Zhang and Jing Xiong and Ziyuan Liu and Yifan Zhang and Hangrui Cao and Chenyang Zhao and Mi Zhang},
+  year={2025},
+  note={Preprint}
+}</code></pre>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="content is-small">
+          The project page content is adapted from the MMSpec paper source in
+          <a href="../MMSpec_arXiv/neurips_2025.pdf">the local manuscript PDF</a>.
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

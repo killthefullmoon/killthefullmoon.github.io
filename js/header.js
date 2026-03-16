@@ -37,8 +37,20 @@ const HEADER_TEMPLATE = /* html */ `
         <li class="nav-item">
           <a class="nav-link" data-path="publications.html" data-nav="publications">Publications📕</a>
         </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link" data-nav="contact" data-contact-trigger>Contact Me🌻</a>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            data-nav="projects-root"
+          >
+            Projects🧪
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" data-path="projects/MMSpec/index.html" data-nav="mmspec">MMSpec</a></li>
+            <li><a class="dropdown-item" data-path="projects/PhyX/index.html" data-nav="phyx">PhyX</a></li>
+          </ul>
         </li>
         <li class="nav-item dropdown">
           <a
@@ -152,9 +164,8 @@ function setupHeaderFrosting() {
 
 function setupContactModal() {
   const modal = document.getElementById('contactModal');
-  const trigger = document.querySelector('[data-contact-trigger]');
 
-  if (!modal || !trigger) {
+  if (!modal) {
     return;
   }
 
@@ -164,7 +175,25 @@ function setupContactModal() {
     'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
   let lastFocusedElement = null;
+  let activeTrigger = null;
   let focusableElements = [];
+
+  function getTriggers() {
+    return Array.from(document.querySelectorAll('[data-contact-trigger]'));
+  }
+
+  function syncContactTriggers() {
+    getTriggers().forEach((triggerElement) => {
+      if (triggerElement.tagName !== 'BUTTON') {
+        triggerElement.setAttribute('role', 'button');
+      }
+      triggerElement.setAttribute('aria-controls', 'contactModal');
+      triggerElement.setAttribute(
+        'aria-expanded',
+        modal.classList.contains('contact-modal--open') && triggerElement === activeTrigger ? 'true' : 'false'
+      );
+    });
+  }
 
   function handleKeyDown(event) {
     if (event.key === 'Escape') {
@@ -203,7 +232,7 @@ function setupContactModal() {
     modal.classList.add('contact-modal--open');
     document.body.classList.add('contact-modal-open');
     modal.setAttribute('aria-hidden', 'false');
-    trigger.setAttribute('aria-expanded', 'true');
+    syncContactTriggers();
 
     focusableElements = Array.from(dialog.querySelectorAll(focusableSelectors));
 
@@ -226,7 +255,9 @@ function setupContactModal() {
     modal.classList.remove('contact-modal--open');
     document.body.classList.remove('contact-modal-open');
     modal.setAttribute('aria-hidden', 'true');
-    trigger.setAttribute('aria-expanded', 'false');
+    const triggerToFocus = activeTrigger;
+    activeTrigger = null;
+    syncContactTriggers();
     document.removeEventListener('keydown', handleKeyDown);
 
     focusableElements = [];
@@ -235,18 +266,32 @@ function setupContactModal() {
       if (lastFocusedElement) {
         lastFocusedElement.focus();
       } else {
-        trigger.focus();
+        triggerToFocus?.focus();
       }
     });
   }
 
-  trigger.setAttribute('role', 'button');
-  trigger.setAttribute('aria-expanded', 'false');
-  trigger.setAttribute('aria-controls', 'contactModal');
+  syncContactTriggers();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', syncContactTriggers, { once: true });
+  }
 
-  trigger.addEventListener('click', openModal);
-  trigger.addEventListener('keydown', (event) => {
-    if (event.key === ' ' || event.key === 'Spacebar') {
+  document.addEventListener('click', (event) => {
+    const triggerElement = event.target.closest('[data-contact-trigger]');
+    if (!triggerElement) {
+      return;
+    }
+    activeTrigger = triggerElement;
+    openModal(event);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    const triggerElement = event.target.closest('[data-contact-trigger]');
+    if (!triggerElement) {
+      return;
+    }
+    if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') {
+      activeTrigger = triggerElement;
       event.preventDefault();
       openModal(event);
     }

@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://kit.fontawesome.com/f8ddf9854a.js" crossorigin="anonymous"></script>
+  <meta charset="utf-8">
+  <meta name="description" content="PhyX, a benchmark for evaluating MLLM's physical reasoning capability.">
+  <meta name="keywords" content="PhyX, PHYX, LMM, LMM Evaluation, VLM, MLLM, Physical Reasoning, Benchmark">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PhyX</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script> -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator_bootstrap4.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/PhyX_Logo.svg">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/fff5b27ec1.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator_bootstrap4.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+
+  <script src="./static/js/benmark_table.js" type="module"></script>
+  <!-- <script src="./static/js/index.js"></script> -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <!-- <script src="./static/js/index.js"></script> -->
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+
+<body>
+
+  <!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav> -->
+
+  <nav class="navbar phyx-topnav" role="navigation" aria-label="main navigation">
+    <div class="navbar-menu is-active">
+      <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+        <a class="navbar-item" href="../../index.html">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">More Projects</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="../MMSpec/index.html">MMSpec</a>
+            <a class="navbar-item" href="../PhyX/index.html">PhyX</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title is-bold">
+              <img src="static/images/PhyX_Logo.png" style="width:1em;vertical-align: middle" alt="Logo" />
+              <span class="mmmu" style="vertical-align: middle">PhyX</span>
+            </h1>
+            <h2 class="subtitle is-3 publication-subtitle">
+              Does Your Model Have the "Wits" for Physical Reasoning?
+            </h2>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://nastymarcus.github.io/">Hui Shen</a><sup>1, 2</sup>,</span>
+              <span class="author-block">
+                <a href="https://wutaiqiang.github.io/">Taiqiang Wu</a><sup>1</sup>,</span>
+              <span class="author-block">
+                <a href="./">Qi Han</a><sup>3</sup>,</span>
+              <span class="author-block">
+                <a href="./">Yunta Hsieh</a><sup>2</sup>,</span>
+              <span class="author-block">
+                <a href="./">Jizhou Wang</a><sup>4</sup>,</span>
+              <span class="author-block">
+                <a href="./">Yuyue Zhang</a><sup>3</sup>,</span>
+              <span class="author-block">
+                <a href="./">Yuxin Cheng</a><sup>1</sup>,</span>
+              <br>
+              <span class="author-block">
+                <a href="./">Zijian Hao</a><sup>3</sup>,</span>
+              <span class="author-block">
+                <a href="https://yuanshengni.github.io/">Yuansheng Ni</a><sup>5</sup>,</span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=Q7yOQTMAAAAJ&hl=en">Xin Wang</a><sup>6</sup>,</span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=EVj1cNoAAAAJ&hl=en">Zhongwei
+                  Wan</a><sup>6</sup>,</span>
+              <span class="author-block">
+                <a href="https://drogozhang.github.io/">Kai Zhang</a><sup>6</sup>,</span>
+              <span class="author-block">
+                <a href="https://vincentxwd.github.io/">Wendong Xu</a><sup>1</sup>,</span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=dFX1hXkAAAAJ&hl=en">Jing
+                  Xiong</a><sup>1</sup>,</span>
+              <br>
+              <span class="author-block">
+                <a href="http://luoping.me/">Ping Luo</a><sup>1</sup>,</span>
+              <span class="author-block">
+                <a href="https://wenhuchen.github.io/">Wenhu Chen</a><sup>5</sup>,</span>
+              <span class="author-block">
+                <a href="https://chaofantao.top/">Chaofan Tao</a><sup>1†</sup>,</span>
+              <span class="author-block">
+                <a href="https://web.eecs.umich.edu/~zmao/">Z. Morley Mao</a><sup>2</sup>,</span>
+              <span class="author-block">
+                <a href="https://www.eee.hku.hk/~nwong/">Ngai Wong</a><sup>1†</sup>,</span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>The University of Hong Kong,</span>
+              <span class="author-block"><sup>2</sup>University of Michigan,</span>
+              <span class="author-block"><sup>3</sup>Independent,</span>
+              <br>
+              <span class="author-block"><sup>4</sup>University of Toronto,</span>
+              <span class="author-block"><sup>5</sup>University of Waterloo,</span>
+              <span class="author-block"><sup>6</sup>The Ohio State University</span>
+            </div>
+
+            <div class="is-size-6 publication-authors">
+              <span class="author-block">†Corresponding author.</span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- PDF Link. -->
+                <!-- <span class="link-block">
+                  <a href="https://arxiv.org/pdf/2406.09961" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a>
+                </span> -->
+                <span class="link-block" style="margin-right: 12px;">
+                  <a href="https://arxiv.org/abs/2505.15929" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <!-- Video Link. -->
+                <!-- <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+                <!-- Code Link. -->
+                <span class="link-block" style="margin-right: 12px;">
+                  <a href="https://github.com/NastyMarcus/PhyX"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+                <!-- Dataset Link. -->
+                <span class="link-block" style="margin-right: 12px;">
+                  <a href="https://huggingface.co/datasets/Cloudriver/PhyX"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span>🤗 Dataset</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://x.com/HuiShen_umich/status/1926287100132925504"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon has-text-white">
+                      <i class="fa-brands fa-x-twitter"></i>
+                    </span>
+                    <span>Twitter</span>
+                  </a>
+                </span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero teaser">
+    <div class="container">
+      <div class="is-max-desktop has-text-centered">
+        <img src="./static/images/overview.png" alt="Dataset overview." style="max-width: 80%; height: auto;" />
+        <p>
+          <!-- <span class="dnerf">Nerfies</span> -->
+          Data examples of the PhyX dataset. The dataset contains 3,000 human-annotated physics problems with visual
+          context.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="margin-bottom: 2vh;">
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">🔔News</h2>
+          <div class="content has-text-justified">
+            <p>
+              <b>🎉 [2026.02.15]: <a href="https://lf3-static.bytednsdoc.com/obj/eden-cn/lapzild-tss/ljhwZthlaukjlkulzlp/seed2/0214/Seed2.0%20Model%20Card.pdf">Seed 2.0</a> technical report has been
+                released and it outperforms GPT-5.2-High by 0.6% on PhyX, congratulations!</b>
+            </p>
+            <p>
+              <b>🎉 [2025.12.17]: <a href="https://arxiv.org/pdf/2512.15431">Step-GUI</a> technical report has been
+                released and it outperforms Qwen3-VL-30B-A3B by 10.0% on PhyX, congratulations!</b>
+            </p>
+            <p>
+              <b>🔥 [2025-07-21]: PhyX is officially supported by <a
+                  href="https://github.com/EvolvingLMMs-Lab/lmms-eval">lmms-eval</a> for easy evalution! 🎉</b>
+            </p>
+            <p>
+              <b>🎉 [2025.07.10]: <a href="https://arxiv.org/pdf/2507.06167">Skywork-R1V3</a> technical report has
+                been released and it outperforms Qwen2.5-VL-72B by 8.0% on PhyX, congratulation!</b>
+            </p>
+            <p>
+              <b>🔥 [2025-05-27]: PhyX is officially supported by <a
+                  href="https://github.com/open-compass/VLMEvalKit">VLMEvalKit</a> for easy evalution! 🎉</b>
+            </p>
+            <p>
+              <b>🚀 [2025-05-23]: The <a href="https://arxiv.org/abs/2505.15929">arXiv paper</a> is online! 🚀</b>
+            </p>
+            <p>
+              <b>🚀 [2025-05-21]: We release the testmini set of PhyX at <a
+                  href="https://huggingface.co/datasets/Cloudriver/PhyX">Huggingface</a> and the <a
+                  href="https://github.com/NastyMarcus/PhyX">evaluation code</a>! 🚀</br>
+            </p>
+          </div>
+          <h2 class="title is-3">Introduction</h2>
+          <div class="content has-text-justified">
+            <p>
+              We introduce <b>PhyX</b>: the first large-scale benchmark designed to assess
+              models capacity for physics-grounded reasoning in visual scenarios.
+              PhyX includes <b>3K</b> meticulously curated multimodal questions spanning <b>6 reasoning types</b>
+              across <b>25 sub-domains</b> and <b>6 core physics domains</b>: thermodynamics, electromagnetism,
+              mechanics, modern physics, optics, and wave&acoustics.
+              In our comprehensive evaluation, even state-of-the-art models struggle significantly with physical
+              reasoning.
+              <b>GPT-4o, Claude3.7-Sonnet, and GPT-o4-mini achieve only 32.5%, 42.2%, and 45.8% </b>
+              accuracy respectively-performance gaps exceeding 29% compared to human experts.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DATASET SECTION -->
+  <section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+      <h1 class="title is-1 mmmu">
+        <img src="static/images/PhyX_Logo.png" style="width:1em;vertical-align: middle" alt="Logo" />
+        <span class="mmmu">PhyX Benchmark</span>
+      </h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Comparisons with Existing Benchmarks</h2>
+          <div class="content has-text-justified">
+            <p>
+              To further distinguish the difference between <i>PhyX</i> and other existing ones, we elaborate the
+              benchmark details in figure.
+              From the <i>realistic</i> perspective, the prior benchmarks are heavily focused on abstract lining.
+              In contrast, our benchmark are realistic and delete text redundancy.
+            </p>
+            <div class="content has-text-centered">
+              <img src="static/images/comparison.png" alt="comparison with existing benchmarks" class="center">
+              <img src="static/images/comparison_with_physics.png" alt="comparison with existing benchmarks"
+                class="center">
+              <p> Comparison with existing physics benchmarks.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns is-centered m-6">
+        <div class="column is-full has-text-centered content">
+          <h2 class="title is-3">Statistics</h2>
+          <div class="carousel results-carousel">
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/overview.png" alt="sampled PhyX" width="95%" />
+                <p> Sampled PhyX examples from each discipline.</p>
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/statistics.png" alt="Key statistics" width="40%" />
+                <p> Key statistics of the PhyX benchmark</p>
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/data_distribution.png" alt="Distribution of question domains" width="80%" />
+                <p> Distribution of question domains in the PhyX dataset</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS SECTION -->
+  <section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+      <h1 class="title is-1 mmmu">
+        <img src="static/images/PhyX_Logo.png" style="width:1em;vertical-align: middle" alt="Logo" />
+        <span class="mmmu">Experiment Results</span>
+      </h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+      <div class="columns is-centered m-6">
+        <div class="column is-full has-text-centered content">
+          <h2 class="title is-3" id="leaderboard">Data</h2>
+          <div class="content has-text-justified">
+            <p>You can directly download our data from <a
+                href="https://huggingface.co/datasets/Cloudriver/PhyX">Huggingface
+                datasets</a>. For guidance on how to access and utilize the data, please consult our instructions on <a
+                href="https://github.com/NastyMarcus/PhyX">Github</a>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-------------------------------------------------------------------- LEADERBOARD SECTION -------------------------------------------------------------------->
+      <div class="columns is-centered m-6">
+        <div class="column is-full has-text-centered content">
+          <h2 class="title is-3" id="leaderboard">Leaderboard</h2>
+          <div class="content has-text-justified">
+            <p>
+              We evaluate various models including LLMs and LMMs.
+              In each type, we consider both closed- and open-source models.
+              Our evaluation is conducted under a zero-shot setting to assess the capability of models to generate
+              accurate answers without fine-tuning or few-shot demonstrations on our benchmark.
+            </p>
+            <b>In our leaderboard, the default setting is the testmini subset with Text-DeRedundancy setting, which
+              removes text redundancy in the question (`PhyX_mini_OE.tsv` & `PhyX_mini_MC.tsv`). We suggest using this
+              setting for a fair comparison.</b>
+            <p>
+              🚨 To submit your results to the leaderboard, please send to huishen [at] umich [dot] edu with your
+              results.
+            </p>
+          </div>
+          <br>
+          <div class="model-labels-container">
+            <span class="leaderboard-label human_expert">Human Expert</span>
+            <span class="leaderboard-label open_source">Open-Source</span>
+            <span class="leaderboard-label proprietary">Proprietary</span>
+          </div>
+          <br>
+          <div class="content has-text-centered">
+            <p>
+              Click on PhyX(OE), PhyX(MC) or PhyX(domain) to expand detailed results.
+            </p>
+          </div>
+          <div class="leaderboard-container">
+            <div class="table-wrapper">
+              <table id="mmmu-table">
+                <thead>
+                  <tr>
+                    <th colspan="3" class="reset-cell clickable" style="text-align: center;">Reset</th>
+                    <th class="pro-details-cell clickable" colspan="1">PhyX(OE) <span class="expand-icon">▼</span></th>
+                    <th class="val-details-cell clickable" colspan="1">PhyX(MC) <span class="expand-icon">▼</span></th>
+                    <th class="test-details-cell clickable" colspan="1">PhyX(domain) <span class="expand-icon">▼</span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th class="sortable clickable" data-sort="string">Name</th>
+                    <th class="clickable" data-sort="string">Size</th>
+                    <th class="sortable clickable" data-sort="date">Date</th>
+                    <th class="sortable clickable pro-overall" data-sort="number">Text-DeRedundancy</th>
+                    <th class="hidden pro-details sortable clickable" data-sort="number">Full-Text</th>
+                    <th class="hidden pro-details sortable clickable" data-sort="number">Text-Minimal</th>
+                    <th class="sortable clickable val-overall" data-sort="number">Text-DeRedundancy</th>
+                    <th class="hidden val-details sortable clickable" data-sort="number">Full-Text</th>
+                    <th class="hidden val-details sortable clickable" data-sort="number">Text-Minimal</th>
+                    <th class="sortable clickable test-overall" data-sort="number">Overall</th>
+                    <th class="hidden test-details sortable clickable" data-sort="number">Mechanics</th>
+                    <th class="hidden test-details sortable clickable" data-sort="number">Electro-magnetism</th>
+                    <th class="hidden test-details sortable clickable" data-sort="number">Thermo-dynamics</th>
+                    <th class="hidden test-details sortable clickable" data-sort="number">Waves & Acoustics </th>
+                    <th class="hidden test-details sortable clickable" data-sort="number">Optics</th>
+                    <th class="hidden test-details sortable clickable" data-sort="number">Modern Physics</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Table body will be populated dynamically -->
+                </tbody>
+              </table>
+              <p class="test-desc"> Overall results of different models on the PhyX leaderboard. The best-performing
+                model in each category is <b>in-bold</b>, and the second best is <u>underlined</u>. *: results provided
+                by the authors.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-------------------------------------------------------------------- Error Analysis SECTION -------------------------------------------------------------------->
+      <div class="columns is-centered m-6">
+        <div class="column is-full has-text-centered content">
+          <h2 class="title is-3">Error Analysis</h2>
+          <div class="content has-text-justified">
+            <p>
+              To dive into the reasoning capabilities and limitations of models, we meticulously inspected 96
+              randomly sampled incorrect predictions and performed an in-depth analysis based on GPT-4o. The
+              objectives of this analysis were twofold: to identify current model weaknesses and to guide future
+              enhancements in model design and training. A comprehensive case study of 30 notable cases is included in
+              our paper, Appendix E.
+            </p>
+          </div>
+          <div class="content has-text-centered">
+            <img src="static/images/error_distribution.png" alt="error distribution" width="25%">
+            <p> Error distribution over 96 annotated GPT-4o errors.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-------------------------------------------------------------------- Error Example  -------------------------------------------------------------------->
+      <div class="columns is-centered m-6">
+        <div class="column is-full has-text-centered content">
+          <h2 class="title is-3" id="examples">Error Examples</h2>
+          <div class="carousel results-carousel">
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/1.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/2.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/3.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/4.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/5.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/6.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/7.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/8.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/9.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/10.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/11.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/12.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/13.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <!-- <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/14.png" alt="grade-lv" width="60%"/>
+              </div>
+            </div> -->
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/15.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/16.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/17.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/error/18.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-------------------------------------------------------------------- Correct Example -------------------------------------------------------------------->
+      <div class="columns is-centered m-6">
+        <div class="column is-full has-text-centered content">
+          <h2 class="title is-3">Correct Examples</h2>
+          <div id="results-carousel" class="carousel results-carousel">
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/correct/1.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/correct/2.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/correct/3.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/correct/4.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/correct/5.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/correct/6.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/correct/7.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/correct/8.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/correct/9.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/correct/10.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/correct/11.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="static/images/correct/12.png" alt="grade-lv" width="60%" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@misc{shen2025phyxdoesmodelwits,
+        title={PhyX: Does Your Model Have the "Wits" for Physical Reasoning?}, 
+        author={Hui Shen and Taiqiang Wu and Qi Han and Yunta Hsieh and Jizhou Wang and Yuyue Zhang and Yuxin Cheng and Zijian Hao and Yuansheng Ni and Xin Wang and Zhongwei Wan and Kai Zhang and Wendong Xu and Jing Xiong and Ping Luo and Wenhu Chen and Chaofan Tao and Zhuoqing Mao and Ngai Wong},
+        year={2025},
+        eprint={2505.15929},
+        archivePrefix={arXiv},
+        primaryClass={cs.AI},
+        url={https://arxiv.org/abs/2505.15929}, 
+  }</code>
+  </pre>
+    </div>
+  </section>
+
+  <!-- <section class="section" id="Contact">
+    <div class="container is-max-desktop content">
+      <h2 class="title">Contact Us</h2>
+      <p>If you have any inquiries about ChartMimic, feel free to reach out to us at chartmimic@gmail.com, {scf22, yangc21}@mails.tsinghua.edu.cn or raise an
+        issue on Github.</p>
+    </div>
+  </section> -->
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="content is-small">
+          This website templated is adapted from <a href="https://github.com/nerfies/nerfies.github.io">nerfies</a> and
+          <a href="https://mmmu-benchmark.github.io/">MMMU</a>.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>
