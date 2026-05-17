@@ -431,6 +431,25 @@ body {
   text-decoration: underline;
 }
 
+.experience-logo-frame {
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  aspect-ratio: 1 / 1;
+}
+
+.experience-logo-frame img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.experience-logo-frame__zoom {
+  transform: translateY(-30%);
+}
+
 .container {
   min-height: calc(100vh - 80px);
   display: flex;
@@ -722,6 +741,11 @@ body.contact-modal-open {
 
 .a_umich {
   color: rgb(65, 134, 231);
+  font-family: 'Raleway-B', 'Lato', Verdana, Helvetica, sans-serif;
+}
+
+.a_waterloo {
+  color: #e0a526;
   font-family: 'Raleway-B', 'Lato', Verdana, Helvetica, sans-serif;
 }
 
