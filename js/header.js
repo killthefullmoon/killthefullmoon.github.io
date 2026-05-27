@@ -67,7 +67,6 @@ const HEADER_TEMPLATE = /* html */ `
             <li><a class="dropdown-item" data-path="misc/music.html" data-nav="music">Music</a></li>
             <li><a class="dropdown-item" data-path="misc/transfer_guide.html" data-nav="transfer_guide">Transfer Guide</a></li>
             <li><a class="dropdown-item" data-path="misc/game.html" data-nav="game">Game</a></li>
-            <li><a class="dropdown-item" data-path="misc/anime_film_book.html" data-nav="anime_film_book">Anime & Film & Book</a></li>
           </ul>
         </li>
       </ul>
