@@ -15,6 +15,8 @@
 
   <link rel="icon" type="image/x-icon" href="images/favicons/favicon.ico">
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="stylesheet.css">
 
@@ -22,436 +24,229 @@
 
 <body data-root-path="." data-page="home">
 
-  <!-- Left Background -->
-  <div class="background"></div>
-  <!-- Dark mode overlay for unified look -->
-  <div class="dark-overlay"></div>
-
-
   <div data-include="site-header"></div>
   <script src="js/header.js"></script>
 
-  <table class="container"
-    style="width:100%;max-width:1000px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-    <tbody>
-      <tr style="padding:0px">
-        <td style="padding:0px">
+  <main class="home">
+    <section class="home-intro">
+      <figure class="home-portrait">
+        <img src="images/self.png" alt="Hand-drawn self-portrait of Hui Shen" width="1008" height="1008">
+      </figure>
 
-          <!-- Introduction -->
-          <table class="intro-section"
-            style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-            <tbody>
-              <tr style="padding:0px">
-                <td style="padding:2.5%;width:37%;max-width:37%">
-                  <a href="images/huishen.png"><img
-                      style="width:100%;max-width:100%;object-fit: cover; border-radius: 50%;" alt="profile photo"
-                      src="images/huishen.png" class="hoverZoomLink"></a>
-                </td>
-                <td style="padding:2.5%;width:63%;vertical-align:middle">
-                  <p class="name" style="text-align: center;">
-                    Hui Shen 沈匯
-                  </p>
-                  <p>
-                    I'm a first year CS Ph.D. student at the <a href="https://umich.edu/" class="a_umich">University of
-                      Michigan</a>, working with Prof. <a href="https://web.eecs.umich.edu/~zmao/">Z. Morley Mao</a>. My
-                    research focus on
-                    <strong>Efficient AI</strong>, <strong>Agentic AI</strong>, and <strong>Model Evaluation</strong>. Feel free to contact me
-                    if want to discuss a potential collaboration. :P
-                  </p>
-                  <p>
-                    Previously, I obtained my B.S. from <a href="https://www.osu.edu/"
-                      class="a_osu">The Ohio State University</a> where I work with 
-                    Prof. <a href="https://mi-zhang.github.io/">Mi Zhang</a>. I also work closely with Prof. <a href="https://www.eee.hku.hk/~nwong/">Ngai Wong</a>, Prof. <a href="https://scholar.google.com/citations?user=aXdjxb4AAAAJ&hl=en" target="_blank" rel="noopener noreferrer">Ping Luo</a>, and Prof. <a href="https://scholar.google.com/citations?user=f1hBi5wAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">Lingpeng Kong</a> at <a
-                      href="https://www.hku.hk/" class="a_hku">The University of Hong Kong</a>, Prof. <a href="https://www.eee.hku.hk/~nwong/">Wenhu Chen</a> at <a href="https://uwaterloo.ca/" class="a_waterloo">University of Waterloo</a>.
-                  </p>
-                  <p style="text-align:center">
-                    <a href="data/Hui_Shen_CV.pdf">CV</a> &nbsp;/&nbsp;
-                    <a href="https://scholar.google.com/citations?user=iblw0zoAAAAJ&hl=en">Google Scholar</a>
-                    &nbsp;/&nbsp;
-                    <a href="https://www.linkedin.com/in/hui-shen-8b4a86260">LinkedIn</a> &nbsp;/&nbsp;
-                    <a href="https://www.instagram.com/qinyan_hai/">Instagram</a> &nbsp;/&nbsp;
-                    <a href="https://x.com/HuiShen_umich">X</a> &nbsp;/&nbsp;
-                    <a href="https://github.com/killthefullmoon">GitHub</a>
-                  </p>
-                </td>
+      <div class="home-bio">
+        <h1 class="home-name">
+          <img class="sign sign--en" src="images/sign_en.png" alt="Hui Shen" width="2172" height="724">
+          <img class="sign sign--zh" src="images/sign_zh.png" alt="沈匯" lang="zh-Hant" width="1683" height="935">
+        </h1>
 
-              </tr>
-            </tbody>
-          </table>
+        <div class="home-tabs" role="tablist" aria-label="About Hui Shen">
+          <button type="button" class="home-tab" role="tab" id="tab-about" aria-controls="panel-about" aria-selected="true">About</button>
+          <button type="button" class="home-tab" role="tab" id="tab-publications" aria-controls="panel-publications" aria-selected="false" tabindex="-1">Publications</button>
+          <button type="button" class="home-tab" role="tab" id="tab-projects" aria-controls="panel-projects" aria-selected="false" tabindex="-1">Projects</button>
+          <button type="button" class="home-tab" role="tab" id="tab-experience" aria-controls="panel-experience" aria-selected="false" tabindex="-1">Experience</button>
+          <button type="button" class="home-tab" role="tab" id="tab-media" aria-controls="panel-media" aria-selected="false" tabindex="-1">Media Coverage</button>
+        </div>
 
-
-          <!-- Tab Navigation -->
-          <div class="tab-navigation">
-            <button class="tab-btn active" data-tab="news">News</button>
-            <button class="tab-btn" data-tab="education">Education</button>
-            <button class="tab-btn" data-tab="experience">Experience</button>
-            <button class="tab-btn" data-tab="services">Services</button>
-            <button class="tab-btn" data-tab="media">Media Coverage</button>
-            <button class="tab-btn" data-tab="stats">Visit Statistic</button>
+        <div class="home-stage">
+          <div class="home-panels">
+          <div class="home-panel home-panel--bio" role="tabpanel" id="panel-about" aria-labelledby="tab-about">
+            <p>
+              I'm a CS Ph.D. student at the <a href="https://umich.edu/" class="a_umich">University of Michigan</a>.
+              Previously, I received my bachelor's degree from <a href="https://www.osu.edu/" class="a_osu">The Ohio
+                State University</a>.
+            </p>
+            <p>
+              Every mind, human or machine, is shaped by what it has seen. Therefore, I founded
+              <a href="https://touchstoneai.org">Touchstone AI</a>.
+            </p>
           </div>
+          <div class="home-panel" role="tabpanel" id="panel-publications" aria-labelledby="tab-publications" hidden>
+            <p class="pub-note">Selected papers. For the full list, see <a href="https://scholar.google.com/citations?user=iblw0zoAAAAJ&hl=en">Google Scholar</a>.<br>* denotes equal contribution</p>
+            <ul class="pub-list">
+              <li>
+                <span class="pub-title">OS-Omni: A Cross-Platform Benchmark for Generalist Computer-Using Agents</span>
+                <span class="pub-authors"><strong>Hui Shen</strong>, Yunta Hsieh, Jianing Ma, Ziyuan Liu, Qi Han, Xiuqi Xu, Yanheng Shang, Chenqi Yin, Zesen Zhao, Boyuan Zheng, Jisen Li, Xiaoxia Wu, Ruoyan Zhang, Dongfu Jiang, Ruiyao Liu, Jing Xiong, He Xiao, Nan Zheng, Hangxiang Chen, Shengyang Tao, Deyang Luorong, Jingxuan Zhang, Chaofan Tao, Yuren Wang, Jiaqi Mo, Hei Ting Una Chan, Sicheng Chen, Kai Zhang, Mengkang Hu, Zhongwei Wan, Xin Wang, Chuanyang Zheng, Ziheng Zhang, Hengyuan Zhang, Zunhai Su, Kanzhi Cheng, Jiawei Lu, Yifan Zhang, Shen Yan, Ben Athiwaratkun, Qiushi Sun, Mi Zhang, Ping Luo, Wenhu Chen, Ngai Wong</span>
+                <span class="pub-venue"><em>NeurIPS 2026</em></span>
+              </li>
+              <li>
+                <span class="pub-title">Dynamic Linear Attention</span>
+                <span class="pub-authors">Xin Wang*, <strong>Hui Shen*</strong>, Boyuan Zheng, Xueshen Liu, Minkyoung Cho, Zhongwei Wan, Zesen Zhao, Zhuoqing Mao, Shen Yan, Mi Zhang</span>
+                <span class="pub-venue"><em>ICML 2026</em></span>
+                <span class="pub-links"><a href="https://arxiv.org/pdf/2606.10650">Paper</a></span>
+              </li>
+              <li>
+                <span class="pub-title">PhyX: Does Your Model Have the "Wits" for Physical Reasoning?</span>
+                <span class="pub-authors"><strong>Hui Shen</strong>, Taiqiang Wu, Qi Han, Yunta Hsieh, Jizhou Wang, Yuyue Zhang, Yuxin Cheng, Zijian Hao, Yuansheng Ni, Xin Wang, Zhongwei Wan, Kai Zhang, Wendong Xu, Jing Xiong, Ping Luo, Wenhu Chen, Chaofan Tao, Z. Morley Mao, Ngai Wong</span>
+                <span class="pub-venue"><em>arXiv preprint, 2025</em></span>
+                <span class="pub-links"><a href="https://phyx-bench.github.io/">Project Page</a> <a href="https://huggingface.co/datasets/Cloudriver/PhyX">Data</a> <a href="https://github.com/NastyMarcus/PhyX">Code</a> <a href="https://arxiv.org/abs/2505.15929">Paper</a></span>
+              </li>
+              <li>
+                <span class="pub-title">Efficient Diffusion Models: A Survey</span>
+                <span class="pub-authors"><strong>Hui Shen*</strong>, Jingxuan Zhang*, Boning Xiong*, Rui Hu*, Shoufa Chen, Zhongwei Wan, Xin Wang, Yu Zhang, Zixuan Gong, Guangyin Bao, Chaofan Tao, Yongfeng Huang, Ye Yuan, Mi Zhang</span>
+                <span class="pub-venue"><em>TMLR 2025</em></span>
+                <span class="pub-links"><a href="https://github.com/AIoT-MLSys-Lab/Efficient-Diffusion-Model-Survey">GitHub Repo</a> <a href="https://arxiv.org/pdf/2502.06805">Paper</a></span>
+              </li>
+              <li>
+                <span class="pub-title">Famba-V: Fast Vision Mamba with Cross-Layer Token Fusion</span>
+                <span class="pub-authors"><strong>Hui Shen</strong>, Zhongwei Wan, Xin Wang, Mi Zhang</span>
+                <span class="pub-venue"><em>ECCV 2024 @ Computational Aspects of Deep Learning</em> <span class="mark">(Best Paper Award)</span></span>
+                <span class="pub-links"><a href="https://github.com/AIoT-MLSys-Lab/Famba-V">Code</a> <a href="https://www.arxiv.org/pdf/2409.09808">Paper</a></span>
+              </li>
+            </ul>
+          </div>
+          <div class="home-panel" role="tabpanel" id="panel-projects" aria-labelledby="tab-projects" hidden>
+            <ul class="pub-list">
+              <li>
+                <a class="pub-title" href="https://openworldrpg.ai/">OpenWorld</a>
+                <span class="pub-authors">A pixel-art open-world RPG you play in the browser. Try anything: what nobody wrote, the world works out and keeps.</span>
+              </li>
+              <li>
+                <a class="pub-title" href="projects/MMSpec/index.html">MMSpec</a>
+                <span class="pub-authors">Benchmarking Speculative Decoding for Vision-Language Models</span>
+              </li>
+              <li>
+                <a class="pub-title" href="projects/PhyX/index.html">PhyX</a>
+                <span class="pub-authors">Does Your Model Have the "Wits" for Physical Reasoning?</span>
+              </li>
+            </ul>
+          </div>
+          <div class="home-panel" role="tabpanel" id="panel-experience" aria-labelledby="tab-experience" hidden>
+            <ul class="home-list">
+              <li><time>2026 –</time>
+                <div>
+                  <span class="entry-title"><a href="https://touchstoneai.org">Touchstone AI</a></span>
+                  <span class="entry-role">Founder &amp; CEO</span>
+                  <span class="entry-meta">Aug 2026 ~ Present</span>
+                </div>
+              </li>
+              <li><time>2026</time>
+                <div>
+                  <span class="entry-title">Zoom</span>
+                  <span class="entry-role">Research Scientist Intern</span>
+                  <span class="entry-meta">May 2026 ~ Aug 2026 · San Jose, CA, USA</span>
+                  <span class="entry-meta">Work with Dr. <a href="https://scholar.google.com/citations?user=dby3OecAAAAJ&hl=en"
+                      target="_blank" rel="noopener noreferrer">Linyong Nan</a>, Dr. <a
+                      href="https://scholar.google.com/citations?user=Om_-hHsAAAAJ&hl=en" target="_blank"
+                      rel="noopener noreferrer">Yuwei Fang</a>, and Dr. <a
+                      href="https://scholar.google.com/citations?user=YdNmnJAAAAAJ&hl=en" target="_blank"
+                      rel="noopener noreferrer">Alex Acero</a>.</span>
+                </div>
+              </li>
+              <li><time>2025</time>
+                <div>
+                  <span class="entry-title">The University of Hong Kong</span>
+                  <span class="entry-role">Research Assistant II</span>
+                  <span class="entry-meta">Jan 2025 ~ Aug 2025 · Hong Kong, SAR</span>
+                  <span class="entry-meta">Work with Prof. <a href="https://www.eee.hku.hk/~nwong/" target="_blank"
+                      rel="noopener noreferrer">Ngai Wong</a>, Prof. <a
+                      href="https://scholar.google.com/citations?user=aXdjxb4AAAAJ&hl=en" target="_blank"
+                      rel="noopener noreferrer">Ping Luo</a>, and Prof. <a
+                      href="https://scholar.google.com/citations?user=f1hBi5wAAAAJ&hl=en" target="_blank"
+                      rel="noopener noreferrer">Lingpeng Kong</a>.</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="home-panel" role="tabpanel" id="panel-media" aria-labelledby="tab-media" hidden>
+            <ul class="home-list home-list--plain">
+              <li>
+                <div><a href="https://mp.weixin.qq.com/s/mV3zcokgx7P2JQxST3foQQ">SwingArena: Competitive Programming Arena
+                    for Long-context GitHub Issue Solving</a> <span class="outlet">— 机器之心 (in Mandarin)</span></div>
+              </li>
+              <li>
+                <div><a href="https://mp.weixin.qq.com/s/Nrd-hpkkN9HT6cfickVY0Q">A Practical Survey of Actionable
+                    Mechanistic Interpretability in Large Language Models</a> <span class="outlet">— 机器之心 (in
+                    Mandarin)</span></div>
+              </li>
+              <li>
+                <div><a href="https://mp.weixin.qq.com/s/okKn6WrWilPmo0_yOcDP3Q">PhyX: Does Your Model Have the "Wits" for
+                    Physical Reasoning?</a> <span class="outlet">— 新智元 (in Mandarin)</span></div>
+              </li>
+              <li>
+                <div><a href="https://mp.weixin.qq.com/s/MLcvrQc8h-ve8lWTZB2VjA">PhyX: Does Your Model Have the "Wits" for
+                    Physical Reasoning?</a> <span class="outlet">— 量子位 (in Mandarin)</span></div>
+              </li>
+              <li>
+                <div><a href="https://mp.weixin.qq.com/s/_O8W1qgvMZu37IKwgtskMA">Autoregressive Models in Vision: A
+                    Survey</a> <span class="outlet">— 机器之心 (in Mandarin)</span></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+          <button type="button" class="scroll-cue" aria-label="Scroll for more" tabindex="-1">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+        </div>
 
-          <!-- Tab Panels Container -->
-          <div class="tab-panels">
-
-            <!-- News -->
-            <div class="tab-content active" data-tab="news">
-              <table
-                style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-                <tbody>
-                  <tr>
-                    <td style="padding:16px;width:100%;vertical-align:middle">
-                      <div class="scrollable-list">
-                        <ul>
-                          <li>
-                            <strong>Jan 2026:</strong> Two papers have been accepted by ICLR 2026.
-                          </li>
-                          <li>
-                            <strong>Sep 2025:</strong> One paper has been accepted by NeurIPS 2025.
-                          </li>
-                          <li>
-                            <strong>May 2025:</strong> Released paper <a href="https://arxiv.org/pdf/2505.15929">PhyX:
-                              Does
-                              Your Model Have the "Wits" for Physical Reasoning?</a>, the dataset of PhyX at <a
-                              href="https://huggingface.co/datasets/Cloudriver/PhyX">Huggingface Dataset</a>, and the <a
-                              href="https://github.com/NastyMarcus/PhyX">evaluation code</a>.
-                          </li>
-                          <li>
-                            <strong>May 2025:</strong> Two papers have been accepted by ACL 2025.
-                          </li>
-                          <li>
-                            <strong>Apr 2025:</strong> <a href="https://arxiv.org/pdf/2502.06805">Efficient Diffusion
-                              Models: A Survey</a> has been accepted by TMLR 2025.
-                          </li>
-                          <li>
-                            <strong>Mar 2025:</strong> <a href="https://arxiv.org/pdf/2411.05902">Autoregressive Models
-                              in
-                              Vision: A Survey</a> has been accepted by TMLR 2025.
-                          </li>
-                          <li>
-                            <strong>Jan 2025:</strong> Research Assistant advised by Prof. <a
-                              href="https://www.eee.hku.hk/~nwong/">Ngai Wong</a>.
-                          </li>
-                          <li>
-                            <strong>Dec 2024:</strong> Graduated from The Ohio State University with a Bachelor of
-                            Science
-                            in Computer & Information Science. Always a Buckeye🌰!
-                          </li>
-                          <li>
-                            <strong>Aug 2024:</strong> <a href="https://www.arxiv.org/pdf/2409.09808">Famba-V</a> has
-                            been
-                            accepted by ECCV 2024 The Fourth Workshop on Computational Aspects of Deep Learning (CADL)
-                            with
-                            <strong>
-                              <font color='#b70000'>Best Paper Award
-                            </strong></font>
-                          </li>
-                          <li>
-                            <strong>Aug 2024:</strong> <a href="">Artificial Intelligence of Things: A Survey</a> has
-                            been
-                            accepted by ACM Transactions on Sensor Networks (TOSN).
-                          </li>
-                          <li>
-                            <strong>Sep 2023:</strong> Research Assistant advised by Prof. <a
-                              href="https://sites.google.com/view/cwell-lab/people?authuser=0">Jingbo Meng</a>.
-                          </li>
-                          <li>
-                            <strong>Apr 2023:</strong> Research Assistant @ <a
-                              href="https://aiot-mlsys-lab.github.io/">AIoT
-                              & Machine Learning System Lab</a> advised by Prof. <a
-                              href="https://mi-zhang.github.io/">Mi
-                              Zhang</a>.
-                          </li>
-                          <li>
-                            <strong>Jun 2022:</strong> Information Technology Intern @ Swire Coca-Cola China
-                          </li>
-                        </ul>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- Education -->
-            <div class="tab-content" data-tab="education">
-              <table
-                style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-                <tbody>
-                  <tr>
-                    <td style="padding:16px;width:100%;vertical-align:middle">
-
-
-                      <table
-                        style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-                        <tbody>
-                        <tbody>
-                          <tr>
-                            <td style="padding:10px;width:20%;vertical-align:middle">
-                              <img src='./images/U-M_Logo2.svg' width="80%">
-                            </td>
-                            <td style="padding:10px;width:70%;vertical-align:middle">
-                              <p>
-                                <strong>University of Michigan, USA</strong><br />
-                                Ph.D. Student in Computer Science <br />
-                                Work with Prof. <a href="https://web.eecs.umich.edu/~zmao/">Z. Morley Mao</a>.
-                              </p>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                      <table
-                        style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-                        <tbody>
-                        <tbody>
-                          <tr>
-                            <td style="padding:10px;width:20%;vertical-align:middle">
-                              <img src='./images/OSU_Logo2.svg' width="80%">
-                            </td>
-                            <td style="padding:10px;width:70%;vertical-align:middle">
-                              <p>
-                                <strong>The Ohio State University, USA</strong><br />
-                                B.S. in Computer & Information Science <br />
-                                <strong>Summa Cum Laude</strong><br />
-                                Work with Prof. <a href="https://mi-zhang.github.io/">Mi Zhang</a> and Prof. <a
-                                  href="https://sites.google.com/view/jingbomeng">Jingbo Meng</a>.
-                              </p>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-
-            <!-- Experience -->
-            <div class="tab-content" data-tab="experience">
-              <table
-                style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-                <tbody>
-                  <tr>
-                    <td style="padding:16px;width:100%;vertical-align:middle">
-
-                      <table
-                        style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-                        <tbody>
-                          <tr>
-                            <td style="padding:10px;width:20%;vertical-align:middle;text-align:center">
-                              <div class="experience-logo-frame">
-                                <img class="experience-logo-frame__zoom" src="./images/zoom_Logo.png" alt="Zoom logo">
-                              </div>
-                            </td>
-                            <td style="padding:10px;width:70%;vertical-align:middle">
-                              <p>
-                                <strong>Zoom</strong><br />
-                                Research Scientist Intern&nbsp;&nbsp; ( May 2026 ~ Present ) <br />
-                                San Jose, CA, USA<br />
-                                Work with Dr. <a href="https://scholar.google.com/citations?user=dby3OecAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">Linyong Nan</a>, Dr. <a href="https://scholar.google.com/citations?user=Om_-hHsAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">Yuwei Fang</a>, and Dr. <a href="https://scholar.google.com/citations?user=YdNmnJAAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">Alex Acero</a>.
-                              </p>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                      <table
-                        style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-                        <tbody>
-                          <tr>
-                            <td style="padding:10px;width:20%;vertical-align:middle;text-align:center">
-                              <div class="experience-logo-frame">
-                                <img src="./images/HKU_Logo.png" alt="The University of Hong Kong logo">
-                              </div>
-                            </td>
-                            <td style="padding:10px;width:70%;vertical-align:middle">
-                              <p>
-                                <strong>The University of Hong Kong</strong><br />
-                                Research Assistant II&nbsp;&nbsp; ( Jan 2025 ~ Aug 2025 ) <br />
-                                Hong Kong, SAR<br />
-                                Work with Prof. <a href="https://www.eee.hku.hk/~nwong/" target="_blank" rel="noopener noreferrer">Ngai Wong</a>, Prof. <a href="https://scholar.google.com/citations?user=aXdjxb4AAAAJ&hl=en" target="_blank" rel="noopener noreferrer">Ping Luo</a>, and Prof. <a href="https://scholar.google.com/citations?user=f1hBi5wAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">Lingpeng Kong</a>.
-                              </p>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-
-            <!-- Services -->
-            <div class="tab-content" data-tab="services">
-              <table
-                style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-                <tbody>
-                  <tr>
-                    <td style="padding:16px;width:100%;vertical-align:middle">
-
-                      <ul>
-                        <li>
-                          <strong>Journal Reviewer:</strong>
-                          <br> IEEE Transactions on Mobile Computing
-                          <br> IEEE Transactions on Circuits and Systems for Video Technology
-                        </li>
-                        <li>
-                          <strong>Conference Reviewer:</strong>
-                          <br>EMNLP 2025
-                          <br>CVPR 2025, 2026
-                          <br>ECCV 2026
-                          <br>ACL Rolling Review
-                          <br>ICLR 2025, 2026
-                          <br>ICML 2026
-                          <br>NeurIPS 2026
-                        </li>
-                      </ul>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- Media Coverage -->
-            <div class="tab-content" data-tab="media">
-              <table
-                style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-                <tbody>
-                  <tr>
-                    <td style="padding:16px;width:100%;vertical-align:middle">
-
-                      <ul>
-                        <li>
-                          <a href="https://mp.weixin.qq.com/s/mV3zcokgx7P2JQxST3foQQ">SwingArena: Competitive
-                            Programming Arena for Long-context GitHub Issue Solving</a> - 机器之心 (in Mandarin)
-                        </li>
-                        <li>
-                          <a href="https://mp.weixin.qq.com/s/Nrd-hpkkN9HT6cfickVY0Q">A Practical Survey of Actionable
-                            Mechanistic Interpretability in Large Language Models</a> - 机器之心 (in Mandarin)
-                        </li>
-                        <li>
-                          <a href="https://mp.weixin.qq.com/s/okKn6WrWilPmo0_yOcDP3Q">PhyX: Does Your Model Have the
-                            "Wits"
-                            for Physical Reasoning?</a> - 新智元 (in Mandarin)
-                        </li>
-                        <li>
-                          <a href="https://mp.weixin.qq.com/s/MLcvrQc8h-ve8lWTZB2VjA">PhyX: Does Your Model Have the
-                            "Wits"
-                            for Physical Reasoning?</a> - 量子位 (in Mandarin)
-                        </li>
-                        <li>
-                          <a href="https://mp.weixin.qq.com/s/_O8W1qgvMZu37IKwgtskMA">Autoregressive Models in Vision: A
-                            Survey</a> - 机器之心 (in Mandarin)
-                        </li>
-                      </ul>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-
-
-            <!-- Visit Statistic -->
-            <div class="tab-content" data-tab="stats">
-              <table
-                style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-                <tbody>
-                  <tr>
-                    <td style="padding:16px;width:100%;vertical-align:middle;text-align:center;">
-
-                      <div id="clustrmaps-container"></div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-          </div><!-- End of tab-panels -->
-
-
-        </td>
-      </tr>
-  </table>
-
+        <ul class="home-links">
+          <li><a href="https://scholar.google.com/citations?user=iblw0zoAAAAJ&hl=en">Google Scholar</a></li>
+          <li><a href="https://www.linkedin.com/in/hui-shen-8b4a86260">LinkedIn</a></li>
+          <li><a href="https://www.instagram.com/qinyan_hai/">Instagram</a></li>
+          <li><a href="https://x.com/HuiShen_umich">X</a></li>
+          <li><a href="https://github.com/killthefullmoon">GitHub</a></li>
+          <li><a href="https://touchstoneai.org">Touchstone AI</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
 
   <footer class="site-footer">
     <div class="footer-content">
-      <span>&copy; 雲端司機</span>
+      <span>&copy; <span lang="zh-Hant">雲端司機</span></span>
+      <span>Hui Shen</span>
     </div>
   </footer>
 
-  <button
-    type="button"
-    class="floating-contact-trigger"
-    data-contact-trigger
-    aria-controls="contactModal"
-    aria-expanded="false"
-  >
+  <button type="button" class="floating-contact-trigger" data-contact-trigger aria-controls="contactModal"
+    aria-expanded="false">
     <span class="floating-contact-trigger__title">Contact Me</span>
-    <span class="floating-contact-trigger__meta">WeChat / Email</span>
   </button>
 
-  <button id="backToTop" class="back-to-top">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-      stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="18 15 12 9 6 15"></polyline>
-    </svg>
-  </button>
 
   <script>
+    // Home tabs: each section replaces the panel beside the portrait
+    (function () {
+      const tabs = Array.from(document.querySelectorAll('.home-tab'));
+      const stage = document.querySelector('.home-panels');
+      const cue = document.querySelector('.scroll-cue');
 
-    // Tab Navigation Logic
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-    let clustrmapsLoaded = false;
-
-    tabButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const targetTab = button.getAttribute('data-tab');
-
-        // Remove active class from all buttons and contents
-        tabButtons.forEach(btn => btn.classList.remove('active'));
-        tabContents.forEach(content => content.classList.remove('active'));
-
-        // Add active class to clicked button and corresponding content
-        button.classList.add('active');
-        document.querySelector(`.tab-content[data-tab="${targetTab}"]`).classList.add('active');
-
-        // Lazy load ClustrMaps when Visit Statistic tab is clicked for the first time
-        if (targetTab === 'stats' && !clustrmapsLoaded) {
-          clustrmapsLoaded = true;
-          const container = document.getElementById('clustrmaps-container');
-          const script = document.createElement('script');
-          script.type = 'text/javascript';
-          script.id = 'clustrmaps';
-          script.src = '//cdn.clustrmaps.com/map_v2.js?cl=080808&w=600&t=tt&d=tw2_506UT1zXRgjtkp68qPMgFK-ObI3n7spI-i0b1Rg&co=ffffff&cmo=3acc3a&cmn=ff5353&ct=808080';
-          container.appendChild(script);
-        }
-      });
-    });
-
-    // Back to Top Button Logic
-    const backToTopButton = document.getElementById('backToTop');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 300) {
-        backToTopButton.classList.add('show');
-      } else {
-        backToTopButton.classList.remove('show');
+      // Bouncing arrow: only while the active section overflows and hasn't been scrolled yet
+      function updateCue() {
+        const overflows = stage.scrollHeight > stage.clientHeight + 4;
+        cue.classList.toggle('is-visible', overflows && stage.scrollTop < 4);
       }
-    });
-
-    backToTopButton.addEventListener('click', () => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+      stage.addEventListener('scroll', updateCue, { passive: true });
+      window.addEventListener('resize', updateCue);
+      window.addEventListener('load', updateCue);
+      document.fonts && document.fonts.ready.then(updateCue);
+      cue.addEventListener('click', () => {
+        stage.scrollBy({ top: stage.clientHeight * 0.7, behavior: 'smooth' });
       });
-    });
-
+      function select(tab, focus) {
+        tabs.forEach((t) => {
+          const on = t === tab;
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+          t.tabIndex = on ? 0 : -1;
+          document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+        });
+        const panel = document.getElementById(tab.getAttribute('aria-controls'));
+        stage.scrollTop = 0;
+        updateCue();
+        if (focus) tab.focus();
+      }
+      tabs.forEach((tab, i) => {
+        tab.addEventListener('click', () => select(tab, false));
+        tab.addEventListener('keydown', (e) => {
+          const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+          if (!step) return;
+          e.preventDefault();
+          select(tabs[(i + step + tabs.length) % tabs.length], true);
+        });
+      });
+      // Deep link: index.html#experience opens that section
+      const fromHash = document.getElementById('tab-' + location.hash.slice(1));
+      if (fromHash && tabs.includes(fromHash)) select(fromHash, false);
+    })();
   </script>
 
   <script src="./js/bootstrap.bundle.min.js"></script>

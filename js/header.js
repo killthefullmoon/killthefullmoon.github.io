@@ -1,7 +1,7 @@
 const HEADER_TEMPLATE = /* html */ `
 <nav class="navbar navbar-expand-lg header">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#" data-path="index.html" data-nav="brand">Cloud Driver 雲端司機</a>
+    <a class="navbar-brand" href="#" data-path="index.html" data-nav="brand">Cloudriver <span lang="zh-Hant">雲端司機</span></a>
     <button id="headerThemeToggle" class="header-theme-toggle" aria-label="Toggle dark/light mode">
       <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="5"></circle>
@@ -32,25 +32,7 @@ const HEADER_TEMPLATE = /* html */ `
     <div class="collapse navbar-collapse" id="navbarText">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" data-path="index.html" data-nav="home">Home🧐</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-path="publications.html" data-nav="publications">Publications📕</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-            data-nav="projects-root"
-          >
-            Projects🧪
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" data-path="projects/MMSpec/index.html" data-nav="mmspec">MMSpec</a></li>
-            <li><a class="dropdown-item" data-path="projects/PhyX/index.html" data-nav="phyx">PhyX</a></li>
-          </ul>
+          <a class="nav-link" data-path="index.html" data-nav="home">Home</a>
         </li>
         <li class="nav-item dropdown">
           <a
@@ -60,7 +42,7 @@ const HEADER_TEMPLATE = /* html */ `
             aria-expanded="false"
             data-nav="misc-root"
           >
-            When I'm Not Doing Research🌊
+            When I'm Not Doing Research
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" data-path="misc/travel_map.html" data-nav="travel_map">Travel Map</a></li>
@@ -342,46 +324,39 @@ if (!injectHeader() && document.readyState === 'loading') {
 }
 
 // Theme Toggle Logic
+// Light is the default for every visitor. Dark only applies after the visitor
+// picks it with the header toggle. The old code saved 'theme' on every visit
+// (even from the system preference), so we use a new key and drop the old one.
 (function () {
   const html = document.documentElement;
+  const KEY = 'theme-choice';
 
-  function getPreferredTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      return savedTheme;
-    }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
+  try {
+    localStorage.removeItem('theme');
+  } catch (e) {}
 
-  function setTheme(theme) {
+  function applyTheme(theme) {
     if (theme === 'dark') {
       html.setAttribute('data-theme', 'dark');
     } else {
       html.removeAttribute('data-theme');
     }
-    localStorage.setItem('theme', theme);
   }
 
-  // Initialize theme immediately
-  setTheme(getPreferredTheme());
+  let saved = null;
+  try {
+    saved = localStorage.getItem(KEY);
+  } catch (e) {}
+  applyTheme(saved === 'dark' ? 'dark' : 'light');
 
-  function toggleTheme() {
-    const currentTheme = html.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-  }
-
-  // Listen for header theme toggle button
   document.addEventListener('click', (e) => {
-    if (e.target.closest('#headerThemeToggle')) {
-      toggleTheme();
+    if (!e.target.closest('#headerThemeToggle')) {
+      return;
     }
-  });
-
-  // Listen for system theme changes
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (!localStorage.getItem('theme')) {
-      setTheme(e.matches ? 'dark' : 'light');
-    }
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try {
+      localStorage.setItem(KEY, next);
+    } catch (e) {}
   });
 })();

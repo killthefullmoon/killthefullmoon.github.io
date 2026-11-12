@@ -1,7 +1,7 @@
 # Hui Shen
 
 - [Hui Shen - Home](https://killthefullmoon.github.io/): The academic portfolio of Hui Shen, a Ph.D. student at the University of Michigan specializing in Efficient MLSys, LLM Agents, and Reasoning.
-- [Publications](https://killthefullmoon.github.io/publications.html): A comprehensive list of Hui Shen's research publications and academic work.
+- [Selected Publications](https://killthefullmoon.github.io/#publications): Hui Shen's selected research publications.
 - [Curriculum Vitae](https://killthefullmoon.github.io/data/Hui_Shen_CV.pdf): Hui Shen's detailed CV, including education, research experience, and awards.
 
 - [PhyX Project](https://phyx-bench.github.io/): Project page for "PhyX: Does Your Model Have the 'Wits' for Physical Reasoning?", a benchmark for physical reasoning in models.
