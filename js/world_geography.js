@@ -16,15 +16,16 @@
 
   function landforms(data) {
     const polygons = data.features.flatMap((f) =>
-      f.geometry.type === 'MultiPolygon' ? f.geometry.coordinates : [f.geometry.coordinates]);
-    return polygons.map((polygon, i) => {
+      (f.geometry.type === 'MultiPolygon' ? f.geometry.coordinates : [f.geometry.coordinates])
+        .map((polygon) => ({ polygon, region: f.properties.travel_id || f.properties.postal })));
+    return polygons.map(({ polygon, region }, i) => {
       const rings = polygon.map((ring) => ring.map(([lng, lat]) => project(lat, lng)));
       const xs = rings[0].map((p) => p[0]);
       const ys = rings[0].map((p) => p[1]);
       const x0 = Math.min(...xs), x1 = Math.max(...xs);
       const y0 = Math.min(...ys), y1 = Math.max(...ys);
       const polar = polygon[0].every(([, lat]) => lat > 60 || lat < -60);
-      return { id: 'land-' + i, rings, polar, cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, rx: (x1 - x0) / 2, ry: (y1 - y0) / 2 };
+      return { id: 'land-' + i, region, rings, polar, cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, rx: (x1 - x0) / 2, ry: (y1 - y0) / 2 };
     });
   }
 

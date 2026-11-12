@@ -151,14 +151,177 @@ body[data-life-scene="world"] .life-hud--run {
   display: none;
 }
 
-.life-hud--minimap {
+.life-symbols {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.life-travel-launcher {
   left: max(24px, calc((100vw - 1160px) / 2 + 40px));
   bottom: 24px;
-  width: 200px;
-  height: 126px;
+  padding: 5px 5px 0;
   border: 1px solid rgba(28, 27, 25, 0.3);
+  border-radius: 3px;
+  background: #f6f2e8;
+  color: #2a2723;
+  box-shadow: 3px 4px 0 rgba(28, 27, 25, 0.1);
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+
+.life-travel-launcher:hover {
+  transform: translateY(-3px) rotate(-1deg);
+  box-shadow: 4px 7px 0 rgba(28, 27, 25, 0.1);
+}
+
+.life-travel-launcher #minimap {
+  display: block;
+  width: 180px;
+  height: 113.4px;
   background: #e9e5da;
+}
+
+.life-travel-launcher__heli {
+  position: absolute;
+  top: -18px;
+  right: -12px;
+  width: 68px;
+  height: 54px;
+  border: 1px solid #a8a08e;
+  border-radius: 50% 45% 48% 42%;
+  background: #f6f2e8;
+  transform: rotate(8deg);
+}
+
+.life-travel-launcher__heli svg { width: 64px; height: 50px; }
+.life-travel-launcher__caption {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 7px 6px;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-style: italic;
+  line-height: 1;
+}
+
+/* A small paper atlas, opened from the map in the corner. */
+.life-travel {
+  position: fixed;
+  inset: auto auto 24px max(24px, calc((100vw - 1160px) / 2 + 40px));
+  margin: 0;
+  padding: 24px 24px 16px;
+  width: 424px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 100px);
+  box-sizing: border-box;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid #aaa18d;
+  border-radius: 4px;
+  background: #f6f2e8;
+  color: #2a2723;
+  box-shadow: 5px 6px 0 rgba(28, 27, 25, 0.12), 0 20px 80px rgba(28, 27, 25, 0.2);
+  font-family: var(--font-sans);
+}
+
+.life-travel::backdrop { background: rgba(37, 42, 35, 0.25); }
+.life-travel__head { display: flex; align-items: center; justify-content: space-between; padding-right: 12px; }
+.life-travel__head > svg { width: 80px; height: 60px; transform: rotate(-6deg); }
+.life-travel__eyebrow {
+  margin: 0 0 5px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9b3d2b;
+}
+.life-travel h2 { margin: 0; font: italic 38px/1 var(--font-serif); }
+.life-travel__intro { margin: 12px 0 18px; font-size: 12px; color: #716a5d; line-height: 1.5; }
+.life-travel__worlds { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.life-travel__worlds button {
+  position: relative;
+  padding: 12px 11px;
+  border: 1px solid #c9c1af;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  text-align: left;
+  color: #2a2723;
+  cursor: pointer;
+}
+.life-travel__worlds button span { display: block; font: 22px/1.1 var(--font-serif); }
+.life-travel__worlds small { display: block; margin-top: 6px; font-size: 10px; color: #716a5d; }
+.life-travel__worlds button[aria-current="location"] { border-color: #9b3d2b; background: #efe6d7; }
+.life-travel__worlds button[aria-current="location"]::after {
+  content: '';
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 4px;
+  height: 4px;
+  background: #9b3d2b;
+  border-radius: 50%;
+}
+.life-travel__divider { display: flex; justify-content: space-between; gap: 8px; margin: 22px 0 10px; font-size: 10px; }
+.life-travel__divider > :first-child { letter-spacing: 0.06em; text-transform: uppercase; }
+#travelCount { color: #716a5d; white-space: nowrap; }
+.life-travel__scope { display: flex; gap: 4px; margin: 0 0 10px; padding: 3px; border: 1px solid #c9c1af; border-radius: 3px; }
+.life-travel__scope button { flex: 1; padding: 8px 6px; border: 0; border-radius: 2px; background: transparent; color: #716a5d; font-size: 11px; cursor: pointer; }
+.life-travel__scope button[aria-pressed="true"] { background: #e9e1d0; color: #8c3828; }
+.life-travel__scope button:hover { background: #efe8da; }
+.life-travel__search { display: flex; align-items: center; gap: 9px; padding: 10px; border: 1px solid #c9c1af; background: #fcf9f1; border-radius: 2px; }
+.life-travel__search svg { flex-shrink: 0; width: 17px; height: 17px; fill: none; stroke: #716a5d; stroke-width: 1.4; }
+.life-travel__search input { width: 100%; min-width: 0; padding: 0; border: 0; outline: 0; background: transparent; font: 12px/1.5 var(--font-sans); color: #2a2723; user-select: text; }
+.life-travel__search input::placeholder { color: #82796c; }
+.life-travel__search:focus-within { outline: 2px solid #9b3d2b; outline-offset: 2px; }
+.life-travel__destinations { display: grid; grid-template-columns: 1fr 1fr; align-content: start; gap: 0 12px; max-height: 184px; overflow-y: auto; overscroll-behavior: contain; margin-top: 8px; scrollbar-color: #b6ad9a transparent; scrollbar-width: thin; }
+.life-travel__destinations button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  min-height: 44px;
+  padding: 8px 6px;
+  border: 0;
+  border-bottom: 1px solid #ddd5c4;
+  background: transparent;
+  color: #3e3b34;
+  text-align: left;
+  font-size: 12px;
+  cursor: pointer;
+}
+.life-travel__destinations small { font-size: 9px; color: #8a8070; letter-spacing: 0.05em; }
+.life-travel__destination-name small { display: block; margin-top: 2px; font-size: 10px; letter-spacing: 0; }
+.life-travel__destinations button:hover, .life-travel__worlds button:hover { background: #e9e1d0; }
+.life-travel button:disabled { opacity: 0.5; cursor: wait; }
+.life-travel__status { margin: 10px 0 0; font-size: 12px; color: #9b3d2b; line-height: 1.5; }
+.life-travel__status:empty { display: none; }
+.life-travel__foot { display: flex; justify-content: space-between; gap: 8px; border-top: 1px solid #c9c1af; margin-top: 16px; padding-top: 12px; font-size: 9px; color: #716a5d; }
+.life-travel__foot > :last-child { white-space: nowrap; font-style: italic; }
+.life-travel-launcher:focus-visible, .life-travel button:focus-visible, .life-travel__destinations:focus-visible { outline: 2px solid #9b3d2b; outline-offset: 3px; }
+.life-flight {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  top: 100px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100vw - 32px);
+  padding: 6px 18px 6px 10px;
+  border: 1px solid #b6ad9a;
+  border-radius: 3px;
+  background: #f6f2e8;
+  box-shadow: 2px 3px 0 rgba(28, 27, 25, 0.1);
+  font: italic 21px/1.2 var(--font-serif);
+  color: #2a2723;
   pointer-events: none;
+}
+.life-flight[hidden] { display: none; }
+.life-flight svg { flex-shrink: 0; width: 48px; height: 36px; }
+@media (prefers-reduced-motion: reduce) {
+  .life-travel-launcher { transition: none; }
 }
 
 .life-hud--hint {
@@ -417,9 +580,15 @@ body[data-page="my_life"] .navbar-brand {
     right: 16px;
   }
 
-  .life-hud--minimap {
-    display: none;
-  }
+  .life-travel-launcher { left: 16px; bottom: 52px; }
+  .life-travel-launcher #minimap { width: 134px; height: 84.42px; }
+  .life-travel-launcher__heli { width: 57px; height: 46px; right: -9px; top: -15px; }
+  .life-travel-launcher__heli svg { width: 54px; height: 42px; }
+  .life-travel-launcher__caption { font-size: 18px; }
+  .life-travel { left: 16px; bottom: max(16px, env(safe-area-inset-bottom)); padding: 22px 18px 16px; max-height: calc(100dvh - 80px); }
+  .life-travel__worlds button span { font-size: 21px; }
+  .life-travel__search input { font-size: 16px; }
+  .life-flight { top: 135px; font-size: 19px; }
 
   .life-hud--zoom {
     right: 16px;

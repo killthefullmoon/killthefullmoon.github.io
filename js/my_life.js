@@ -246,14 +246,14 @@
     }
     return grid;
   }
-  function decorIn(x0, y0, x1, y1, out) {
+  function decorIn(x0, y0, x1, y1, out, grid = decor.grid) {
     const gx0 = Math.floor(x0 / CELL);
     const gx1 = Math.floor(x1 / CELL);
     const gy0 = Math.floor(y0 / CELL);
     const gy1 = Math.floor(y1 / CELL);
     for (let gx = gx0; gx <= gx1; gx++) {
       for (let gy = gy0; gy <= gy1; gy++) {
-        const cell = decor.grid && decor.grid.get(gx + ',' + gy);
+        const cell = grid && grid.get(gx + ',' + gy);
         if (cell) for (const it of cell) out.push(it);
       }
     }
@@ -367,6 +367,7 @@
       zoom = zoomTarget = W < 700 ? 0.78 : 1;
       resize.done = true;
     }
+    updateHint();
   }
 
 
@@ -382,6 +383,7 @@
   const SCENES = {};
   let worldPlaces = [];
   let fade = null; // { t, dur, to, swapped }
+  const travelDialog = document.getElementById('travelDialog');
   const notes = [];
   const started = true;
   let openPlace = null;
@@ -410,7 +412,8 @@
     ArrowUp: 'u', KeyW: 'u', ArrowDown: 'd', KeyS: 'd', ArrowLeft: 'l', KeyA: 'l', ArrowRight: 'r', KeyD: 'r',
   };
   window.addEventListener('keydown', (e) => {
-    if (!started || e.target.closest('input, textarea')) return;
+    if (!started || travelDialog.open || fade || e.target.closest('input, textarea, [contenteditable]')) return;
+    if (e.target.closest('button, a') && (e.code === 'Enter' || e.code === 'Space')) return;
     if (!screen.hidden) {
       if (e.code === 'Escape') closeScreen();
       return;
@@ -428,6 +431,9 @@
     } else if (e.code === 'Escape') {
       closeCard();
       toggleJournal(false);
+    } else if (e.code === 'KeyM') {
+      e.preventDefault();
+      openTravel();
     } else if (e.code === 'KeyJ') {
       toggleJournal();
     } else if (e.code === 'Minus' || e.code === 'NumpadSubtract') {
@@ -437,7 +443,7 @@
     }
   });
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Shift') keys.add('run');
+    if (e.key === 'Shift' && !travelDialog.open && !fade && screen.hidden) keys.add('run');
   });
   window.addEventListener('keyup', (e) => {
     if (e.key === 'Shift') keys.delete('run');
@@ -467,7 +473,7 @@
   canvas.addEventListener('pointercancel', dropPointer);
 
   canvas.addEventListener('pointerdown', (e) => {
-    if (!started) return;
+    if (!started || fade || travelDialog.open) return;
     pointers.set(e.pointerId, [e.clientX, e.clientY]);
     if (pointers.size === 2) {
       const [a, b] = [...pointers.values()];
@@ -490,6 +496,13 @@
   });
 
   let hintFaded = false;
+  function updateHint() {
+    document.getElementById('hint').textContent = W < 700
+      ? sceneName === 'world' ? 'Tap to walk or sail · pinch to zoom' : 'Tap to walk · tap a place to explore'
+      : sceneName === 'world'
+        ? 'Walk or sail · Shift to run · E to interact · M to travel · scroll to zoom'
+        : 'WASD / arrows to walk · Shift to run · E to interact · M to travel · scroll to zoom';
+  }
   function fadeHint() {
     if (hintFaded) return;
     hintFaded = true;
@@ -501,21 +514,25 @@
   const RUN = 3; // running is three times walking speed
   let runToggle = false; // the on-screen Run button (touch)
   const dust = [];
-  function walkable(x, y) {
-    if (x < 20 || y < 20 || x > WORLD.w - 20 || y > WORLD.h - 20) return false;
+  function walkableIn(sc, x, y) {
+    if (x < 20 || y < 20 || x > sc.world.w - 20 || y > sc.world.h - 20) return false;
     // In The World, Hui takes a little boat across water instead of using
     // imaginary bridges between continents. Other scenes keep their shores.
-    if (sceneName !== 'world' && !onLand(x, y) && !onBridge(x, y)) return false;
-    for (const it of decorIn(x - 20, y - 20, x + 20, y + 20, [])) {
+    if (sc !== SCENES.world && !sc.islands.some((isl) => islandNorm(isl, x, y) < 0.95)
+      && !sc.bridges.some((br) => distToSeg(x, y, br.a, br.b) < BRIDGE_W / 2 - 4)) return false;
+    for (const it of decorIn(x - 20, y - 20, x + 20, y + 20, [], sc.decor.grid)) {
       if (!it.solid) continue;
       const dx = it.x - x;
       if (dx > 14 || dx < -14) continue;
       if (Math.hypot(dx, (it.y - y) * 1.6) < 11 * it.s) return false;
     }
-    for (const p of places) {
+    for (const p of sc.places) {
       if (Math.abs(p.x - x) < (p.r || 26) && y < p.y + 6 && y > p.y - 26) return false;
     }
     return true;
+  }
+  function walkable(x, y) {
+    return walkableIn(SCENES[sceneName], x, y);
   }
 
   function update(dt) {
@@ -525,9 +542,20 @@
       fade.t += dt;
       if (!fade.swapped && fade.t >= fade.dur / 2) {
         fade.swapped = true;
-        loadScene(fade.to, fade.from);
+        loadScene(fade.to, fade.from, fade.arrival);
       }
-      if (fade.t >= fade.dur) fade = null;
+      if (fade.t >= fade.dur) {
+        if (fade.flightLabel) {
+          showFlight('Landed in ' + fade.flightLabel, 2400);
+          canvas.focus({ preventScroll: true });
+        }
+        fade = null;
+      }
+    }
+    if (travelDialog.open || fade) {
+      keys.clear();
+      target = null;
+      pendingOpen = null;
     }
 
     let vx = 0;
@@ -2242,7 +2270,7 @@
       if (fade) return;
       closeCard();
       ensureScene(p.to).then(() => {
-        if (!fade) fade = { t: 0, dur: 1.1, to: p.to, from: sceneName, swapped: false };
+        if (!fade && !travelDialog.open) fade = { t: 0, dur: 1.1, to: p.to, from: sceneName, swapped: false };
       }).catch(() => {
         const hint = document.getElementById('hint');
         hint.textContent = 'This world could not load. Please refresh and try again.';
@@ -2254,8 +2282,8 @@
   }
 
   // Nearest walkable point to (x, y): doors near the coast would otherwise drop Hui in the sea
-  function safeSpot(x, y) {
-    if (walkable(x, y)) return [x, y];
+  function safeSpot(x, y, canStand = walkable) {
+    if (canStand(x, y)) return [x, y];
     for (let r = 12; r <= 420; r += 12) {
       const n = Math.max(8, Math.round(r / 6));
       for (let i = 0; i < n; i++) {
@@ -2264,7 +2292,7 @@
         const a = Math.PI / 2 + (k / n) * Math.PI * 2;
         const px = x + Math.cos(a) * r;
         const py = y + Math.sin(a) * r;
-        if (walkable(px, py)) return [px, py];
+        if (canStand(px, py)) return [px, py];
       }
     }
     return [x, y];
@@ -2272,7 +2300,7 @@
 
   const SCENE_TITLES = { home: 'Home Island', world: 'The World', games: 'Save Point', music: 'Album Collection' };
 
-  function loadScene(name, from) {
+  function loadScene(name, from, arrival) {
     const sc = SCENES[name];
     sceneName = name;
     WORLD = sc.world;
@@ -2284,8 +2312,8 @@
     decor = sc.decor;
     // Arrive in front of the door you came through
     const door = places.find((p) => p.to === from) || places.find((p) => p.kind === 'portal');
-    const want = name === 'world' ? sc.spawn
-      : from && door ? [door.x + 6, door.y + 70] : sc.spawn || [door.x + 6, door.y + 70];
+    const want = arrival || (name === 'world' ? sc.spawn
+      : from && door ? [door.x + 6, door.y + 70] : sc.spawn || [door.x + 6, door.y + 70]);
     const sp = safeSpot(want[0], want[1]);
     player.x = sp[0];
     player.y = sp[1];
@@ -2304,15 +2332,201 @@
     document.getElementById('sceneName').textContent = SCENE_TITLES[name] || '';
     document.body.dataset.lifeScene = name;
     document.getElementById('zoomMap').hidden = name !== 'world';
-    document.getElementById('hint').textContent = name === 'world'
-      ? W < 700 ? 'Tap to walk or sail · pinch to zoom'
-        : 'Walk on land · sail across the sea · Shift to run · E to interact · scroll to zoom'
-      : 'WASD / arrow keys to walk · hold Shift to run · E to interact · scroll to zoom · tap to walk on phones';
+    updateHint();
     document.getElementById('journalBtn').hidden = name !== 'world';
     if (name !== 'world') toggleJournal(false);
     // arriving in the world: pull back a little so it reads as a map
-    if (name === 'world' && started) setZoom(W < 700 ? 0.55 : 0.7);
+    if (started) setZoom(name === 'world' ? (W < 700 ? 0.55 : 0.7) : (W < 700 ? 0.78 : 1));
+    updateTravelLocation();
   }
+
+  // Fast travel uses the same projected geography as the map. A flight is
+  // committed only after its scene and a clear landing spot are ready.
+  const travelBtn = document.getElementById('travelBtn');
+  const travelSearch = document.getElementById('travelSearch');
+  const travelDestinations = document.getElementById('travelDestinations');
+  const travelStatus = document.getElementById('travelStatus');
+  const flightNotice = document.getElementById('flightNotice');
+  let travelRequest = 0;
+  let travelBusy = false;
+  let travelMapFailed = false;
+  let travelScope = 'country';
+  let flightTimer;
+
+  function updateTravelLocation() {
+    for (const button of travelDialog.querySelectorAll('[data-travel-scene]')) {
+      if (button.dataset.travelScene === sceneName) button.setAttribute('aria-current', 'location');
+      else button.removeAttribute('aria-current');
+    }
+    document.getElementById('travelLocation').textContent = 'Currently: ' + SCENE_TITLES[sceneName];
+  }
+
+  function renderTravelDestinations() {
+    const allDestinations = SCENES.world?.destinations;
+    if (!allDestinations) {
+      travelStatus.textContent = travelMapFailed ? 'The destinations could not load. Refresh to try again.' : 'Preparing the map…';
+      return;
+    }
+    // "Been there" lists the countries / regions with a place in visited.json; their cities are searchable too
+    const been = SCENES.world.visitedCountries;
+    const destinations = travelScope === 'visited'
+      ? allDestinations.filter((d) => been.has(d.id)).map((d) => ({ ...d, cities: been.get(d.id) }))
+      : allDestinations.filter((d) => d.kind === 'country');
+    const normalize = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    const query = normalize(travelSearch.value);
+    const exactCode = destinations.find((d) => d.code.toLowerCase() === query);
+    const matches = exactCode ? [exactCode] : destinations.filter((d) =>
+      [d.name, d.zh, ...(d.aliases || []), ...(d.cities || [])].some((name) => name && normalize(name).includes(query)));
+    const fragment = document.createDocumentFragment();
+    for (const d of matches) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.travelDestination = d.id;
+      button.disabled = travelBusy;
+      button.setAttribute('aria-label', 'Fly to ' + d.name);
+      const name = document.createElement('span');
+      name.className = 'life-travel__destination-name';
+      name.textContent = d.name;
+      if (d.zh) {
+        const zh = document.createElement('small');
+        zh.textContent = d.zh;
+        name.append(zh);
+      }
+      const code = document.createElement('small');
+      // in "Been there", show the cities instead of the country code
+      if (d.cities) {
+        const own = d.cities.filter((c) => c !== d.name);
+        code.textContent = own.length > 3 ? own.slice(0, 3).join(' · ') + ' +' + (own.length - 3) : own.join(' · ');
+        code.title = own.join(' · ');
+      } else code.textContent = d.code;
+      button.append(name, code);
+      fragment.append(button);
+    }
+    travelDestinations.replaceChildren(fragment);
+    travelDestinations.scrollTop = 0;
+    document.getElementById('travelCount').textContent = (query ? matches.length + ' / ' : '') + destinations.length + (travelScope === 'visited' ? ' visited' : ' places');
+    if (!travelBusy) travelStatus.textContent = matches.length ? '' : 'No destination found. Try a name or code.';
+  }
+
+  function setTravelBusy(busy) {
+    travelBusy = busy;
+    travelDialog.setAttribute('aria-busy', String(busy));
+    travelSearch.disabled = busy;
+    for (const button of travelDialog.querySelectorAll('[data-travel-scene], [data-travel-destination], [data-travel-scope]')) button.disabled = busy;
+  }
+
+  function openTravel() {
+    if (fade || travelDialog.open) return;
+    closeCard();
+    closeScreen();
+    toggleJournal(false);
+    keys.clear();
+    target = pendingOpen = null;
+    pointers.clear();
+    pinchStart = null;
+    clearTimeout(flightTimer);
+    flightNotice.hidden = true;
+    travelSearch.value = '';
+    updateTravelLocation();
+    renderTravelDestinations();
+    travelDialog.showModal();
+    travelDestinations.scrollTop = 0;
+    travelBtn.setAttribute('aria-expanded', 'true');
+  }
+
+  function landingSpot(sc, destination) {
+    if (!sc.decor) sc.decor = buildDecor(sc);
+    const regions = destination && (destination.kind === 'country'
+      ? sc.travelRegions.filter((r) => r.region === destination.id)
+      : sc.stateBorders.filter((r) => r.usState && r.region === destination.code));
+    const canLand = (x, y) => (!regions || regions.some((r) => GEO.contains(r, x, y)))
+      && sc.islands.some((isl) => islandNorm(isl, x, y) < 0.95) && walkableIn(sc, x, y);
+    const point = destination ? destination.point : sc.spawn;
+    // Microstates can be smaller than Hui's sprite at this world scale. Keep
+    // the feet inside the real boundary even when a 12px margin cannot fit.
+    for (const radius of destination?.kind === 'country' ? [12, 4, 0] : [12]) {
+      if (regions && !regions.some((r) => r.rx >= radius && r.ry >= radius)) continue;
+      const clear = (x, y) => [[0, 0], [radius, 0], [-radius, 0], [0, radius], [0, -radius]]
+        .every(([dx, dy]) => canLand(x + dx, y + dy));
+      const spot = safeSpot(...point, clear);
+      if (clear(...spot)) return spot;
+    }
+    throw new Error('No clear landing spot');
+  }
+
+  function showFlight(message, duration) {
+    clearTimeout(flightTimer);
+    document.getElementById('flightText').textContent = message;
+    flightNotice.hidden = false;
+    if (duration) flightTimer = setTimeout(() => { flightNotice.hidden = true; }, duration);
+  }
+
+  async function flyTo(name, destinationId) {
+    if (travelBusy || fade || !travelDialog.open) return;
+    const request = ++travelRequest;
+    setTravelBusy(true);
+    travelStatus.textContent = 'Preparing your flight…';
+    try {
+      await ensureScene(name);
+      if (request !== travelRequest || !travelDialog.open) return;
+      const sc = SCENES[name];
+      const destination = destinationId && sc.destinations.find((d) => d.id === destinationId);
+      if (destinationId && !destination) throw new Error('Unknown destination');
+      const arrival = landingSpot(sc, destination);
+      const label = destination ? destination.name : SCENE_TITLES[name];
+      fade = {
+        t: 0, dur: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.08 : 0.8,
+        to: name, from: sceneName, arrival, flightLabel: label, swapped: false,
+      };
+      keys.clear();
+      target = pendingOpen = null;
+      showFlight('Flying to ' + label + '…');
+      travelDialog.close();
+    } catch (error) {
+      if (request === travelRequest && travelDialog.open) {
+        travelStatus.textContent = 'This stop could not load. Try again, or refresh the page.';
+      }
+    } finally {
+      if (request === travelRequest) setTravelBusy(false);
+    }
+  }
+
+  travelBtn.addEventListener('click', openTravel);
+  document.getElementById('travelClose').addEventListener('click', () => travelDialog.close());
+  travelDialog.addEventListener('close', () => {
+    ++travelRequest; // Cancel a flight still waiting for its scene to load.
+    setTravelBusy(false);
+    keys.clear();
+    travelBtn.setAttribute('aria-expanded', 'false');
+  });
+  travelDialog.addEventListener('click', (e) => {
+    if (e.target !== travelDialog) return;
+    const box = travelDialog.getBoundingClientRect();
+    if (e.clientX < box.left || e.clientX > box.right || e.clientY < box.top || e.clientY > box.bottom) travelDialog.close();
+  });
+  travelDialog.querySelectorAll('[data-travel-scene]').forEach((button) => {
+    button.addEventListener('click', () => flyTo(button.dataset.travelScene));
+  });
+  travelDestinations.addEventListener('click', (e) => {
+    const button = e.target.closest('[data-travel-destination]');
+    if (button) flyTo('world', button.dataset.travelDestination);
+  });
+  travelDialog.querySelectorAll('[data-travel-scope]').forEach((button) => {
+    button.addEventListener('click', () => {
+      if (travelBusy) return;
+      travelScope = button.dataset.travelScope;
+      for (const option of travelDialog.querySelectorAll('[data-travel-scope]')) {
+        option.setAttribute('aria-pressed', String(option === button));
+      }
+      const been = travelScope === 'visited';
+      travelSearch.value = '';
+      travelSearch.placeholder = been ? 'Search countries or cities / 搜索去过的地方' : 'Search countries / 搜索国家';
+      travelSearch.setAttribute('aria-label', been ? 'Find a country or city I have been to' : 'Find a country or region');
+      travelDestinations.setAttribute('aria-label', been ? 'Choose a country I have been to' : 'Choose a country or region');
+      renderTravelDestinations();
+    });
+  });
+  travelSearch.addEventListener('input', renderTravelDestinations);
 
   const card = document.getElementById('card');
   function openCard(p) {
@@ -2424,7 +2638,7 @@
   function scaleScene(sc, k) {
     const sx = (v) => v * k;
     sc.world = { w: sc.world.w * k, h: sc.world.h * k };
-    for (const isl of [...sc.islands, ...(sc.stateBorders || [])]) {
+    for (const isl of [...sc.islands, ...(sc.stateBorders || []), ...(sc.travelRegions || [])]) {
       isl.cx *= k;
       isl.cy *= k;
       isl.rx *= k;
@@ -2442,6 +2656,7 @@
     if (sc.spawn) sc.spawn = sc.spawn.map(sx);
     if (sc.compass) sc.compass = sc.compass.map(sx);
     if (sc.mapLabels) sc.mapLabels = sc.mapLabels.map((l) => ({ ...l, point: l.point.map(sx) }));
+    if (sc.destinations) sc.destinations = sc.destinations.map((d) => ({ ...d, point: d.point.map(sx) }));
     for (const key of ['rugs', 'frames']) {
       for (const r of sc[key] || []) {
         r.x0 *= k;
@@ -2458,7 +2673,10 @@
   const clean = (t) => (t || '').replace(/\s+/g, ' ').trim();
   function loadDoc(url) {
     return fetch(url)
-      .then((r) => r.text())
+      .then((r) => {
+        if (!r.ok) throw new Error('Page unavailable');
+        return r.text();
+      })
       .then((t) => new DOMParser().parseFromString(t, 'text/html'));
   }
   // Pages live in misc/ like this one, so their relative srcs resolve against location.href
@@ -2793,6 +3011,9 @@
     if (!pendingScenes[name]) {
       pendingScenes[name] = LOADERS[name]().then((sc) => {
         SCENES[name] = scaleScene(sc, SCENE_SCALE[name]);
+      }).catch((error) => {
+        delete pendingScenes[name];
+        throw error;
       });
     }
     return pendingScenes[name];
@@ -2824,20 +3045,66 @@
     // countries and Chinese provinces are optional: the map still works without them
     fetch('../data/countries.json').then((r) => (r.ok ? r.json() : { features: [] })).catch(() => ({ features: [] })),
     fetch('../data/china-provinces.json').then((r) => (r.ok ? r.json() : { features: [] })).catch(() => ({ features: [] })),
-  ]).then(([list, land, states, countries, provinces]) => {
+    fetch('../data/travel-countries.json').then((r) => {
+      if (!r.ok) throw new Error('Country destinations unavailable');
+      return r.json();
+    }),
+  ]).then(([list, land, states, countries, provinces, travelCountries]) => {
+      // Which countries / regions Hui has been to, read from the place names in visited.json
+      // ("Tokyo, Japan", "Hong Kong SAR, China"); the map outline is only a fallback.
+      function visitedCountries(placesList, travel) {
+        const norm = (t) => (t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\./g, '').trim();
+        const regions = travel.features.map((f) => {
+          const p = f.properties;
+          return {
+            id: p.travel_id,
+            names: new Set([p.name, p.name_zh, p.name_zht, p.code, ...(p.aliases || [])].map(norm).filter(Boolean)),
+            lands: null,
+            f,
+          };
+        });
+        const byName = (t) => regions.find((r) => r.names.has(norm(t)));
+        const out = new Map();
+        for (const pl of placesList) {
+          const parts = pl.name.split(',').map((t) => t.trim());
+          // a Special Administrative Region is its own stop ("Hong Kong SAR, China" -> Hong Kong)
+          const sar = parts.find((t) => /\bSAR\b/.test(t));
+          let hit = sar && byName(sar.replace(/\s*SAR\b/, ''));
+          for (let i = parts.length - 1; !hit && i > 0; i--) hit = byName(parts[i]);
+          if (!hit && pl.coords) {
+            const [x, y] = GEO.project(...pl.coords);
+            hit = regions.find((r) => (r.lands = r.lands || GEO.landforms({ features: [r.f] })).some((l) => GEO.contains(l, x, y)));
+          }
+          if (!hit) continue;
+          if (!out.has(hit.id)) out.set(hit.id, []);
+          out.get(hit.id).push(parts[0].replace(/\s*SAR\b/, ''));
+        }
+        return out;
+      }
+
       worldPlaces = buildPlaces(list);
       worldPlaces.push(computer(...GEO.project(33, -112), 'travel_map.html', 'Travel map (web)'));
       SCENES.world = scaleScene(
         {
-          world: { ...GEO.size }, islands: GEO.landforms(land), bridges: [], places: worldPlaces,
+          world: { ...GEO.size }, islands: [...GEO.landforms(land), ...GEO.landforms(travelCountries.landingLand)], bridges: [], places: worldPlaces,
           spawn: [...GEO.start], compass: GEO.project(-38, -120), extentScale: GEO.enlargement, open: true,
+          destinations: [
+            ...travelCountries.features.map(({ properties: p }) => ({
+              id: p.travel_id, kind: 'country', code: p.code, name: p.name, zh: p.name_zh,
+              aliases: [p.name_zht, ...p.aliases], point: GEO.project(...p.coords),
+            })),
+          ].sort((a, b) => a.name.localeCompare(b.name)),
+          visitedCountries: visitedCountries(list, travelCountries),
+          travelRegions: GEO.landforms(travelCountries),
           stateBorders: [
             ...GEO.landforms(countries).map((r) => Object.assign(r, { country: true })),
-            ...GEO.landforms(states),
+            ...GEO.landforms(states).map((r) => Object.assign(r, { usState: true })),
             ...GEO.landforms(provinces),
           ],
           mapLabels: GEO.labels.concat(
             countries.features.map(({ properties: p }) => ({ text: p.name, zh: p.name_zh, point: GEO.project(...p.coords), country: true })),
+            travelCountries.features.filter(({ properties: p }) => !countries.features.some((f) => f.properties.name === p.name))
+              .map(({ properties: p }) => ({ text: p.name, zh: p.name_zh, point: GEO.project(...p.coords), country: true })),
             [...states.features, ...provinces.features].map(({ properties: p }) => ({
               text: p.name, point: GEO.project(...p.coords), state: true,
             })),
@@ -2845,7 +3112,19 @@
         },
         SCENE_SCALE.world,
       );
+      // A flag sprite is larger than some entire islands. Leave space beside
+      // country landing points; the dot and leader still mark its true location.
+      for (const d of SCENES.world.destinations.filter((p) => p.kind === 'country')) {
+        for (const p of worldPlaces) {
+          if (p.kind === 'flag' && Math.abs(p.x - d.point[0]) < (p.r || 26) + 12
+            && d.point[1] < p.y + 18 && d.point[1] > p.y - 38) {
+            p.x = d.point[0] + (p.r || 26) + 20;
+            p.y = d.point[1] - 18;
+          }
+        }
+      }
       renderJournal();
+      renderTravelDestinations();
       idle(() => {
         if (!SCENES.world.decor) SCENES.world.decor = buildDecor(SCENES.world);
       });
@@ -2853,6 +3132,8 @@
       if (location.hash === '#world') loadScene('world', 'home');
     });
   worldReady.catch(() => {
+    travelMapFailed = true;
+    travelStatus.textContent = 'The destinations could not load. Refresh to try again.';
     if (location.hash === '#world') {
       document.getElementById('hint').textContent = 'The world map could not load. Please refresh to try again.';
     }

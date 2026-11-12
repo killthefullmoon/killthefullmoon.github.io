@@ -83,12 +83,16 @@
         <button type="button" data-travel-scene="games"><span>Save Point</span><small>The games I play</small></button>
         <button type="button" data-travel-scene="music"><span>Album Collection</span><small>Something to listen to</small></button>
       </div>
-      <div class="life-travel__divider"><span>The World · United States</span><span id="travelCount">50 states</span></div>
+      <div class="life-travel__divider"><span>The World · Destinations</span><span id="travelCount">Loading…</span></div>
+      <div class="life-travel__scope" role="group" aria-label="Destination type">
+        <button type="button" data-travel-scope="country" aria-pressed="true">All countries · 全部</button>
+        <button type="button" data-travel-scope="visited" aria-pressed="false">Been there · 去过的</button>
+      </div>
       <label class="life-travel__search" for="travelSearch">
         <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8" cy="8" r="5" /><path d="m12 12 5 5" /></svg>
-        <input type="search" id="travelSearch" placeholder="Find a state… e.g. California or CA" aria-label="Find a U.S. state" autocomplete="off" spellcheck="false">
+        <input type="search" id="travelSearch" placeholder="Search countries / 搜索国家" aria-label="Find a country or region" autocomplete="off" spellcheck="false">
       </label>
-      <div class="life-travel__states" id="travelStates" role="group" aria-label="Choose a U.S. state" tabindex="0"></div>
+      <div class="life-travel__destinations" id="travelDestinations" role="group" aria-label="Choose a country or region" tabindex="0"></div>
       <p class="life-travel__status" id="travelStatus" role="status">Preparing the map…</p>
       <footer class="life-travel__foot"><span id="travelLocation">Currently on Home Island</span><span>Choose a stop ↗</span></footer>
     </dialog>
