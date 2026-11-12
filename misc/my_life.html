@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>My Life · Hui Shen</title>
+  <meta name="description"
+    content="My Life: a small hand-drawn, top-down walking game through the places Hui Shen has lived, studied, worked and visited.">
+
+  <link rel="icon" type="image/x-icon" href="../images/favicons/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Fetch the fonts in parallel instead of waiting for stylesheet.css to @import them -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400&text=%E6%B2%88%E5%8C%AF%E9%9B%B2%E7%AB%AF%E5%8F%B8%E6%A9%9F&display=swap">
+  <link rel="preload" href="../travel_notes/visited.json" as="fetch" crossorigin="anonymous">
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../stylesheet.css">
+  <link rel="stylesheet" href="../css/my_life.css">
+</head>
+
+<body data-root-path=".." data-page="my_life">
+
+  <div data-include="site-header"></div>
+  <script src="../js/header.js"></script>
+
+  <main class="life" aria-label="My Life, a walking game">
+    <canvas id="world" tabindex="0" aria-label="Hand-drawn map. Walk Hui around to discover places."></canvas>
+
+    <svg class="life-symbols" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="helicopter" viewBox="0 0 80 60">
+        <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M31 20V11M9 10l49-1M25 17h13" />
+          <path fill="#e8dfcb" d="M45 29l20-7 3 3-22 15M12 37c0-9 9-17 20-16 12 0 18 8 16 17-2 8-29 9-35 3Z" />
+          <path fill="#bccdc6" d="M14 34c2-6 8-10 15-11l1 12Z" />
+          <path d="M35 25v14M19 44l-2 7m23-7 2 7M10 50c2 3 5 3 9 3h26l5-3M67 15v15m-7-7h14" />
+          <path stroke-width="1.2" d="M4 54h3m47 0h8M8 5l14-1m28 0h11" />
+        </g>
+      </symbol>
+    </svg>
+
+    <!-- HUD -->
+    <div class="life-hud life-hud--title">
+      <h1>My Life</h1>
+      <p class="scene" id="sceneName">Home Island</p>
+    </div>
+
+    <button type="button" class="life-hud life-hud--journal" id="journalBtn" aria-expanded="false"
+      aria-controls="journal">
+      <span class="label">Journal</span>
+      <span class="count" id="count">0 / 0</span>
+    </button>
+
+    <button type="button" class="life-hud life-hud--run" id="runBtn" aria-pressed="false" title="Run (hold Shift)">Run</button>
+
+    <div class="life-hud life-hud--zoom" role="group" aria-label="Zoom">
+      <button type="button" id="zoomMap" aria-label="Show the whole world" hidden>Map</button>
+      <button type="button" id="zoomIn" aria-label="Zoom in">+</button>
+      <button type="button" id="zoomOut" aria-label="Zoom out">−</button>
+    </div>
+
+    <button type="button" class="life-hud life-travel-launcher" id="travelBtn"
+      aria-haspopup="dialog" aria-controls="travelDialog" aria-expanded="false" title="Map &amp; fast travel (M)">
+      <canvas id="minimap" width="200" height="126" aria-hidden="true"></canvas>
+      <span class="life-travel-launcher__heli" aria-hidden="true"><svg><use href="#helicopter" /></svg></span>
+      <span class="life-travel-launcher__caption">Fast travel <span aria-hidden="true">↗</span></span>
+    </button>
+
+    <dialog class="life-travel" id="travelDialog" aria-labelledby="travelTitle" aria-describedby="travelIntro">
+      <button type="button" class="life-card__close" id="travelClose" aria-label="Close fast travel" autofocus>×</button>
+      <header class="life-travel__head">
+        <div>
+          <p class="life-travel__eyebrow">Helicopter travel</p>
+          <h2 id="travelTitle">Where to?</h2>
+        </div>
+        <svg aria-hidden="true"><use href="#helicopter" /></svg>
+      </header>
+      <p class="life-travel__intro" id="travelIntro">A different world, or a little closer to home.</p>
+      <div class="life-travel__worlds" role="group" aria-label="Choose a world">
+        <button type="button" data-travel-scene="home"><span>Home Island</span><small>Back to the beginning</small></button>
+        <button type="button" data-travel-scene="world"><span>The World</span><small>Places &amp; memories</small></button>
+        <button type="button" data-travel-scene="games"><span>Save Point</span><small>The games I play</small></button>
+        <button type="button" data-travel-scene="music"><span>Album Collection</span><small>Something to listen to</small></button>
+      </div>
+      <div class="life-travel__divider"><span>The World · United States</span><span id="travelCount">50 states</span></div>
+      <label class="life-travel__search" for="travelSearch">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8" cy="8" r="5" /><path d="m12 12 5 5" /></svg>
+        <input type="search" id="travelSearch" placeholder="Find a state… e.g. California or CA" aria-label="Find a U.S. state" autocomplete="off" spellcheck="false">
+      </label>
+      <div class="life-travel__states" id="travelStates" role="group" aria-label="Choose a U.S. state" tabindex="0"></div>
+      <p class="life-travel__status" id="travelStatus" role="status">Preparing the map…</p>
+      <footer class="life-travel__foot"><span id="travelLocation">Currently on Home Island</span><span>Choose a stop ↗</span></footer>
+    </dialog>
+
+    <div class="life-flight" id="flightNotice" role="status" hidden>
+      <svg aria-hidden="true"><use href="#helicopter" /></svg><span id="flightText"></span>
+    </div>
+
+    <p class="life-hud life-hud--hint" id="hint">WASD / arrow keys to walk · hold Shift to run · E to interact · scroll to zoom · tap to walk on phones</p>
+
+    <!-- Place card -->
+    <section class="life-card" id="card" hidden aria-live="polite">
+      <button type="button" class="life-card__close" id="cardClose" aria-label="Close">×</button>
+      <p class="life-card__kicker" id="cardKicker"></p>
+      <h2 class="life-card__title" id="cardTitle"></h2>
+      <img class="life-card__img" id="cardImg" alt="" hidden>
+      <p class="life-card__body" id="cardBody"></p>
+      <div class="life-card__embed" id="cardEmbed" hidden></div>
+      <a class="life-card__link" id="cardLink" href="#" hidden></a>
+    </section>
+
+    <!-- In-game computer: shows the plain web page -->
+    <section class="life-screen" id="screen" hidden>
+      <div class="life-screen__monitor">
+        <div class="life-screen__bar">
+          <span id="screenTitle"></span>
+          <a id="screenOpen" href="#" target="_blank" rel="noopener">Open in a tab ↗</a>
+          <button type="button" id="screenClose" aria-label="Close">×</button>
+        </div>
+        <iframe id="screenFrame" title="Web page" src="about:blank"></iframe>
+      </div>
+    </section>
+
+    <!-- Journal -->
+    <section class="life-journal" id="journal" hidden>
+      <div class="life-journal__head">
+        <h2>Journal</h2>
+        <button type="button" class="life-card__close" id="journalClose" aria-label="Close">×</button>
+      </div>
+      <ol id="journalList"></ol>
+    </section>
+
+  </main>
+
+  <script src="../js/world_geography.js"></script>
+  <script src="../js/my_life.js"></script>
+  <script src="../js/bootstrap.bundle.min.js" defer></script>
+</body>
+
+</html>

@@ -483,18 +483,34 @@ papertitle {
   display: block;
   width: auto;
   height: var(--signature-height);
+  transform-origin: 0 0;
+  filter: var(--signature-tone);
 }
 
-/* Account for transparent padding so both signatures have equal ink height
-   and share the same baseline. Both retain their full ink opacity. */
+/* Normalize the new ink bounds and tone to the previous signatures while
+   retaining their existing layout boxes, visible size, and baseline. */
+.sign--en {
+  --signature-tone: saturate(0.55671) brightness(0.961468);
+  width: calc(var(--signature-height) * 3);
+  transform: translate(-2.320311%, -5.045712%) scale(1.050916, 1.069048);
+}
+
 .sign--zh {
+  /* Keep the approved ink weight around the handwritten strokes. */
+  --signature-tone: drop-shadow(0.15px 0 0 #1e1a18)
+    drop-shadow(-0.15px 0 0 #1e1a18)
+    drop-shadow(0 0.2px 0 #1e1a18)
+    drop-shadow(0 -0.2px 0 #1e1a18)
+    saturate(0.846462) brightness(1.083356);
+  width: calc(var(--signature-height) * 2.0547);
   height: calc(var(--signature-height) * 1.1415);
   margin-left: calc(var(--signature-height) * -0.25);
   margin-bottom: calc(var(--signature-height) * -0.052);
+  transform: translate(-20.334001%, -2.658957%) scale(1.441295, 1.051536);
 }
 
 [data-theme="dark"] .sign {
-  filter: invert(0.9);
+  filter: var(--signature-tone) invert(0.9);
 }
 
 .home-name__zh {

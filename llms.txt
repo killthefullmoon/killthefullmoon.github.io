@@ -21,6 +21,6 @@
 - [Famba-V Paper](https://www.arxiv.org/pdf/2409.09808): The paper "Famba-V: Fast Vision Mamba with Cross-Layer Token Fusion", winner of the Best Paper Award at ECCV 2024 Workshop.
 - [FedAIoT Benchmark](https://arxiv.org/abs/2310.00109): A federated learning benchmark for Artificial Intelligence of Things (DMLR).
 
-- [Travel Map](https://killthefullmoon.github.io/misc/travel_map.html): A map showing places visited and lived by Hui Shen.
+- [My Life](https://killthefullmoon.github.io/misc/my_life.html): A small hand-drawn walking game through the places Hui Shen has lived, studied, worked and visited.
 - [Music Collection](https://killthefullmoon.github.io/misc/music.html): A collection of favorite albums and music preferences.
 - [Game Save Point](https://killthefullmoon.github.io/misc/game.html): A log of video games played and achievements unlocked.

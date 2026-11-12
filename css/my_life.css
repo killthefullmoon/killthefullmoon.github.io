@@ -1,0 +1,524 @@
+/* My Life — hand-drawn top-down walking game */
+
+body[data-page="my_life"] {
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: #d9ddd6;
+}
+
+.life {
+  position: fixed;
+  inset: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#world {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+/* HUD ------------------------------------------------------------------ */
+.life-hud {
+  position: absolute;
+  z-index: 5;
+}
+
+.life-hud--title {
+  top: 86px;
+  left: max(40px, calc((100vw - 1160px) / 2 + 40px));
+  pointer-events: none;
+}
+
+.life-hud--title h1 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 44px;
+  line-height: 1;
+  color: #1c1b19;
+}
+
+.life-hud--title p {
+  margin: 8px 0 0;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6d6962;
+}
+
+.life-hud--journal {
+  top: 90px;
+  right: max(40px, calc((100vw - 1160px) / 2 + 40px));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 8px 12px;
+  border: 1px solid rgba(28, 27, 25, 0.25);
+  background: rgba(243, 241, 236, 0.86);
+  color: #1c1b19;
+  cursor: pointer;
+}
+
+.life-hud--journal .label {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.life-hud--journal .count {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: #6d6962;
+}
+
+.life-hud--journal:hover {
+  border-color: #1c1b19;
+}
+
+.life-hud--title .scene {
+  margin-top: 6px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 17px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #1c1b19;
+}
+
+.life-hud--zoom {
+  right: max(24px, calc((100vw - 1160px) / 2 + 40px));
+  bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(28, 27, 25, 0.3);
+  background: rgba(243, 241, 236, 0.9);
+}
+
+.life-hud--zoom button {
+  width: 34px;
+  height: 32px;
+  border: none;
+  background: none;
+  color: #1c1b19;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.life-hud--run {
+  right: max(24px, calc((100vw - 1160px) / 2 + 40px));
+  bottom: 100px;
+  width: 36px;
+  padding: 7px 0;
+  border: 1px solid rgba(28, 27, 25, 0.3);
+  background: rgba(243, 241, 236, 0.9);
+  color: #1c1b19;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.life-hud--run[aria-pressed="true"] {
+  background: #1c1b19;
+  color: #f6f2e8;
+}
+
+.life-hud--zoom button + button {
+  border-top: 1px solid rgba(28, 27, 25, 0.2);
+}
+
+#zoomMap {
+  font-size: 11px;
+}
+
+body[data-life-scene="world"] .life-hud--run {
+  bottom: 136px;
+}
+
+.life-hud--zoom button:hover {
+  background: rgba(28, 27, 25, 0.06);
+}
+
+.life-hud--journal[hidden] {
+  display: none;
+}
+
+.life-hud--minimap {
+  left: max(24px, calc((100vw - 1160px) / 2 + 40px));
+  bottom: 24px;
+  width: 200px;
+  height: 126px;
+  border: 1px solid rgba(28, 27, 25, 0.3);
+  background: #e9e5da;
+  pointer-events: none;
+}
+
+.life-hud--hint {
+  left: 50%;
+  bottom: 22px;
+  margin: 0;
+  transform: translateX(-50%);
+  padding: 6px 14px;
+  background: rgba(243, 241, 236, 0.82);
+  color: #6d6962;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+.life-hud--hint.is-faded {
+  opacity: 0;
+}
+
+/* Paper panels ----------------------------------------------------------- */
+.life-card,
+.life-journal {
+  background: #f6f2e8;
+  color: #1c1b19;
+  border: 1px solid rgba(28, 27, 25, 0.35);
+  box-shadow: 4px 5px 0 rgba(28, 27, 25, 0.12), 0 20px 40px rgba(28, 27, 25, 0.12);
+}
+
+.life-card {
+  position: absolute;
+  z-index: 8;
+  right: max(76px, calc((100vw - 1160px) / 2 + 92px));
+  bottom: 24px;
+  width: min(360px, calc(100vw - 48px));
+  padding: 24px 26px 22px;
+  transform: rotate(-0.6deg);
+  animation: card-in 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.life-card[hidden],
+.life-journal[hidden] {
+  display: none;
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) rotate(-0.6deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: rotate(-0.6deg);
+  }
+}
+
+.life-card__close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: none;
+  color: #6d6962;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.life-card__close:hover {
+  color: #1c1b19;
+}
+
+.life-card__kicker {
+  margin: 0 0 6px !important;
+  font-size: 10px !important;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9b3d2b !important;
+}
+
+.life-card__title {
+  margin: 0 30px 10px 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1.1;
+}
+
+.life-card__body {
+  margin: 0 !important;
+  font-size: 14px !important;
+  line-height: 1.6;
+  color: #4a4741 !important;
+}
+
+.life-card__body:empty {
+  display: none;
+}
+
+.life-card--wide {
+  width: min(420px, calc(100vw - 48px));
+}
+
+.life-card__img {
+  display: block;
+  width: 100%;
+  max-height: 260px;
+  margin: 4px 0 12px;
+  object-fit: contain;
+  background: #ebe5d8;
+  border: 1px solid rgba(28, 27, 25, 0.25);
+}
+
+.life-card__img[hidden],
+.life-card__embed[hidden] {
+  display: none;
+}
+
+.life-card__embed {
+  margin-top: 6px;
+}
+
+.life-card__embed iframe {
+  display: block;
+  width: 100%;
+  height: 152px;
+  border: 0;
+  border-radius: 12px;
+}
+
+.life-card__link {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #1c1b19;
+}
+
+/* Journal */
+.life-journal {
+  position: absolute;
+  z-index: 9;
+  top: 150px;
+  right: max(24px, calc((100vw - 1160px) / 2 + 40px));
+  width: min(320px, calc(100vw - 48px));
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  padding: 18px 22px 16px;
+}
+
+.life-journal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.life-journal__head h2 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 26px;
+}
+
+.life-journal__head .life-card__close {
+  position: static;
+}
+
+.life-journal ol {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: stop;
+}
+
+.life-journal li {
+  display: flex;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(28, 27, 25, 0.1);
+  font-size: 13px;
+  color: #1c1b19;
+}
+
+.life-journal li::before {
+  counter-increment: stop;
+  content: counter(stop, decimal-leading-zero);
+  min-width: 20px;
+  color: #a19c93;
+  font-size: 10px;
+  padding-top: 3px;
+}
+
+.life-journal li.is-unknown {
+  color: #a19c93;
+  font-style: italic;
+}
+
+.life-journal li .tag {
+  margin-left: auto;
+  color: #a19c93;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding-top: 3px;
+}
+
+/* Nav sits straight on the map; a soft paper fade (not a bar) keeps it legible */
+body[data-page="my_life"] .header,
+body[data-page="my_life"] .header.header--frosted {
+  background: transparent;
+  border-bottom-color: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.life::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 130px;
+  z-index: 4;
+  background: linear-gradient(to bottom, rgba(243, 241, 236, 0.85), rgba(243, 241, 236, 0));
+  pointer-events: none;
+}
+
+.life-hud--title h1,
+.life-hud--title p {
+  text-shadow: 0 0 10px rgba(243, 241, 236, 0.9), 0 0 2px rgba(243, 241, 236, 0.9);
+}
+
+body[data-page="my_life"] .header .nav-link,
+body[data-page="my_life"] .navbar-brand {
+  color: #1c1b19 !important;
+}
+
+@media (max-width: 768px) {
+  .life-hud--title {
+    top: 70px;
+    left: 16px;
+  }
+
+  .life-hud--title h1 {
+    font-size: 32px;
+  }
+
+  .life-hud--journal {
+    top: 72px;
+    right: 16px;
+  }
+
+  .life-hud--minimap {
+    display: none;
+  }
+
+  .life-hud--zoom {
+    right: 16px;
+    bottom: 52px;
+  }
+
+  .life-hud--run {
+    right: 16px;
+    bottom: 128px;
+    width: 52px;
+    padding: 10px 0;
+  }
+
+  body[data-life-scene="world"] .life-hud--run {
+    bottom: 164px;
+  }
+
+  .life-hud--hint {
+    bottom: 14px;
+    font-size: 10px;
+  }
+
+  .life-card {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    width: auto;
+  }
+
+  .life-journal {
+    top: 130px;
+    right: 16px;
+  }
+}
+
+/* In-game computer */
+.life-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 90px 24px 24px;
+  background: rgba(28, 27, 25, 0.35);
+}
+
+.life-screen[hidden] {
+  display: none;
+}
+
+.life-screen__monitor {
+  display: flex;
+  flex-direction: column;
+  width: min(1100px, 100%);
+  height: min(760px, 100%);
+  padding: 14px 14px 18px;
+  background: #e6dfcf;
+  border: 1.5px solid #1c1b19;
+  border-radius: 10px;
+  box-shadow: 5px 6px 0 rgba(28, 27, 25, 0.18), 0 24px 60px rgba(28, 27, 25, 0.25);
+}
+
+.life-screen__bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 4px 10px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 18px;
+  color: #1c1b19;
+}
+
+.life-screen__bar a {
+  margin-left: auto;
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4a4741;
+}
+
+.life-screen__bar button {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: none;
+  font-size: 22px;
+  line-height: 1;
+  color: #4a4741;
+  cursor: pointer;
+}
+
+.life-screen iframe {
+  flex: 1;
+  width: 100%;
+  border: 1.5px solid #1c1b19;
+  border-radius: 4px;
+  background: #f3f1ec;
+}

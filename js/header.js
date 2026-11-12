@@ -34,22 +34,8 @@ const HEADER_TEMPLATE = /* html */ `
         <li class="nav-item">
           <a class="nav-link" data-path="index.html" data-nav="home">Home</a>
         </li>
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-            data-nav="misc-root"
-          >
-            When I'm Not Doing Research
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" data-path="misc/travel_map.html" data-nav="travel_map">Travel Map</a></li>
-            <li><a class="dropdown-item" data-path="misc/music.html" data-nav="music">Music</a></li>
-            <li><a class="dropdown-item" data-path="misc/transfer_guide.html" data-nav="transfer_guide">Transfer Guide</a></li>
-            <li><a class="dropdown-item" data-path="misc/game.html" data-nav="game">Game</a></li>
-          </ul>
+        <li class="nav-item">
+          <a class="nav-link" data-path="misc/my_life.html" data-nav="my_life">When I'm Not Doing Research</a>
         </li>
       </ul>
     </div>
