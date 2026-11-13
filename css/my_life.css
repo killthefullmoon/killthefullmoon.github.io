@@ -151,6 +151,46 @@ body[data-life-scene="world"] .life-hud--run {
   display: none;
 }
 
+.life-collection {
+  top: 86px;
+  right: max(24px, calc((100vw - 1160px) / 2 + 40px));
+  width: 290px;
+  padding: 10px 12px;
+  border: 1px solid #b9ad98;
+  background: rgba(246, 242, 232, 0.96);
+  box-shadow: 3px 3px 0 rgba(59, 47, 32, 0.08);
+  color: #342b24;
+}
+.life-collection[hidden] { display: none; }
+.life-collection__rooms, .life-collection__search, .life-collection__pages { display: flex; align-items: center; gap: 8px; }
+.life-collection__search { margin: 8px 0; }
+.life-collection button, .life-collection select, .life-collection input {
+  min-height: 32px;
+  border: 1px solid #c6bba8;
+  border-radius: 2px;
+  background: #faf6ed;
+  color: inherit;
+  font: 12px Inter, sans-serif;
+}
+.life-collection button { padding: 5px 9px; cursor: pointer; white-space: nowrap; }
+.life-collection button:hover:not(:disabled) { background: #e8ddc9; }
+.life-collection button:disabled { opacity: 0.35; cursor: default; }
+.life-collection input, .life-collection select { min-width: 0; flex: 1; width: 100%; padding: 5px 6px; }
+.life-collection input:focus-visible, .life-collection button:focus-visible, .life-collection select:focus-visible { outline: 2px solid #9b6546; outline-offset: 2px; }
+.life-collection__results[hidden] { display: none; }
+.life-collection__results { display: grid; gap: 4px; margin-top: 8px; max-height: min(280px, 32vh); overflow-y: auto; }
+.life-collection__results button { text-align: left; white-space: normal; padding: 7px 8px; }
+.life-collection__results button[aria-current] { border-color: #997547; background: #ede1cd; }
+.life-collection__results span, .life-collection__results small { display: block; }
+.life-collection__results small { font-size: 10px; color: #786d5c; margin-top: 3px; }
+.life-collection__pages output { flex: 1; text-align: center; font: 11px Inter, sans-serif; }
+@media (max-width: 699px) {
+  .life-collection { top: 138px; left: 16px; right: 16px; width: auto; padding: 7px 9px; }
+  .life-collection__search { margin: 5px 0; }
+  .life-collection button, .life-collection input, .life-collection select { min-height: 30px; }
+  .life-hud--title .scene { max-width: calc(100vw - 32px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
+
 .life-symbols {
   position: absolute;
   width: 0;

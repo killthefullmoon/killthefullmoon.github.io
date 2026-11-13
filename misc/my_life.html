@@ -51,6 +51,23 @@
       <p class="scene" id="sceneName">Home</p>
     </div>
 
+    <nav class="life-hud life-collection" id="collectionNav" aria-label="Explore the collection" hidden>
+      <div class="life-collection__rooms">
+        <button type="button" id="collectionBack">← Home</button>
+        <select id="collectionRoom" aria-label="Jump to a category"></select>
+      </div>
+      <form id="collectionSearchForm" class="life-collection__search" role="search">
+        <input type="search" id="collectionSearch" aria-label="Search the collection" placeholder="Find a title or artist" autocomplete="off">
+        <button type="submit">Find</button>
+      </form>
+      <div class="life-collection__pages">
+        <button type="button" id="collectionPrev" aria-label="Previous display area">←</button>
+        <output id="collectionCount" aria-live="polite"></output>
+        <button type="button" id="collectionNext" aria-label="Next display area">→</button>
+      </div>
+      <div id="collectionResults" class="life-collection__results" aria-label="Matching exhibits" hidden></div>
+    </nav>
+
     <button type="button" class="life-hud life-hud--journal" id="journalBtn" aria-expanded="false"
       aria-controls="journal">
       <span class="label">Journal</span>
@@ -85,8 +102,8 @@
       <div class="life-travel__worlds" role="group" aria-label="Choose a world">
         <button type="button" data-travel-scene="home"><span>Home</span><small>A home above the clouds</small></button>
         <button type="button" data-travel-scene="world"><span>The World</span><small>Places &amp; memories</small></button>
-        <button type="button" data-travel-scene="games"><span>Save Point</span><small>The games I play</small></button>
-        <button type="button" data-travel-scene="music"><span>Album Collection</span><small>Something to listen to</small></button>
+        <button type="button" data-travel-scene="games"><span>Save Point</span><small>An open arcade garden</small></button>
+        <button type="button" data-travel-scene="music"><span>Album Collection</span><small>An open listening garden</small></button>
       </div>
       <div class="life-travel__divider"><span>The World · Destinations</span><span id="travelCount">Loading…</span></div>
       <div class="life-travel__scope" role="group" aria-label="Destination type">
@@ -143,6 +160,7 @@
   </main>
 
   <script src="../js/world_geography.js"></script>
+  <script src="../js/collection_rooms.js"></script>
   <script src="../js/my_life.js"></script>
   <script src="../js/bootstrap.bundle.min.js" defer></script>
 </body>

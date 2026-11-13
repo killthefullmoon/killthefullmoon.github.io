@@ -1,0 +1,298 @@
+{
+  "version": 2,
+  "games": {
+    "rooms": [
+      {
+        "id": "rpg",
+        "name": "RPG",
+        "tint": "rgba(196, 170, 122, 0.24)"
+      },
+      {
+        "id": "rogue",
+        "name": "Roguelike",
+        "tint": "rgba(170, 120, 100, 0.2)"
+      },
+      {
+        "id": "metroid",
+        "name": "Metroidvania & Platformer",
+        "tint": "rgba(120, 140, 160, 0.2)"
+      },
+      {
+        "id": "survival",
+        "name": "Survival & Sandbox",
+        "tint": "rgba(130, 150, 100, 0.22)"
+      },
+      {
+        "id": "story",
+        "name": "Sim & Story",
+        "tint": "rgba(200, 160, 90, 0.2)"
+      },
+      {
+        "id": "action",
+        "name": "Action & Adventure",
+        "tint": "rgba(110, 130, 120, 0.2)"
+      },
+      {
+        "id": "competitive",
+        "name": "Online Competitive",
+        "tint": "rgba(155, 61, 43, 0.14)"
+      },
+      {
+        "id": "other",
+        "name": "More",
+        "tint": "rgba(150, 140, 120, 0.18)"
+      }
+    ],
+    "items": {
+      "Dota 2": {
+        "genre": "competitive",
+        "dev": "Valve"
+      },
+      "Counter-Strike 2": {
+        "genre": "competitive",
+        "dev": "Valve"
+      },
+      "Warframe": {
+        "genre": "action",
+        "dev": "Digital Extremes"
+      },
+      "Valheim": {
+        "genre": "survival",
+        "dev": "Iron Gate"
+      },
+      "Slay the Spire Ⅱ": {
+        "genre": "rogue",
+        "dev": "Mega Crit"
+      },
+      "Animal Crossing": {
+        "genre": "story",
+        "dev": "Nintendo"
+      },
+      "Bloodstained: Ritual of the Night": {
+        "genre": "metroid",
+        "dev": "ArtPlay"
+      },
+      "Hollow Knight: Silksong": {
+        "genre": "metroid",
+        "dev": "Team Cherry"
+      },
+      "Hollow Knight": {
+        "genre": "metroid",
+        "dev": "Team Cherry"
+      },
+      "Blasphemous 2": {
+        "genre": "metroid",
+        "dev": "The Game Kitchen"
+      },
+      "Celeste": {
+        "genre": "metroid",
+        "dev": "Maddy Makes Games"
+      },
+      "ASTLIBRA Revision": {
+        "genre": "metroid",
+        "dev": "KEIZO"
+      },
+      "Slay the Spire": {
+        "genre": "rogue",
+        "dev": "Mega Crit"
+      },
+      "Vampire Survivors": {
+        "genre": "rogue",
+        "dev": "poncle"
+      },
+      "Cult of the Lamb": {
+        "genre": "rogue",
+        "dev": "Massive Monster"
+      },
+      "Hades": {
+        "genre": "rogue",
+        "dev": "Supergiant Games"
+      },
+      "Hades 2": {
+        "genre": "rogue",
+        "dev": "Supergiant Games"
+      },
+      "The Binding of Isaac: Rebirth": {
+        "genre": "rogue",
+        "dev": "Nicalis"
+      },
+      "Risk of Rain 2": {
+        "genre": "rogue",
+        "dev": "Hopoo Games"
+      },
+      "Darkest Dungeon": {
+        "genre": "rogue",
+        "dev": "Red Hook Studios"
+      },
+      "Persona 5 Royal": {
+        "genre": "rpg",
+        "dev": "Atlus"
+      },
+      "Clair Obscur: Expedition 33": {
+        "genre": "rpg",
+        "dev": "Sandfall Interactive"
+      },
+      "The Witcher 3: Wild Hunt": {
+        "genre": "rpg",
+        "dev": "CD Projekt Red"
+      },
+      "Cyberpunk 2077": {
+        "genre": "rpg",
+        "dev": "CD Projekt Red"
+      },
+      "Elden Ring": {
+        "genre": "rpg",
+        "dev": "FromSoftware"
+      },
+      "Baldur's Gate 3": {
+        "genre": "rpg",
+        "dev": "Larian Studios"
+      },
+      "Tale of Immortal": {
+        "genre": "rpg",
+        "dev": "GuiGu Studio"
+      },
+      "Subnautica 2": {
+        "genre": "survival",
+        "dev": "Unknown Worlds"
+      },
+      "Starbound": {
+        "genre": "survival",
+        "dev": "Chucklefish"
+      },
+      "Don't Starve": {
+        "genre": "survival",
+        "dev": "Klei Entertainment"
+      },
+      "Palworld": {
+        "genre": "survival",
+        "dev": "Pocketpair"
+      },
+      "Dave the Diver": {
+        "genre": "story",
+        "dev": "MINTROCKET"
+      },
+      "Stardew Valley": {
+        "genre": "story",
+        "dev": "ConcernedApe"
+      },
+      "Volcano Princess": {
+        "genre": "story",
+        "dev": ""
+      },
+      "Sultan's Game": {
+        "genre": "story",
+        "dev": ""
+      },
+      "Magical Girl Witch Trials": {
+        "genre": "story",
+        "dev": ""
+      },
+      "Cultist Simulator": {
+        "genre": "story",
+        "dev": "Weather Factory"
+      },
+      "Helltaker": {
+        "genre": "story",
+        "dev": "vanripper"
+      },
+      "Pokémon Scarlet": {
+        "genre": "rpg",
+        "dev": "Game Freak"
+      },
+      "Pokémon Sword": {
+        "genre": "rpg",
+        "dev": "Game Freak"
+      },
+      "Fire Emblem: Three Houses": {
+        "genre": "rpg",
+        "dev": "Intelligent Systems"
+      },
+      "The Legend of Zelda: Breath of the Wild": {
+        "genre": "action",
+        "dev": "Nintendo"
+      }
+    }
+  },
+  "music": {
+    "rooms": [
+      {
+        "id": "neosoul",
+        "name": "Neo-Soul",
+        "tint": "rgba(155, 61, 43, 0.13)"
+      },
+      {
+        "id": "altrnb",
+        "name": "Alternative R&B",
+        "tint": "rgba(110, 100, 130, 0.16)"
+      },
+      {
+        "id": "rnb",
+        "name": "R&B",
+        "tint": "rgba(200, 160, 90, 0.2)"
+      },
+      {
+        "id": "folk",
+        "name": "Folk & Singer-Songwriter",
+        "tint": "rgba(130, 150, 100, 0.22)"
+      },
+      {
+        "id": "rock",
+        "name": "Indie Rock",
+        "tint": "rgba(120, 140, 160, 0.2)"
+      },
+      {
+        "id": "pop",
+        "name": "Pop",
+        "tint": "rgba(196, 170, 122, 0.24)"
+      },
+      {
+        "id": "hiphop",
+        "name": "Hip-Hop",
+        "tint": "rgba(60, 60, 60, 0.12)"
+      },
+      {
+        "id": "indiepop",
+        "name": "Indie & Dream Pop",
+        "tint": "rgba(110, 130, 120, 0.2)"
+      },
+      {
+        "id": "other",
+        "name": "More",
+        "tint": "rgba(150, 140, 120, 0.18)"
+      }
+    ],
+    "artists": {
+      "Daniel Caesar": "neosoul",
+      "Giveon": "neosoul",
+      "Khalil Fong": "neosoul",
+      "Frank Ocean": "altrnb",
+      "SZA": "altrnb",
+      "keshi": "altrnb",
+      "DEN": "altrnb",
+      "The Weeknd": "rnb",
+      "Michael Jackson": "rnb",
+      "David Tao": "rnb",
+      "Matt Lv": "rnb",
+      "Tyler, The Creator": "hiphop",
+      "Kendrick Lamar": "hiphop",
+      "Jay Chou": "pop",
+      "Jerry Li": "pop",
+      "AK Akemi Kakihara": "pop",
+      "Crowd Lu": "folk",
+      "Cheer Chen": "folk",
+      "Deserts Chang": "folk",
+      "Radiohead": "rock",
+      "RADWIMPS": "rock",
+      "露波合唱團": "rock",
+      "Schoolgirl Byebye": "rock",
+      "唐貓SUGARCAT": "rock",
+      "Zhang Zhen Yue": "rock",
+      "HYBS": "indiepop",
+      "The Crane": "indiepop",
+      "Gordon": "indiepop",
+      "花伦": "indiepop"
+    }
+  },
+  "displaySize": 12
+}

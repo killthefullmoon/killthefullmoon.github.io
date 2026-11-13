@@ -356,6 +356,15 @@
   ]).then(([, sheet]) => {
     homeArt.frames = Object.fromEntries(sheet.names.map((name, i) => [name, sheet.frames[i]]));
   }).catch(() => {});
+  const roomArt = { player: new Image(), playerFrame: null };
+  roomArt.player.src = '../images/rooms/album-player.png';
+  Promise.all([
+    roomArt.player.decode(),
+    fetch('../images/rooms/album-player.json').then((r) => {
+      if (!r.ok) throw new Error('Album player unavailable');
+      return r.json();
+    }),
+  ]).then(([, frame]) => { roomArt.playerFrame = frame; }).catch(() => {});
   const huiSprite = { image: new Image(), frames: null };
   const quietMotion = matchMedia('(prefers-reduced-motion: reduce)');
   huiSprite.image.decoding = 'async';
@@ -448,7 +457,7 @@
     ArrowUp: 'u', KeyW: 'u', ArrowDown: 'd', KeyS: 'd', ArrowLeft: 'l', KeyA: 'l', ArrowRight: 'r', KeyD: 'r',
   };
   window.addEventListener('keydown', (e) => {
-    if (!started || travelDialog.open || fade || e.target.closest('input, textarea, [contenteditable]')) return;
+    if (!started || travelDialog.open || fade || e.target.closest('input, textarea, select, [contenteditable]')) return;
     if (e.target.closest('button, a') && (e.code === 'Enter' || e.code === 'Space')) return;
     if (!screen.hidden) {
       if (e.code === 'Escape') closeScreen();
@@ -520,7 +529,16 @@
     }
     const wx = (e.clientX - W / 2) / zoom + cam.x;
     const wy = (e.clientY - H / 2) / zoom + cam.y - (sceneName === 'home' ? homeLift() : 0);
-    const hit = places.find((p) => Math.abs(p.x - wx) < (p.r || 26) + 12 && wy < p.y + 16 && wy > p.y - (p.h || 70));
+    const sc = SCENES[sceneName];
+    const hit = (sc.placeGrid ? decorIn(wx - 120, wy - 50, wx + 120, wy + 200, [], sc.placeGrid) : places).find((p) => Math.abs(p.x - wx) < (p.r || 26) + 12 && wy < p.y + 16 && wy > p.y - (p.h || 70));
+    if (hit && sc.gallery) {
+      // Browsing an exhibit never requires walking around intervening furniture.
+      target = pendingOpen = null;
+      keys.clear();
+      interact(hit);
+      fadeHint();
+      return;
+    }
     if (hit) {
       target = { x: hit.x, y: hit.y + 34 };
       pendingOpen = hit;
@@ -533,6 +551,12 @@
 
   let hintFaded = false;
   function updateHint() {
+    if (SCENES[sceneName]?.gallery) {
+      document.getElementById('hint').textContent = W < 700
+        ? 'Tap an exhibit to open · tap the floor to walk'
+        : 'Click an exhibit to explore · WASD to walk · Shift to run · scroll to zoom';
+      return;
+    }
     document.getElementById('hint').textContent = W < 700
       ? sceneName === 'world' ? 'Tap to walk or sail · pinch to zoom' : 'Tap to walk · tap a place to explore'
       : sceneName === 'world'
@@ -562,7 +586,8 @@
       if (dx > 14 || dx < -14) continue;
       if (Math.hypot(dx, (it.y - y) * 1.6) < 11 * it.s) return false;
     }
-    for (const p of [...sc.places, ...(sc.furniture || [])]) {
+    for (const p of sc.collisionGrid ? decorIn(x - 130, y - 150, x + 130, y + 150, [], sc.collisionGrid) : [...sc.places, ...(sc.furniture || [])]) {
+      if (p.solid === false) continue;
       if (Math.abs(p.x - x) < (p.r || 26) && y < p.y + 6 && y > p.y - (p.depth || 26)) return false;
     }
     return true;
@@ -652,11 +677,11 @@
       player.face = Math.abs(vy) > Math.abs(vx) ? (vy < 0 ? 'up' : 'down') : 'side';
       player.phase += dt * (player.running ? 19 : 11);
       const sailing = sceneName === 'world' && !onLand(player.x, player.y);
-      if (player.running && !sailing && sceneName !== 'home' && rand() < dt * 22) {
+      if (player.running && !sailing && !SCENES[sceneName].room && rand() < dt * 22) {
         dust.push({ x: player.x - vx * 8 + rr(-4, 4), y: player.y + rr(-1, 2), r: rr(2, 3.5), life: 0.5 });
       }
 
-      if (!sailing && sceneName !== 'home' && Math.hypot(player.x - lastPrint.x, player.y - lastPrint.y) > (player.running ? 30 : 17)) {
+      if (!sailing && (!SCENES[sceneName].room || SCENES[sceneName].theme === 'music') && Math.hypot(player.x - lastPrint.x, player.y - lastPrint.y) > (player.running ? 30 : 17)) {
         lastPrint = { x: player.x, y: player.y, side: -lastPrint.side };
         footprints.push({ x: player.x + lastPrint.side * 4, y: player.y + 1, life: 6, glyph: rand() < 0.5 ? 1 : 2 });
         if (footprints.length > 80) footprints.shift();
@@ -670,31 +695,36 @@
     for (const f of footprints) f.life -= dt;
     while (footprints.length && footprints[0].life <= 0) footprints.shift();
 
+    // Nearby exhibits also drive local animation and the current section label.
+    const sc = SCENES[sceneName];
+    const nearby = sc.placeGrid ? decorIn(player.x - 220, player.y - 250, player.x + 220, player.y + 250, [], sc.placeGrid) : places;
+    if (sc.gallery) trackCollectionArea(sc);
     // Nearest place
     near = null;
     let best = 96;
-    for (const p of places) {
+    for (const p of nearby) {
       const d = Math.hypot(p.x - player.x, p.y + 20 - player.y) - ((p.r || 26) - 26);
       if (d < best) {
         best = d;
         near = p;
       }
     }
-    if (openPlace && !openPlace.embed && Math.hypot(openPlace.x - player.x, openPlace.y - player.y) > 220) closeCard();
+    if (openPlace && !sc.gallery && !openPlace.embed && Math.hypot(openPlace.x - player.x, openPlace.y - player.y) > 220) closeCard();
 
     // Camera eases after the player
     cam.x += (player.x - cam.x) * Math.min(1, dt * 4);
-    cam.y += (player.y - cam.y) * Math.min(1, dt * 4);
+    const collectionLift = SCENES[sceneName].collection && W < 700 ? Math.min(95, H * 0.17) / zoom : 0;
+    cam.y += (player.y - collectionLift - cam.y) * Math.min(1, dt * 4);
     const hw = W / 2 / zoom;
     const hh = H / 2 / zoom;
     clampCam(hw, hh);
 
     // Particles
-    for (const p of places) {
+    for (const p of nearby) {
       if ((p.kind === 'house' || p.kind === 'hall') && rand() < dt * 1.6) {
         smoke.push({ x: p.x + (p.kind === 'house' ? 10 : 18), y: p.y - (p.kind === 'house' ? 50 : 58), r: 3, life: 3.2 });
       }
-      if (p.kind === 'gramophone' && rand() < dt * 1.3) {
+      if (!quietMotion.matches && (p.kind === 'gramophone' || p.sprite === 'records' || (p.kind === 'record' && p === openPlace)) && rand() < dt * 1.3) {
         notes.push({ x: p.x + 30, y: p.y - 96, vx: rr(6, 18), life: 3.4, glyph: rand() < 0.5 ? 1 : 2, wob: rr(0, 6) });
       }
       if (p.kind === 'portal' && rand() < dt * 10) {
@@ -894,9 +924,9 @@
       c.fillStyle = g.tint;
       roundRect(c, g.x0, g.y0, g.x1, g.y1, 22);
       c.fill();
-      c.strokeStyle = 'rgba(42, 39, 35, 0.28)';
+      c.strokeStyle = sc.room ? 'rgba(68, 55, 42, 0.22)' : 'rgba(42, 39, 35, 0.28)';
       c.lineWidth = 1.2;
-      c.setLineDash([8, 7]);
+      c.setLineDash(sc.room ? [] : [8, 7]);
       c.stroke();
     }
     c.setLineDash([]);
@@ -1525,8 +1555,9 @@
 
   // ---- shared image cache (covers load only when first seen)
   const IMGS = new Map();
-  function image(src, fallback) {
-    let im = IMGS.get(src);
+  const COLLECTION_IMGS = new Map();
+  function image(src, fallback, cache = IMGS) {
+    let im = cache.get(src);
     if (!im) {
       im = new Image();
       im.decoding = 'async';
@@ -1534,7 +1565,12 @@
         if (fallback && im.src.indexOf(fallback) < 0) im.src = fallback;
       };
       im.src = src;
-      IMGS.set(src, im);
+      cache.set(src, im);
+    }
+    if (cache === COLLECTION_IMGS) {
+      cache.delete(src);
+      cache.set(src, im);
+      if (cache.size > 128) cache.delete(cache.keys().next().value);
     }
     return im;
   }
@@ -1591,9 +1627,36 @@
     }
   }
 
-  // An album: a sleeve on a crate with the record sliding out
+  // Every album uses the same generated cabinet, with its own sleeve beside it.
   const SLEEVES = ['#8a4b3a', '#5f6a55', '#3b5d5d', '#c9a35a', '#6d5a7a', '#2a2723', '#b0704a', '#7d8a9a'];
   function drawRecord(c, p) {
+    const frame = roomArt.playerFrame;
+    if (!frame) return drawRecordFallback(c, p);
+    const cover = albumCover(p);
+    const x = p.x - 63;
+    const y = p.y - 119;
+    c.save();
+    shadow(c, p.x + 18, p.y, 40, 6);
+    c.strokeStyle = '#69492f';
+    inkLine(c, x + 7, p.y - 1, x + 15, y + 45, 2);
+    inkLine(c, x + 45, p.y - 1, x + 37, y + 45, 2);
+    c.fillStyle = '#f5ecda';
+    c.fillRect(x - 3, y - 3, 56, 56);
+    c.strokeRect(x - 3, y - 3, 56, 56);
+    if (cover && cover.complete && cover.naturalWidth) c.drawImage(cover, x, y, 50, 50);
+    else {
+      c.fillStyle = SLEEVES[p.seed % SLEEVES.length];
+      c.fillRect(x, y, 50, 50);
+      c.strokeStyle = '#eee4d3';
+      c.beginPath(); c.arc(x + 25, y + 25, 14, 0, Math.PI * 2); c.stroke();
+    }
+    const scale = 108 / frame.anchorY;
+    c.drawImage(roomArt.player, frame.x, frame.y, frame.width, frame.height,
+      p.x + 21 - frame.anchorX * scale, p.y - frame.anchorY * scale, frame.width * scale, frame.height * scale);
+    c.restore();
+  }
+
+  function drawRecordFallback(c, p) {
     const x = p.x;
     const y = p.y;
     shadow(c, x, y, 26, 6);
@@ -1661,8 +1724,7 @@
   let coverInflight = 0;
   function remoteCover(p, id) {
     if (coverCache[id]) {
-      p.coverImg = image(coverCache[id]);
-      return;
+      return image(coverCache[id], null, COLLECTION_IMGS);
     }
     if (p.coverAsked || coverInflight >= 6) return;
     p.coverAsked = true;
@@ -1675,7 +1737,7 @@
         try {
           localStorage.setItem(COVER_KEY, JSON.stringify(coverCache));
         } catch (e) {}
-        p.coverImg = image(d.thumbnail_url);
+        image(d.thumbnail_url, null, COLLECTION_IMGS);
       })
       .catch(() => {})
       .finally(() => {
@@ -1683,24 +1745,14 @@
       });
   }
   function albumCover(p) {
-    if (p.coverImg) return p.coverImg;
     const m = /\/album\/([A-Za-z0-9]+)/.exec(p.embed || '');
     if (!m) return null;
     const id = m[1];
-    if (!p.localTried) {
-      p.localTried = true;
-      const local = new Image();
-      local.decoding = 'async';
-      local.onerror = () => {
-        p.coverImg = null;
-        remoteCover(p, id);
-      };
-      local.src = '../images/thumbs/albums/' + id + '.jpg';
-      p.coverImg = local;
-      return local;
-    }
-    remoteCover(p, id);
-    return p.coverImg || null;
+    if (p.localMissing) return remoteCover(p, id) || null;
+    const local = image('../images/thumbs/albums/' + id + '.jpg', null, COLLECTION_IMGS);
+    local.onerror = () => { p.localMissing = true; remoteCover(p, id); };
+    if (local.complete && !local.naturalWidth) { p.localMissing = true; return remoteCover(p, id) || null; }
+    return local;
   }
 
   // An old desktop computer on a little desk; it opens the plain web page
@@ -2065,6 +2117,117 @@
     c.restore();
   }
 
+  function drawGameCabinet(c, p) {
+    const frame = homeArt.frames && homeArt.frames.arcade;
+    if (!frame) return drawEasel(c, p);
+    drawHomeFurniture(c, p);
+    const scale = p.h / frame.anchorY;
+    const x = p.x - frame.anchorX * scale;
+    const y = p.y - frame.anchorY * scale;
+    // Use the existing hand-painted arcade cabinet; each screen shows its game.
+    drawImageIn(c, image(p.thumb, p.image, COLLECTION_IMGS), x + 58 * scale, y + 96 * scale, 125 * scale, 83 * scale);
+    if (p.status) {
+      c.save();
+      c.fillStyle = STATUS_COLOR[p.status] || C.accent;
+      c.strokeStyle = '#463b2b';
+      c.lineWidth = 1;
+      c.beginPath(); c.arc(p.x + 29, p.y - p.h + 14, 4, 0, Math.PI * 2); c.fill(); c.stroke();
+      c.restore();
+    }
+  }
+
+  function drawRoomPlaque(c, p) {
+    c.save();
+    c.font = '500 18px "Cormorant Garamond", Georgia, serif';
+    const label = p.kind === 'room-info' ? 'Game log' : p.title;
+    const w = Math.min(300, c.measureText(label).width + 32);
+    const y = p.y - (p.kind === 'room-info' ? 74 : 27);
+    c.fillStyle = SCENES[sceneName].theme === 'games' ? '#253f43' : '#f1dfbc';
+    c.strokeStyle = SCENES[sceneName].theme === 'games' ? '#bc9970' : '#885439';
+    c.lineWidth = 1.6;
+    roundRect(c, p.x - w / 2, y, p.x + w / 2, y + 36, 4);
+    c.fill(); c.stroke();
+    c.fillStyle = SCENES[sceneName].theme === 'games' ? '#f7ecd5' : '#633f30';
+    c.textAlign = 'center';
+    c.fillText(label, p.x, y + 24, w - 20);
+    for (const sign of [-1, 1]) { c.beginPath(); c.arc(p.x + sign * (w / 2 - 6), y + 6, 1.5, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+
+  function drawCollectionRoom(c, sc, view = { x0: 0, y0: 0, x1: sc.world.w, y1: sc.world.h }, mini = false) {
+    const music = sc.theme === 'music';
+    const { w, h } = sc.world;
+    c.save();
+    c.fillStyle = music ? '#e1cfb2' : '#d8dfd8';
+    roundRect(c, 60, 60, w - 60, h - 60, 60); c.fill();
+    // Quiet, continuous flooring. No walls, thresholds or collision boundaries between genres.
+    if (!mini) {
+      c.save(); c.clip();
+      c.strokeStyle = music ? 'rgba(112, 83, 52, .10)' : 'rgba(53, 90, 85, .065)';
+      c.lineWidth = 1;
+      const step = music ? 48 : 100;
+      const top = Math.max(60, Math.floor(view.y0 / step) * step);
+      const bottom = Math.min(h - 60, view.y1 + step);
+      for (let y = top; y < bottom; y += step) {
+        c.beginPath(); c.moveTo(60, y); c.lineTo(w - 60, y + (music ? 1 : 0)); c.stroke();
+        const offset = (Math.floor(y / step) % 3) * 120;
+        for (let x = 60 + offset; x < w - 60; x += music ? 360 : 100) {
+          c.beginPath(); c.moveTo(x, y); c.lineTo(x, y + step); c.stroke();
+        }
+      }
+      c.restore();
+    }
+    c.fillStyle = music ? '#f0e5d0' : '#edf0e5';
+    roundRect(c, 1340, 320, 1660, h - 150, 100); c.fill();
+    // Woven runner down the promenade, connecting every display.
+    c.strokeStyle = music ? '#cab48f' : '#a5bcb0'; c.lineWidth = 2;
+    c.setLineDash([3, 10]);
+    for (const x of [1352, 1648]) {
+      c.beginPath(); c.moveTo(x, 420); c.lineTo(x, h - 240); c.stroke();
+    }
+    c.setLineDash([]);
+    if (!mini) {
+      c.textAlign = 'center'; c.fillStyle = music ? '#684a35' : '#315653';
+      c.font = 'italic 400 54px "Cormorant Garamond", Georgia, serif';
+      c.fillText(music ? 'The listening garden' : 'The play garden', 1500, 205);
+      c.font = '11px Inter, sans-serif';
+      c.fillStyle = music ? '#8b7256' : '#6d8576';
+      c.fillText('WANDER · DISCOVER · STAY A WHILE', 1500, 238);
+      c.font = 'italic 20px "Cormorant Garamond", Georgia, serif';
+      c.fillText('keep exploring ↓', 1500, 500);
+    }
+    for (const block of sc.gallery.blocks) {
+      if (!mini && (block.y > view.y1 + 100 || block.y + block.h < view.y0 - 100)) continue;
+      c.fillStyle = music ? '#f4e8d3' : '#edf0e5';
+      roundRect(c, block.x, block.y, block.x + block.w, block.y + block.h, 46); c.fill();
+      c.fillStyle = block.tint; c.fill();
+      if (mini) continue;
+      c.strokeStyle = music ? 'rgba(120, 81, 51, .24)' : 'rgba(49, 86, 83, .24)';
+      c.lineWidth = 1.3;
+      roundRect(c, block.x + 12, block.y + 12, block.x + block.w - 12, block.y + block.h - 12, 36); c.stroke();
+      c.setLineDash([3, 6]);
+      roundRect(c, block.x + 19, block.y + 19, block.x + block.w - 19, block.y + block.h - 19, 31); c.stroke(); c.setLineDash([]);
+      c.fillStyle = music ? '#785840' : '#365c55';
+      c.textAlign = 'center'; c.font = '500 33px "Cormorant Garamond", Georgia, serif';
+      c.fillText(block.name, block.x + block.w / 2, block.y + 64, block.w - 220);
+      c.font = '11px Inter, sans-serif';
+      c.globalAlpha = .68;
+      c.fillText(`${block.total} ${music ? 'albums' : 'games'}${block.parts > 1 ? ` · display ${block.part} of ${block.parts}` : ''}`, block.x + block.w / 2, block.y + 87);
+      c.globalAlpha = 1;
+      // Genre motifs are woven into the floor, leaving all four sides open.
+      if (music) {
+        c.beginPath(); c.arc(block.x + 62, block.y + 64, 20, 0, Math.PI * 2); c.stroke();
+        c.beginPath(); c.arc(block.x + 62, block.y + 64, 9, 0, Math.PI * 2); c.stroke();
+      } else for (const [dx, dy] of [[0, 0], [-12, 0], [12, 0], [0, -12], [0, 12]]) c.fillRect(block.x + 58 + dx, block.y + 55 + dy, 9, 9);
+    }
+    c.restore();
+  }
+
+  function drawRoomBackdrop(c, sc, view) {
+    c.fillStyle = sc.theme === 'games' ? '#c3d0c4' : '#d4c6b0';
+    c.fillRect(view.x0, view.y0, view.x1 - view.x0, view.y1 - view.y0);
+  }
+
   function drawPlace(c, p) {
     c.save();
     if (p.mapScale) {
@@ -2072,8 +2235,14 @@
       c.scale(p.mapScale, p.mapScale);
       c.translate(-p.x, -p.y);
     }
+    if (SCENES[sceneName].highlight === p.id) {
+      c.fillStyle = 'rgba(184, 122, 57, .18)'; c.strokeStyle = '#aa7545'; c.lineWidth = 1.5;
+      c.beginPath(); c.ellipse(p.x, p.y + 6, 77, 24, 0, 0, Math.PI * 2); c.fill(); c.stroke();
+    }
     const seen = visited.has(p.name);
     if (p.kind === 'home-prop') drawHomeFurniture(c, p);
+    else if (p.kind === 'game-cabinet') drawGameCabinet(c, p);
+    else if (p.kind === 'room-sign' || p.kind === 'room-info') drawRoomPlaque(c, p);
     else if (p.kind === 'house') drawHouse(c, p, seen);
     else if (p.kind === 'hall') drawHall(c, p, seen);
     else if (p.kind === 'office') drawOffice(c, p, seen);
@@ -2160,6 +2329,11 @@
       if (sceneName === 'home') {
         drawHomeSky(b, { x0: -ox / k, y0: -oy / k, x1: (MM.w - ox) / k, y1: (MM.h - oy) / k }, false);
         drawHomeRoom(b);
+      } else if (SCENES[sceneName].room) {
+        drawRoomBackdrop(b, SCENES[sceneName], { x0: -ox / k, y0: -oy / k, x1: (MM.w - ox) / k, y1: (MM.h - oy) / k });
+        drawCollectionRoom(b, SCENES[sceneName], undefined, true);
+        b.fillStyle = 'rgba(42,39,35,.4)';
+        for (const p of places) b.fillRect(p.x - 1 / k, p.y - 1 / k, 2 / k, 2 / k);
       } else for (const isl of ISLANDS) {
         b.fillStyle = isl.polar ? '#f1eee5' : C.land;
         b.fill(coast(isl, 1, 80));
@@ -2179,7 +2353,7 @@
     mctx.setTransform(1, 0, 0, 1, 0, 0);
     mctx.drawImage(miniBase, 0, 0);
     mctx.setTransform(1, 0, 0, 1, ox, oy);
-    for (const p of places) {
+    for (const p of SCENES[sceneName].gallery ? [] : places) {
       mctx.fillStyle = p.kind === 'portal' ? '#3b5d5d' : visited.has(p.name) ? C.accent : 'rgba(42,39,35,0.45)';
       mctx.fillRect((p.anchor ? p.anchor[0] : p.x) * sx - 1.5, (p.anchor ? p.anchor[1] : p.y) * sy - 1.5, 3, 3);
     }
@@ -2211,6 +2385,9 @@
       // Room, furniture, player and labels float together; collision stays in room coordinates.
       ctx.translate(0, homeLift());
       drawHomeRoom(ctx);
+    } else if (SCENES[sceneName].room) {
+      drawRoomBackdrop(ctx, SCENES[sceneName], view);
+      drawCollectionRoom(ctx, SCENES[sceneName], view);
     }
     else {
       drawWater(ctx, view);
@@ -2223,7 +2400,7 @@
     }
 
     // footprints
-    const noteSteps = sceneName === 'music';
+    const noteSteps = SCENES[sceneName].theme === 'music';
     for (const f of footprints) {
       const a = Math.min(1, f.life / 3);
       if (!noteSteps) {
@@ -2290,8 +2467,10 @@
     if (sceneName !== 'world' || zoom >= 0.12) {
       decorIn(view.x0 - 60, view.y0 - 60, view.x1 + 60, view.y1 + 140, list);
     }
-    for (const p of places) if (inView(p.x, p.y, 120)) list.push({ t: 'place', y: p.y, p });
-    for (const p of SCENES[sceneName].furniture || []) if (inView(p.x, p.y, 190)) list.push({ t: 'furniture', y: p.y, p });
+    const sc = SCENES[sceneName];
+    const visiblePlaces = sc.placeGrid ? decorIn(view.x0 - 160, view.y0 - 180, view.x1 + 160, view.y1 + 220, [], sc.placeGrid) : places;
+    for (const p of visiblePlaces) if (inView(p.x, p.y, 150)) list.push({ t: 'place', y: p.y, p });
+    for (const p of sc.furnitureGrid ? decorIn(view.x0 - 190, view.y0 - 190, view.x1 + 190, view.y1 + 220, [], sc.furnitureGrid) : sc.furniture || []) if (inView(p.x, p.y, 190)) list.push({ t: 'furniture', y: p.y, p });
     list.push({ t: 'hui', y: player.y });
     list.sort((a, b) => a.y - b.y);
     for (const e of list) {
@@ -2407,8 +2586,8 @@
     if (p.to) {
       if (fade) return;
       closeCard();
-      ensureScene(p.to).then(() => {
-        if (!fade && !travelDialog.open) fade = { t: 0, dur: 1.1, to: p.to, from: sceneName, swapped: false };
+      ensureScene(p.to).then((destination) => {
+        if (!fade && !travelDialog.open) fade = { t: 0, dur: 0.65, to: destination, from: sceneName, swapped: false };
       }).catch(() => {
         const hint = document.getElementById('hint');
         hint.textContent = 'This world could not load. Please refresh and try again.';
@@ -2437,10 +2616,13 @@
   }
 
   const SCENE_TITLES = { home: 'Home', world: 'The World', games: 'Save Point', music: 'Album Collection' };
+  const sceneTitle = (name) => SCENES[name]?.title || SCENE_TITLES[name] || name;
+  let loadedFirstScene = false;
 
   function loadScene(name, from, arrival) {
     const sc = SCENES[name];
     sceneName = name;
+    if (sc.gallery) { sc.collection = { theme: sc.theme, room: '', query: '', page: 1 }; sc.activeBlock = null; sc.matches = []; sc.highlight = null; }
     WORLD = sc.world;
     ISLANDS = sc.islands;
     BRIDGES = sc.bridges;
@@ -2449,7 +2631,9 @@
     if (!sc.decor) sc.decor = buildDecor(sc);
     decor = sc.decor;
     // Arrive in front of the door you came through
-    const door = places.find((p) => p.to === from) || places.find((p) => p.kind === 'portal');
+    const sourceRoom = from && CollectionRooms.parseRoute(from);
+    const sourceBase = sourceRoom && CollectionRooms.route(sourceRoom.theme, sourceRoom.room);
+    const door = places.find((p) => p.to && (p.to === from || p.to === sourceBase || p.to === sourceRoom?.theme)) || places.find((p) => p.to);
     const want = arrival || (name === 'world' ? sc.spawn
       : from && door ? [door.x + 6, door.y + 70] : sc.spawn || [door.x + 6, door.y + 70]);
     const sp = safeSpot(want[0], want[1]);
@@ -2460,6 +2644,7 @@
     cam.y = player.y;
     target = null;
     pendingOpen = null;
+    near = null;
     footprints.length = 0;
     dust.length = 0;
     smoke.length = 0;
@@ -2467,8 +2652,9 @@
     notes.length = 0;
     lastPrint = { x: player.x, y: player.y, side: 1 };
     closeCard();
-    document.getElementById('sceneName').textContent = SCENE_TITLES[name] || '';
-    document.body.dataset.lifeScene = name;
+    document.getElementById('sceneName').textContent = sceneTitle(name);
+    document.body.dataset.lifeScene = sc.theme || name;
+    document.body.dataset.lifeRoom = name;
     document.getElementById('zoomMap').hidden = name !== 'world';
     updateHint();
     document.getElementById('journalBtn').hidden = name !== 'world';
@@ -2476,9 +2662,13 @@
     // arriving in the world: pull back a little so it reads as a map
     if (started) {
       const homeZoom = W < 700 ? Math.max(0.4, Math.min(0.6, (W - 40) / 640)) : 1;
-      setZoom(name === 'world' ? (W < 700 ? 0.55 : 0.7) : name === 'home' ? homeZoom : (W < 700 ? 0.78 : 1));
+      const collectionZoom = W < 700 ? 0.78 : 0.75;
+      setZoom(name === 'world' ? (W < 700 ? 0.55 : 0.7) : name === 'home' ? homeZoom : collectionZoom);
     }
     updateTravelLocation();
+    updateCollectionNav();
+    if (loadedFirstScene) history.replaceState(null, '', '#' + name);
+    loadedFirstScene = true;
   }
 
   // Fast travel uses the same projected geography as the map. A flight is
@@ -2496,10 +2686,10 @@
 
   function updateTravelLocation() {
     for (const button of travelDialog.querySelectorAll('[data-travel-scene]')) {
-      if (button.dataset.travelScene === sceneName) button.setAttribute('aria-current', 'location');
+      if (button.dataset.travelScene === (SCENES[sceneName].theme || sceneName)) button.setAttribute('aria-current', 'location');
       else button.removeAttribute('aria-current');
     }
-    document.getElementById('travelLocation').textContent = 'Currently: ' + SCENE_TITLES[sceneName];
+    document.getElementById('travelLocation').textContent = 'Currently: ' + sceneTitle(sceneName);
   }
 
   function renderTravelDestinations() {
@@ -2608,13 +2798,13 @@
     setTravelBusy(true);
     travelStatus.textContent = 'Preparing your flight…';
     try {
-      await ensureScene(name);
+      name = await ensureScene(name);
       if (request !== travelRequest || !travelDialog.open) return;
       const sc = SCENES[name];
       const destination = destinationId && sc.destinations.find((d) => d.id === destinationId);
       if (destinationId && !destination) throw new Error('Unknown destination');
       const arrival = landingSpot(sc, destination);
-      const label = destination ? destination.name : SCENE_TITLES[name];
+      const label = destination ? destination.name : sceneTitle(name);
       fade = {
         t: 0, dur: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.08 : 0.8,
         to: name, from: sceneName, arrival, flightLabel: label, swapped: false,
@@ -2770,6 +2960,137 @@
     document.getElementById('count').textContent = `${all.filter((p) => visited.has(p.name)).length} / ${all.length}`;
   }
 
+  // A category is a destination on one continuous floor, never another scene.
+  const collectionNav = document.getElementById('collectionNav');
+  const collectionRoom = document.getElementById('collectionRoom');
+  const collectionSearch = document.getElementById('collectionSearch');
+  const collectionResults = document.getElementById('collectionResults');
+  let collectionNavigationRequest = 0;
+  let nextAreaCheck = 0;
+  function updateCollectionNav() {
+    const sc = SCENES[sceneName];
+    collectionNav.hidden = !sc.gallery;
+    if (!sc.gallery) return;
+    const catalog = collectionCatalogs[sc.theme];
+    collectionRoom.replaceChildren();
+    for (const room of [{ id: '', name: 'The promenade', items: catalog.items }, ...catalog.rooms]) {
+      const option = document.createElement('option');
+      option.value = room.id;
+      option.textContent = room.name + (room.id ? ` (${room.items.length})` : '');
+      collectionRoom.append(option);
+    }
+    collectionSearch.placeholder = sc.theme === 'music' ? 'Find an album or artist' : 'Find a game or studio';
+    collectionSearch.setAttribute('aria-label', collectionSearch.placeholder);
+    collectionSearch.value = sc.collection.query;
+    updateCollectionPosition(sc);
+    renderCollectionResults(sc);
+  }
+  function updateCollectionPosition(sc) {
+    const block = sc.activeBlock;
+    collectionRoom.value = block?.room || '';
+    const searching = !!sc.collection.query;
+    const index = searching ? sc.resultIndex || 0 : sc.gallery.blocks.indexOf(block);
+    const length = searching ? sc.matches?.length || 0 : sc.gallery.blocks.length;
+    const prev = document.getElementById('collectionPrev'), next = document.getElementById('collectionNext');
+    prev.disabled = index <= 0;
+    next.disabled = !length || index >= length - 1;
+    prev.setAttribute('aria-label', searching ? 'Previous search result' : 'Previous display area');
+    next.setAttribute('aria-label', searching ? 'Next search result' : 'Next display area');
+    document.getElementById('collectionCount').textContent = searching
+      ? length ? `Match ${index + 1} / ${length}` : 'No matches · try another name'
+      : block ? `${block.name} · ${index + 1} / ${length}` : `${length} open areas · wander freely`;
+    document.getElementById('sceneName').textContent = sceneTitle(sceneName) + (block ? ' · ' + block.name : '');
+  }
+  function renderCollectionResults(sc) {
+    collectionResults.replaceChildren();
+    collectionResults.hidden = !sc.collection.query || !sc.matches?.length;
+    if (collectionResults.hidden) return;
+    const start = Math.floor((sc.resultIndex || 0) / 6) * 6;
+    for (const [i, item] of sc.matches.slice(start, start + 6).entries()) {
+      const button = document.createElement('button');
+      button.type = 'button'; button.dataset.item = item.itemId;
+      button.setAttribute('aria-label', 'Go to ' + item.title);
+      if (start + i === sc.resultIndex) button.setAttribute('aria-current', 'true');
+      const title = document.createElement('span'); title.textContent = item.title;
+      const sub = document.createElement('small'); sub.textContent = [item.artist || item.dev, item.roomName].filter(Boolean).join(' · ');
+      button.append(title, sub);
+      button.addEventListener('click', () => {
+        focusCollection(CollectionRooms.route(sc.theme, '', start + i + 1, sc.collection.query));
+        openCard(sc.placeById.get(item.itemId));
+      });
+      collectionResults.append(button);
+    }
+  }
+  function trackCollectionArea(sc) {
+    if (clock < nextAreaCheck) return;
+    nextAreaCheck = clock + .2;
+    const block = sc.gallery.blocks.find(b => player.x >= b.x && player.x <= b.x + b.w && player.y >= b.y && player.y <= b.y + b.h);
+    if (!block || block === sc.activeBlock) return;
+    sc.activeBlock = block;
+    updateCollectionPosition(sc);
+    if (!sc.collection.query) history.replaceState(null, '', '#' + CollectionRooms.route(sc.theme, block.room, block.part));
+  }
+  function focusCollection(name) {
+    const requested = CollectionRooms.parseRoute(name), sc = SCENES[sceneName];
+    if (!requested || requested.theme !== sc.theme || !sc.gallery) return;
+    const catalog = collectionCatalogs[sc.theme];
+    const dest = CollectionRooms.destination(catalog, sc.gallery, requested);
+    sc.collection = { ...requested, query: requested.query.trim() };
+    sc.matches = dest.matches; sc.resultIndex = dest.index || 0;
+    keys.clear(); target = pendingOpen = null; near = null; closeCard();
+    if (!requested.query || dest.matches.length) {
+      const point = safeSpot(...dest.point);
+      player.x = point[0]; player.y = point[1]; cam.x = player.x; cam.y = player.y;
+      footprints.length = 0;
+      lastPrint = { x: player.x, y: player.y, side: 1 };
+      sc.activeBlock = dest.block || null;
+      sc.highlight = dest.item?.itemId;
+    } else sc.highlight = null;
+    collectionSearch.value = sc.collection.query;
+    updateCollectionPosition(sc); renderCollectionResults(sc);
+    const key = requested.query ? CollectionRooms.route(sc.theme, '', sc.resultIndex + 1, sc.collection.query)
+      : CollectionRooms.route(sc.theme, dest.block?.room || '', dest.block?.part || 1);
+    history.replaceState(null, '', '#' + key);
+  }
+  async function navigateCollection(name) {
+    if (fade || travelDialog.open) return;
+    const request = ++collectionNavigationRequest;
+    keys.clear(); target = pendingOpen = null; closeCard();
+    try {
+      const destination = await ensureScene(name);
+      if (request !== collectionNavigationRequest || fade) return;
+      if (destination !== sceneName) loadScene(destination);
+      if (SCENES[destination].gallery) focusCollection(name);
+    } catch (error) {
+      document.getElementById('collectionCount').textContent = 'Could not find this area. Try again.';
+    }
+  }
+  document.getElementById('collectionBack').addEventListener('click', () => navigateCollection('home'));
+  collectionRoom.addEventListener('change', () => {
+    const sc = SCENES[sceneName];
+    if (sc.gallery) navigateCollection(CollectionRooms.route(sc.theme, collectionRoom.value));
+  });
+  for (const [id, delta] of [['collectionPrev', -1], ['collectionNext', 1]]) {
+    document.getElementById(id).addEventListener('click', () => {
+      const sc = SCENES[sceneName];
+      if (!sc.gallery) return;
+      if (sc.collection.query) focusCollection(CollectionRooms.route(sc.theme, '', (sc.resultIndex || 0) + delta + 1, sc.collection.query));
+      else {
+        const block = sc.gallery.blocks[sc.gallery.blocks.indexOf(sc.activeBlock) + delta];
+        if (block) focusCollection(CollectionRooms.route(sc.theme, block.room, block.part));
+      }
+    });
+  }
+  document.getElementById('collectionSearchForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const sc = SCENES[sceneName];
+    if (sc.gallery) focusCollection(CollectionRooms.route(sc.theme, '', 1, collectionSearch.value));
+  });
+  collectionSearch.addEventListener('search', () => {
+    const sc = SCENES[sceneName];
+    if (sc.gallery && !collectionSearch.value) focusCollection(CollectionRooms.route(sc.theme, sc.activeBlock?.room || '', sc.activeBlock?.part || 1));
+  });
+
   // ---------------------------------------------------------------- boot
   window.addEventListener('resize', resize);
   resize();
@@ -2826,151 +3147,40 @@
   function computer(x, y, url, title) {
     return { id: 'pc-' + url, name: title, title, kind: 'computer', type: 'device', x, y, r: 30, h: 84, url, small: true };
   }
-  function backPortal(x, y) {
-    return { id: 'portal-home', name: 'Portal home', title: 'Home', kind: 'portal', type: 'portal', x, y, r: 34, h: 112, to: 'home' };
+
+  function buildCollectionGallery(catalog) {
+    const theme = catalog.theme, gallery = CollectionRooms.layout(catalog);
+    const places = [{ id: 'collection-home', name: 'Home', title: 'Back to Home',
+      kind: 'home-prop', sprite: 'door', to: 'home', x: 1500, y: 410, r: 48, depth: 18, h: 154 },
+      computer(1150, 310, theme === 'games' ? 'game.html' : 'music.html', 'The collection (web)'),
+      { ...catalog.info, kind: theme === 'music' ? 'home-prop' : 'room-info', sprite: 'records',
+        x: 1850, y: 310, r: 48, depth: 28, h: 124, noLabel: theme === 'games' }];
+    for (const { item: entry, block, x, y } of gallery.positions.values()) {
+      const common = { id: entry.itemId, name: entry.title, title: entry.title, small: true, block,
+        x, y, h: 126, roomId: entry.roomId };
+      places.push(theme === 'games' ? { ...common,
+        kind: 'game-cabinet', sprite: 'arcade', r: 38, depth: 30,
+        kicker: [entry.roomName, entry.dev].filter(Boolean).join(' · '),
+        body: [entry.sub, entry.tags.join(' · ')].filter(Boolean).join(' · '),
+        image: thumbFor(entry.src), thumb: thumbFor(entry.src), status: entry.status,
+      } : { ...common, kind: 'record', r: 57, depth: 32, seed: entry.seed,
+        kicker: [entry.artist, entry.date, entry.roomName].filter(Boolean).join(' · '), body: '', embed: entry.embed });
+    }
+    const furniture = [{ sprite: 'sofa', x: 990, y: 365, r: 78, depth: 35, h: 108 }];
+    for (const block of gallery.blocks) furniture.push({ sprite: 'plant',
+      x: block.x + block.w - 65, y: block.y + 105, r: 24, depth: 24, h: 95 });
+    const { w, h } = gallery.world;
+    const sc = { theme, gallery, room: { x: 60, y: 60, w: w - 120, h: h - 120 },
+      collection: { theme, room: '', query: '', page: 1 }, parent: 'home', title: SCENE_TITLES[theme],
+      world: gallery.world, islands: [{ id: theme, cx: w / 2, cy: h / 2, rx: w / 2 - 80, ry: h / 2 - 80,
+        rings: [[[80, 80], [w - 80, 80], [w - 80, h - 80], [80, h - 80], [80, 80]]] }],
+      bridges: [], places, furniture, bare: true, spawn: gallery.spawn,
+      placeById: new Map(places.map(p => [p.id, p])),
+      placeGrid: buildGrid(places), furnitureGrid: buildGrid(furniture), collisionGrid: buildGrid([...places, ...furniture]) };
+    return sc;
   }
 
-  // Genre and studio for each game (game.html lists platform and status, not these).
-  // A game that isn't listed lands in the "More" district.
-  const G = (genre, dev) => ({ genre, dev });
-  const GAME_META = {
-    'Dota 2': G('competitive', 'Valve'),
-    'Counter-Strike 2': G('competitive', 'Valve'),
-    Warframe: G('action', 'Digital Extremes'),
-    Valheim: G('survival', 'Iron Gate'),
-    'Slay the Spire Ⅱ': G('rogue', 'Mega Crit'),
-    'Animal Crossing': G('story', 'Nintendo'),
-    'Bloodstained: Ritual of the Night': G('metroid', 'ArtPlay'),
-    'Hollow Knight: Silksong': G('metroid', 'Team Cherry'),
-    'Hollow Knight': G('metroid', 'Team Cherry'),
-    'Blasphemous 2': G('metroid', 'The Game Kitchen'),
-    Celeste: G('metroid', 'Maddy Makes Games'),
-    'ASTLIBRA Revision': G('metroid', 'KEIZO'),
-    'Slay the Spire': G('rogue', 'Mega Crit'),
-    'Vampire Survivors': G('rogue', 'poncle'),
-    'Cult of the Lamb': G('rogue', 'Massive Monster'),
-    Hades: G('rogue', 'Supergiant Games'),
-    'Hades 2': G('rogue', 'Supergiant Games'),
-    'The Binding of Isaac: Rebirth': G('rogue', 'Nicalis'),
-    'Risk of Rain 2': G('rogue', 'Hopoo Games'),
-    'Darkest Dungeon': G('rogue', 'Red Hook Studios'),
-    'Persona 5 Royal': G('rpg', 'Atlus'),
-    'Clair Obscur: Expedition 33': G('rpg', 'Sandfall Interactive'),
-    'The Witcher 3: Wild Hunt': G('rpg', 'CD Projekt Red'),
-    'Cyberpunk 2077': G('rpg', 'CD Projekt Red'),
-    'Elden Ring': G('rpg', 'FromSoftware'),
-    "Baldur's Gate 3": G('rpg', 'Larian Studios'),
-    'Tale of Immortal': G('rpg', 'GuiGu Studio'),
-    'Subnautica 2': G('survival', 'Unknown Worlds'),
-    Starbound: G('survival', 'Chucklefish'),
-    "Don't Starve": G('survival', 'Klei Entertainment'),
-    Palworld: G('survival', 'Pocketpair'),
-    'Dave the Diver': G('story', 'MINTROCKET'),
-    'Stardew Valley': G('story', 'ConcernedApe'),
-    'Volcano Princess': G('story', ''),
-    "Sultan's Game": G('story', ''),
-    'Magical Girl Witch Trials': G('story', ''),
-    'Cultist Simulator': G('story', 'Weather Factory'),
-    Helltaker: G('story', 'vanripper'),
-    'Pokémon Scarlet': G('rpg', 'Game Freak'),
-    'Pokémon Sword': G('rpg', 'Game Freak'),
-    'Fire Emblem: Three Houses': G('rpg', 'Intelligent Systems'),
-    'The Legend of Zelda: Breath of the Wild': G('action', 'Nintendo'),
-  };
-  // Genre districts in a ring around the centre (where Hui arrives).
-  // anchor = the slot nearest the centre; dir = which way rows grow (away from the centre)
-  const DISTRICTS = [
-    { id: 'rpg', name: 'RPG', anchor: [1500, 880], dir: [0, -1], cols: 4, tint: 'rgba(196, 170, 122, 0.24)' },
-    { id: 'rogue', name: 'Roguelike', anchor: [880, 930], dir: [0, -1], cols: 4, tint: 'rgba(170, 120, 100, 0.2)' },
-    { id: 'metroid', name: 'Metroidvania & Platformer', anchor: [2110, 930], dir: [0, -1], cols: 3, tint: 'rgba(120, 140, 160, 0.2)' },
-    { id: 'survival', name: 'Survival & Sandbox', anchor: [690, 1300], dir: [-1, 0], cols: 3, tint: 'rgba(130, 150, 100, 0.22)' },
-    { id: 'story', name: 'Sim & Story', anchor: [2300, 1240], dir: [1, 0], cols: 3, tint: 'rgba(200, 160, 90, 0.2)' },
-    { id: 'action', name: 'Action & Adventure', anchor: [1150, 1640], dir: [0, 1], cols: 2, tint: 'rgba(110, 130, 120, 0.2)' },
-    { id: 'competitive', name: 'Online Competitive', anchor: [1850, 1640], dir: [0, 1], cols: 2, tint: 'rgba(155, 61, 43, 0.14)' },
-    { id: 'other', name: 'More', anchor: [1500, 1760], dir: [0, 1], cols: 4, tint: 'rgba(150, 140, 120, 0.18)' },
-  ];
-
-  // Lay out genre districts around a centre. Items that share a group (studio, artist) stand
-  // side by side in an ink frame and never split across rows; better-ranked items sit nearest the centre.
-  function layoutDistricts(districts, places, o) {
-    const rugs = [];
-    const frames = [];
-    const total = o.unitWeight || ((u) => u.reduce((t, g) => t + o.weight(g), 0));
-    for (const d of districts) {
-      if (!d.items.length) continue;
-      const units = [];
-      const seen = new Map();
-      for (const g of d.items) {
-        const key = o.group(g);
-        if (key && seen.has(key)) seen.get(key).push(g);
-        else {
-          const u = [g];
-          units.push(u);
-          if (key) seen.set(key, u);
-        }
-      }
-      for (const u of units) u.sort((a, b) => o.rank(a) - o.rank(b) || o.weight(b) - o.weight(a));
-      units.sort((a, b) => o.rank(a[0]) - o.rank(b[0]) || total(b) - total(a));
-
-      const slots = [];
-      let row = 0;
-      let col = 0;
-      for (const u of units) {
-        if (col > 0 && col + u.length > d.cols && u.length <= d.cols) {
-          row++;
-          col = 0;
-        }
-        const start = slots.length;
-        for (const g of u) {
-          slots.push({ g, row, col });
-          col++;
-          if (col >= d.cols) {
-            row++;
-            col = 0;
-          }
-        }
-        if (u.length > 1 && o.group(u[0])) frames.push({ dev: o.group(u[0]), members: slots.slice(start) });
-      }
-      const [ax, ay] = d.anchor;
-      const [dx, dy] = d.dir;
-      // rows step away from the centre; slots within a row run across that direction
-      const xy = (r, c) => {
-        const off = c - (d.cols - 1) / 2;
-        return dx ? [ax + dx * r * o.col * 1.12, ay + off * o.row] : [ax + off * o.col, ay + dy * r * o.row];
-      };
-      let x0 = Infinity;
-      let y0 = Infinity;
-      let x1 = -Infinity;
-      let y1 = -Infinity;
-      for (const sl of slots) {
-        const [x, y] = xy(sl.row, sl.col);
-        sl.x = x;
-        sl.y = y;
-        x0 = Math.min(x0, x - o.half);
-        x1 = Math.max(x1, x + o.half);
-        y0 = Math.min(y0, y - o.top);
-        y1 = Math.max(y1, y + 34);
-        places.push(o.place(sl.g, d, x, y, `${d.id}-${sl.row}-${sl.col}`));
-      }
-      rugs.push({ x0: x0 - 14, y0: y0 - 14, x1: x1 + 14, y1: y1 + 14, tint: d.tint });
-      // signpost on the side facing the centre (beside the patch for side districts)
-      const sx = dx ? (dx < 0 ? x1 + 110 : x0 - 110) : (x0 + x1) / 2;
-      const sy = dx ? ay + 50 : dy < 0 ? y1 + 84 : y0 - 18;
-      places.push(Object.assign({ id: 'sign-' + d.id, name: d.name, title: d.name, kind: 'sign', noLabel: true, x: sx, y: sy, r: 8, h: 84 }, o.sign(d)));
-    }
-    for (const f of frames) {
-      const xs = f.members.map((m) => m.x);
-      const ys = f.members.map((m) => m.y);
-      f.x0 = Math.min(...xs) - o.half + 2;
-      f.x1 = Math.max(...xs) + o.half - 2;
-      f.y0 = Math.min(...ys) - o.top + 4;
-      f.y1 = Math.max(...ys) + 40;
-      delete f.members;
-    }
-    return { rugs, frames };
-  }
-
-  function buildGames(doc) {
+  function buildGames(doc, config) {
     const sections = [...doc.querySelectorAll('.game-section')].map((sec) => ({
       id: sec.id,
       name: clean(sec.querySelector('h2') && sec.querySelector('h2').textContent),
@@ -2982,6 +3192,7 @@
           : card.classList.contains('status-main') ? 'main'
           : card.querySelector('.tag-status-playing') ? 'playing' : '';
         return {
+          genre: card.dataset.genre, genreName: card.dataset.genreName, dev: card.dataset.studio,
           title: clean(card.querySelector('.game-title') && card.querySelector('.game-title').textContent),
           sub: clean(card.querySelector('.game-subtitle') && card.querySelector('.game-subtitle').textContent),
           src,
@@ -3005,79 +3216,16 @@
       `${fmt(hours)} hrs played`,
     ].join(' · ');
 
-    // Save Point is laid out as genre districts around the centre (where Hui arrives).
-    // Inside a district, games by the same studio stand side by side inside an ink frame,
-    // and all-achievement (gold) games stand closest to the centre.
-    const CX = 1500;
-    const CY = 1200;
-    const districts = DISTRICTS.map((d) => Object.assign({ items: [] }, d));
-    const byId = Object.fromEntries(districts.map((d) => [d.id, d]));
-    for (const sec of sections) {
-      for (const g of sec.games) {
-        const meta = GAME_META[g.title] || {};
-        const d = byId[meta.genre] || byId.other;
-        d.items.push(Object.assign({ section: sec.name, dev: meta.dev || '' }, g));
-      }
-    }
-
-    const places = [
-      backPortal(CX, CY - 60),
-      computer(CX - 150, CY - 20, 'game.html', 'Game log (web)'),
-      { id: 'g-stele', name: heading, title: heading, kind: 'stele', x: CX + 150, y: CY - 20, r: 26, h: 80, kicker: 'Game Log', body: `${lead} ${statLine}` },
-    ];
-    const { rugs, frames } = layoutDistricts(districts, places, {
-      col: 128,
-      row: 158,
-      top: 104,
-      half: 52,
-      group: (g) => g.dev,
-      rank: (g) => (g.status === 'complete' ? 0 : g.status === 'main' ? 1 : 2),
-      weight: (g) => g.hours,
-      sign: (d) => ({ kicker: 'Genre', body: `${d.items.length} titles` }),
-      place: (g, d, x, y, id) => ({
-        id, name: g.title, title: g.title, small: true, kind: 'easel', x, y, r: 24, h: 96,
-        kicker: [d.name, g.dev].filter(Boolean).join(' · '),
-        body: [g.sub, g.tags.join(' · ')].filter(Boolean).join(' · '),
-        image: thumbFor(g.src), thumb: thumbFor(g.src), status: g.status,
-      }),
+    const items = all.map((g, order) => {
+      const meta = config.games?.items?.[g.title] || {};
+      return { ...g, order, genre: g.genre || meta.genre || 'other', dev: g.dev || meta.dev || '' };
     });
-    return {
-      world: { w: 3000, h: 2400 },
-      islands: [makeIsland({ id: 'games', name: 'Save Point', cx: CX, cy: CY, rx: 1300, ry: 1000 })],
-      bridges: [],
-      places,
-      rugs,
-      frames,
-      bare: true,
-      spawn: [CX, CY + 20],
-    };
+    const catalog = CollectionRooms.createCatalog('games', items, config);
+    catalog.info = { id: 'g-info', name: heading, title: heading, kicker: 'Game Log', body: `${lead} ${statLine}` };
+    return catalog;
   }
 
-  // Genre for each artist (music.html lists album, artist and date, not genre).
-  // Grouped by sound, not by language.
-  const ARTIST_GENRE = {
-    'Daniel Caesar': 'neosoul', Giveon: 'neosoul', 'Khalil Fong': 'neosoul',
-    'Frank Ocean': 'altrnb', SZA: 'altrnb', keshi: 'altrnb', DEN: 'altrnb',
-    'The Weeknd': 'rnb', 'Michael Jackson': 'rnb', 'David Tao': 'rnb', 'Matt Lv': 'rnb',
-    'Tyler, The Creator': 'hiphop', 'Kendrick Lamar': 'hiphop',
-    'Jay Chou': 'pop', 'Jerry Li': 'pop', 'AK Akemi Kakihara': 'pop',
-    'Crowd Lu': 'folk', 'Cheer Chen': 'folk', 'Deserts Chang': 'folk',
-    Radiohead: 'rock', RADWIMPS: 'rock', '露波合唱團': 'rock', 'Schoolgirl Byebye': 'rock', '唐貓SUGARCAT': 'rock', 'Zhang Zhen Yue': 'rock',
-    HYBS: 'indiepop', 'The Crane': 'indiepop', Gordon: 'indiepop', '花伦': 'indiepop',
-  };
-  const MUSIC_DISTRICTS = [
-    { id: 'neosoul', name: 'Neo-Soul', anchor: [1150, 620], dir: [0, -1], cols: 3, tint: 'rgba(155, 61, 43, 0.13)' },
-    { id: 'altrnb', name: 'Alternative R&B', anchor: [700, 660], dir: [0, -1], cols: 2, tint: 'rgba(110, 100, 130, 0.16)' },
-    { id: 'rnb', name: 'R&B', anchor: [1600, 660], dir: [0, -1], cols: 3, tint: 'rgba(200, 160, 90, 0.2)' },
-    { id: 'folk', name: 'Folk & Singer-Songwriter', anchor: [560, 960], dir: [-1, 0], cols: 3, tint: 'rgba(130, 150, 100, 0.22)' },
-    { id: 'rock', name: 'Indie Rock', anchor: [1740, 960], dir: [1, 0], cols: 3, tint: 'rgba(120, 140, 160, 0.2)' },
-    { id: 'pop', name: 'Pop', anchor: [760, 1280], dir: [0, 1], cols: 2, tint: 'rgba(196, 170, 122, 0.24)' },
-    { id: 'hiphop', name: 'Hip-Hop', anchor: [1150, 1320], dir: [0, 1], cols: 3, tint: 'rgba(60, 60, 60, 0.12)' },
-    { id: 'indiepop', name: 'Indie & Dream Pop', anchor: [1560, 1280], dir: [0, 1], cols: 2, tint: 'rgba(110, 130, 120, 0.2)' },
-    { id: 'other', name: 'More', anchor: [1150, 1580], dir: [0, 1], cols: 4, tint: 'rgba(150, 140, 120, 0.18)' },
-  ];
-
-  function buildMusic(doc) {
+  function buildMusic(doc, config) {
     const name = doc.querySelector('p.name');
     let intro = '';
     for (let el = name && name.nextElementSibling; el; el = el.nextElementSibling) {
@@ -3096,69 +3244,43 @@
       const title = cut > 0 ? text.slice(0, cut) : text;
       const date = cut > 0 ? clean(text.slice(cut + 3 + artist.length).replace(/^,/, '')) : '';
       const frame = card.querySelector('iframe');
-      return { title, artist, date, embed: frame ? frame.getAttribute('src') : '', seed: i };
+      return { title, artist, date, embed: frame ? frame.getAttribute('src') : '', seed: i, order: i,
+        genre: card.dataset.genre || config.music?.artists?.[artist] || 'other', genreName: card.dataset.genreName };
     });
-    // The gramophone stands at the centre, where Hui arrives
-    const CX = 1150;
-    const CY = 900;
-    const places = [
-      {
-        id: 'm-gramophone', name: 'Album Collection', title: 'Album Collection', kind: 'gramophone', x: CX + 170, y: CY + 60, r: 40, h: 118,
-        kicker: 'Music', body: intro, link: spotify ? [spotify.getAttribute('href'), 'Find me on Spotify'] : null,
-      },
-      backPortal(CX - 40, CY + 20),
-      computer(CX - 200, CY + 70, 'music.html', 'Album collection (web)'),
-    ];
-    const districts = MUSIC_DISTRICTS.map((d) => Object.assign({ items: [] }, d));
-    const byId = Object.fromEntries(districts.map((d) => [d.id, d]));
-    albums.forEach((a, i) => {
-      a.order = i; // page order: newest first
-      (byId[ARTIST_GENRE[a.artist]] || byId.other).items.push(a);
-    });
-    const { rugs, frames } = layoutDistricts(districts, places, {
-      col: 108,
-      row: 120,
-      top: 74,
-      half: 44,
-      group: (a) => a.artist,
-      rank: () => 0,
-      weight: (a) => -a.order, // newer albums nearer the centre
-      unitWeight: (u) => Math.max(...u.map((a) => -a.order)), // an artist sits by their newest album
-      sign: (d) => ({ kicker: 'Genre', body: `${d.items.length} albums` }),
-      place: (a, d, x, y, id) => ({
-        id: 'm-' + id, name: a.title, title: a.title, small: true, kind: 'record', x, y, r: 26, h: 76, seed: a.seed,
-        kicker: [a.artist, a.date, d.name].filter(Boolean).join(' · '), body: '', embed: a.embed,
-      }),
-    });
-    return {
-      world: { w: 2300, h: 1800 },
-      islands: [makeIsland({ id: 'music', name: 'Album Collection', cx: CX, cy: CY, rx: 1150, ry: 860 })],
-      bridges: [],
-      places,
-      rugs,
-      frames,
-      bare: true,
-      spawn: [CX, CY + 100],
-    };
+    const catalog = CollectionRooms.createCatalog('music', albums, config);
+    catalog.info = { id: 'm-info', name: 'Album Collection', title: 'Album Collection', kicker: 'Music', body: intro,
+      link: spotify ? [spotify.getAttribute('href'), 'Find me on Spotify'] : null };
+    return catalog;
   }
 
-  const LOADERS = {
-    games: () => loadDoc('game.html').then(buildGames),
-    music: () => loadDoc('music.html').then(buildMusic),
-  };
-  const pendingScenes = {};
-  function ensureScene(name) {
-    if (SCENES[name]) return Promise.resolve();
-    if (!LOADERS[name]) return worldReady;
-    if (!pendingScenes[name]) {
-      pendingScenes[name] = LOADERS[name]().then((sc) => {
-        SCENES[name] = scaleScene(sc, SCENE_SCALE[name]);
-      }).catch((error) => {
-        delete pendingScenes[name];
-        throw error;
-      });
-    }
-    return pendingScenes[name];
+  const collectionCatalogs = {};
+  const catalogRequests = {};
+  let collectionConfigRequest;
+  function collectionConfig() {
+    if (!collectionConfigRequest) collectionConfigRequest = fetch('../data/collection-rooms.json').then(r => {
+      if (!r.ok) throw new Error('Collection room metadata unavailable');
+      return r.json();
+    }).catch(error => { collectionConfigRequest = null; throw error; });
+    return collectionConfigRequest;
+  }
+  function ensureCatalog(theme) {
+    if (collectionCatalogs[theme]) return Promise.resolve(collectionCatalogs[theme]);
+    if (!catalogRequests[theme]) catalogRequests[theme] = Promise.all([
+      loadDoc(theme === 'games' ? 'game.html' : 'music.html'), collectionConfig(),
+    ]).then(([doc, config]) => {
+      collectionCatalogs[theme] = (theme === 'games' ? buildGames : buildMusic)(doc, config);
+      return collectionCatalogs[theme];
+    }).catch(error => { delete catalogRequests[theme]; throw error; });
+    return catalogRequests[theme];
+  }
+  async function ensureScene(name) {
+    if (name === 'home') return name;
+    if (name === 'world') { await worldReady; return name; }
+    const requested = CollectionRooms.parseRoute(name);
+    if (!requested) throw new Error('Unknown collection room');
+    const catalog = await ensureCatalog(requested.theme);
+    if (!SCENES[catalog.theme]) SCENES[catalog.theme] = buildCollectionGallery(catalog);
+    return catalog.theme;
   }
 
   // Home geometry is ready immediately; the generated artwork loads alongside it.
@@ -3271,8 +3393,6 @@
       idle(() => {
         if (!SCENES.world.decor) SCENES.world.decor = buildDecor(SCENES.world);
       });
-      // A direct link for sharing/previewing The World; normal entry stays on Home.
-      if (location.hash === '#world') loadScene('world', 'home');
     });
   worldReady.catch(() => {
     travelMapFailed = true;
@@ -3281,6 +3401,24 @@
       document.getElementById('hint').textContent = 'The world map could not load. Please refresh to try again.';
     }
   });
-  // Warm up the three page-backed worlds while Hui is still at home
-  idle(() => ['games', 'music'].forEach((n) => ensureScene(n).catch(() => {})));
+  // Parse data in the background; a single continuous gallery is built on first visit.
+  idle(() => ['games', 'music'].forEach((n) => ensureCatalog(n).catch(() => {})));
+  let sharedSceneRequest = 0;
+  async function followSharedScene() {
+    const name = location.hash.slice(1);
+    if (!name || (name !== 'home' && name !== 'world' && !CollectionRooms.parseRoute(name))) return;
+    const request = ++sharedSceneRequest;
+    try {
+      const destination = await ensureScene(name);
+      if (request === sharedSceneRequest && location.hash.slice(1) === name) {
+        fade = null;
+        loadScene(destination);
+        if (SCENES[destination].gallery) focusCollection(name);
+      }
+    } catch (error) {
+      document.getElementById('hint').textContent = 'This collection could not load. Refresh to try again.';
+    }
+  }
+  window.addEventListener('hashchange', followSharedScene);
+  followSharedScene();
 })();
