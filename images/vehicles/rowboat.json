@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "views": {
+    "right": { "width": 1862, "height": 845, "anchorX": 710, "anchorY": 565, "renderWidth": 112, "foregroundY": 560, "seatedOffsetY": 18, "rippleX": 7, "rippleY": 9, "rippleRX": 45, "rippleRY": 8 },
+    "up": { "width": 1086, "height": 1448, "anchorX": 543, "anchorY": 760, "renderWidth": 80, "foregroundY": 790, "seatedOffsetY": 20, "rippleX": 0, "rippleY": 6, "rippleRX": 30, "rippleRY": 48 },
+    "down": { "width": 1086, "height": 1448, "anchorX": 543, "anchorY": 580, "renderWidth": 80, "foregroundY": 640, "seatedOffsetY": 22, "rippleX": 0, "rippleY": 15, "rippleRX": 30, "rippleRY": 47 }
+  }
+}

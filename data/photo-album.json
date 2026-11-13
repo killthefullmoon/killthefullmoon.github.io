@@ -1,0 +1,148 @@
+{
+  "version": 3,
+  "photos": [
+    {
+      "id": "columbus_1",
+      "place": "Columbus",
+      "title": "Columbus · 01",
+      "caption": "Columbus · Ohio, USA",
+      "alt": "Photograph 1 from Hui’s Columbus collection",
+      "src": "../images/travel_notes/USA/ohio/columbus_1.JPG",
+      "thumbnail": "../images/thumbs/photos/columbus_1.jpg",
+      "category": "people",
+      "year": 2023
+    },
+    {
+      "id": "columbus_2",
+      "place": "Columbus",
+      "title": "Columbus · 02",
+      "caption": "Columbus · Ohio, USA",
+      "alt": "Photograph 2 from Hui’s Columbus collection",
+      "src": "../images/travel_notes/USA/ohio/columbus_2.JPG",
+      "thumbnail": "../images/thumbs/photos/columbus_2.jpg",
+      "category": "people",
+      "year": 2023
+    },
+    {
+      "id": "columbus_3",
+      "place": "Columbus",
+      "title": "Columbus · 03",
+      "caption": "Columbus · Ohio, USA",
+      "alt": "Photograph 3 from Hui’s Columbus collection",
+      "src": "../images/travel_notes/USA/ohio/columbus_3.JPG",
+      "thumbnail": "../images/thumbs/photos/columbus_3.jpg",
+      "category": "scenery",
+      "year": null
+    },
+    {
+      "id": "columbus_4",
+      "place": "Columbus",
+      "title": "J. Cole & Drake",
+      "caption": "J. Cole & Drake · Columbus, Ohio, USA",
+      "alt": "J. Cole and Drake concert in Columbus, with stage screens above the illuminated stage",
+      "src": "../images/travel_notes/USA/ohio/columbus_4.PNG",
+      "thumbnail": "../images/thumbs/photos/columbus_4.jpg",
+      "category": "concerts",
+      "year": 2024
+    },
+    {
+      "id": "columbus_5",
+      "place": "Columbus",
+      "title": "Columbus · 05",
+      "caption": "Columbus · Ohio, USA",
+      "alt": "Photograph 5 from Hui’s Columbus collection",
+      "src": "../images/travel_notes/USA/ohio/columbus_5.JPG",
+      "thumbnail": "../images/thumbs/photos/columbus_5.jpg",
+      "category": "people",
+      "year": null
+    },
+    {
+      "id": "columbus_6",
+      "place": "Columbus",
+      "title": "Columbus · 06",
+      "caption": "Columbus · Ohio, USA",
+      "alt": "Photograph 6 from Hui’s Columbus collection",
+      "src": "../images/travel_notes/USA/ohio/columbus_6.JPG",
+      "thumbnail": "../images/thumbs/photos/columbus_6.jpg",
+      "category": "scenery",
+      "year": null
+    },
+    {
+      "id": "columbus_7",
+      "place": "Columbus",
+      "title": "Columbus · 07",
+      "caption": "Columbus · Ohio, USA",
+      "alt": "Photograph 7 from Hui’s Columbus collection",
+      "src": "../images/travel_notes/USA/ohio/columbus_7.PNG",
+      "thumbnail": "../images/thumbs/photos/columbus_7.jpg",
+      "category": "scenery",
+      "year": 2024
+    },
+    {
+      "id": "columbus_8",
+      "place": "Columbus",
+      "title": "Columbus · 08",
+      "caption": "Columbus · Ohio, USA",
+      "alt": "Photograph 8 from Hui’s Columbus collection",
+      "src": "../images/travel_notes/USA/ohio/columbus_8.JPG",
+      "thumbnail": "../images/thumbs/photos/columbus_8.jpg",
+      "category": "people",
+      "year": 2024
+    },
+    {
+      "id": "columbus_9",
+      "place": "Columbus",
+      "title": "Columbus · 09",
+      "caption": "Columbus · Ohio, USA",
+      "alt": "Photograph 9 from Hui’s Columbus collection",
+      "src": "../images/travel_notes/USA/ohio/columbus_9.jpg",
+      "thumbnail": "../images/thumbs/photos/columbus_9.jpg",
+      "category": "scenery",
+      "year": 2023
+    },
+    {
+      "id": "ningbo_1",
+      "place": "Ningbo",
+      "title": "Ningbo · 01",
+      "caption": "Ningbo · Zhejiang, China",
+      "alt": "Photograph 1 from Hui’s Ningbo collection",
+      "src": "../images/travel_notes/China/zhejiang/ningbo_1.JPG",
+      "thumbnail": "../images/thumbs/photos/ningbo_1.jpg",
+      "category": "people",
+      "year": 2025
+    },
+    {
+      "id": "ningbo_2",
+      "place": "Ningbo",
+      "title": "Ningbo · 02",
+      "caption": "Ningbo · Zhejiang, China",
+      "alt": "Photograph 2 from Hui’s Ningbo collection",
+      "src": "../images/travel_notes/China/zhejiang/ningbo_2.JPG",
+      "thumbnail": "../images/thumbs/photos/ningbo_2.jpg",
+      "category": "food",
+      "year": 2025
+    },
+    {
+      "id": "ningbo_3",
+      "place": "Ningbo",
+      "title": "Ningbo · 03",
+      "caption": "Ningbo · Zhejiang, China",
+      "alt": "Photograph 3 from Hui’s Ningbo collection",
+      "src": "../images/travel_notes/China/zhejiang/ningbo_3.jpg",
+      "thumbnail": "../images/thumbs/photos/ningbo_3.jpg",
+      "category": "scenery",
+      "year": 2025
+    },
+    {
+      "id": "ningbo_4",
+      "place": "Ningbo",
+      "title": "Ningbo · 04",
+      "caption": "Ningbo · Zhejiang, China",
+      "alt": "Photograph 4 from Hui’s Ningbo collection",
+      "src": "../images/travel_notes/China/zhejiang/ningbo_4.JPG",
+      "thumbnail": "../images/thumbs/photos/ningbo_4.jpg",
+      "category": "scenery",
+      "year": 2025
+    }
+  ]
+}

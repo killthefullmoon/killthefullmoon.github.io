@@ -134,7 +134,8 @@
   ];
 
   const WORLD_PORTAL = {
-    name: 'Portal home', type: 'portal', fixed: GEO.project(43, -108),
+    // the way back stands just west of the Hangzhou home
+    name: 'Portal home', type: 'portal', fixed: GEO.project(30.45, 118.95),
     chapter: { kind: 'portal', kicker: 'Portal', body: '' }, title: 'Home', to: 'home',
   };
 
@@ -143,6 +144,8 @@
     { id: 'h-arcade', name: 'The Arcade', title: 'Save Point', kind: 'home-prop', sprite: 'arcade', x: 500, y: 700, r: 38, depth: 32, h: 136, to: 'games' },
     { id: 'h-gramophone', name: 'The Gramophone', title: 'Album Collection', kind: 'home-prop', sprite: 'records', x: 1290, y: 710, r: 52, depth: 30, h: 142, to: 'music' },
     { id: 'h-door', name: 'The front door', title: 'The World', kind: 'home-prop', sprite: 'door', type: 'portal', x: 900, y: 625, r: 54, depth: 18, h: 206, to: 'world' },
+    { id: 'h-mailbox', name: 'The letter box', title: 'Leave a note', kind: 'home-prop', sprite: 'mailbox', action: 'guestbook', x: 690, y: 720, r: 34, depth: 20, h: 146 },
+    { id: 'h-photos', name: 'The photo album', title: 'Photo Album', kind: 'home-prop', sprite: 'photo-album', action: 'photos', x: 1080, y: 1010, r: 67, depth: 35, h: 130 },
   ];
   const HOME_FURNITURE = [
     { sprite: 'sofa', x: 420, y: 1000, r: 76, depth: 42, h: 104 },
@@ -339,6 +342,23 @@
   const ctx = canvas.getContext('2d');
   const mini = document.getElementById('minimap');
   const mctx = mini.getContext('2d');
+  const nameplateArt = { image: new Image(), sheet: null, cache: new Map() };
+  nameplateArt.image.decoding = 'async';
+  nameplateArt.image.src = '../images/ui/nameplate.png';
+  Promise.all([
+    nameplateArt.image.decode(),
+    fetch('../images/ui/nameplate.json').then(r => {
+      if (!r.ok) throw new Error('Nameplate frame unavailable');
+      return r.json();
+    }),
+  ]).then(([, sheet]) => {
+    if (sheet.width !== nameplateArt.image.naturalWidth || sheet.height !== nameplateArt.image.naturalHeight) {
+      throw new Error('Nameplate dimensions do not match');
+    }
+    nameplateArt.sheet = sheet;
+    nameplateArt.cache.clear();
+  }).catch(() => { /* Keep names readable while the generated border loads. */ });
+  document.fonts.ready.then(() => nameplateArt.cache.clear());
   const homeArt = { room: new Image(), furniture: new Image(), sky: new Image(), clouds: new Image(), frames: null };
   homeArt.room.src = '../images/home/room.png';
   homeArt.furniture.src = '../images/home/furniture.png';
@@ -356,6 +376,13 @@
   ]).then(([, sheet]) => {
     homeArt.frames = Object.fromEntries(sheet.names.map((name, i) => [name, sheet.frames[i]]));
   }).catch(() => {});
+  const keepsakeArt = {};
+  for (const [name, anchorX, anchorY] of [['mailbox', 543, 1335], ['photo-album', 627, 1085]]) {
+    const image = new Image();
+    image.decoding = 'async';
+    image.src = `../images/home/keepsakes/${name}.png`;
+    keepsakeArt[name] = { image, anchorX, anchorY };
+  }
   const roomArt = { player: new Image(), playerFrame: null };
   roomArt.player.src = '../images/rooms/album-player.png';
   Promise.all([
@@ -382,6 +409,27 @@
     }
     huiSprite.frames = sheet.frames;
   }).catch(() => { /* The original canvas character remains usable if the art cannot load. */ });
+  const boatArt = { images: {}, frames: null };
+  for (const view of ['right', 'up', 'down']) {
+    const image = boatArt.images[view] = new Image();
+    image.decoding = 'async';
+    image.src = `../images/vehicles/rowboat${view === 'right' ? '' : '-' + view}.png?v=20261113-no-oars`;
+  }
+  Promise.all([
+    Promise.all(Object.values(boatArt.images).map(image => image.decode())),
+    fetch('../images/vehicles/rowboat.json?v=20261113-directions').then((r) => {
+      if (!r.ok) throw new Error('Boat frame unavailable');
+      return r.json();
+    }),
+  ]).then(([, sheet]) => {
+    for (const [view, image] of Object.entries(boatArt.images)) {
+      const frame = sheet.views?.[view];
+      if (!frame || frame.width !== image.naturalWidth || frame.height !== image.naturalHeight) {
+        throw new Error('Boat frame dimensions do not match');
+      }
+    }
+    boatArt.frames = sheet.views;
+  }).catch(() => { /* Keep sailing usable while the artwork is unavailable. */ });
   let W = 0;
   let H = 0;
   let DPR = 1;
@@ -457,7 +505,7 @@
     ArrowUp: 'u', KeyW: 'u', ArrowDown: 'd', KeyS: 'd', ArrowLeft: 'l', KeyA: 'l', ArrowRight: 'r', KeyD: 'r',
   };
   window.addEventListener('keydown', (e) => {
-    if (!started || travelDialog.open || fade || e.target.closest('input, textarea, select, [contenteditable]')) return;
+    if (!started || travelDialog.open || window.HuiHomeKeepsakes.isOpen() || fade || e.target.closest('input, textarea, select, [contenteditable]')) return;
     if (e.target.closest('button, a') && (e.code === 'Enter' || e.code === 'Space')) return;
     if (!screen.hidden) {
       if (e.code === 'Escape') closeScreen();
@@ -488,7 +536,7 @@
     }
   });
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Shift' && !travelDialog.open && !fade && screen.hidden) keys.add('run');
+    if (e.key === 'Shift' && !travelDialog.open && !window.HuiHomeKeepsakes.isOpen() && !fade && screen.hidden) keys.add('run');
   });
   window.addEventListener('keyup', (e) => {
     if (e.key === 'Shift') keys.delete('run');
@@ -518,7 +566,7 @@
   canvas.addEventListener('pointercancel', dropPointer);
 
   canvas.addEventListener('pointerdown', (e) => {
-    if (!started || fade || travelDialog.open) return;
+    if (!started || fade || travelDialog.open || window.HuiHomeKeepsakes.isOpen()) return;
     pointers.set(e.pointerId, [e.clientX, e.clientY]);
     if (pointers.size === 2) {
       const [a, b] = [...pointers.values()];
@@ -527,11 +575,17 @@
       pendingOpen = null;
       return;
     }
-    const wx = (e.clientX - W / 2) / zoom + cam.x;
-    const wy = (e.clientY - H / 2) / zoom + cam.y - (sceneName === 'home' ? homeLift() : 0);
+    let wx = (e.clientX - W / 2) / zoom + cam.x;
+    let wy = (e.clientY - H / 2) / zoom + cam.y - (sceneName === 'home' ? homeLift() : 0);
+    if (sceneName === 'world') { wx = GEO.wrap(wx, WORLD.w); wy = GEO.wrap(wy, WORLD.h); }
     const sc = SCENES[sceneName];
-    const hit = (sc.placeGrid ? decorIn(wx - 120, wy - 50, wx + 120, wy + 200, [], sc.placeGrid) : places).find((p) => Math.abs(p.x - wx) < (p.r || 26) + 12 && wy < p.y + 16 && wy > p.y - (p.h || 70));
-    if (hit && sc.gallery) {
+    const hit = (sc.placeGrid ? decorIn(wx - 180, wy - 240, wx + 180, wy + 220, [], sc.placeGrid) : places).find((p) => {
+      if (Math.abs(p.x - wx) < (p.r || 26) + 12 && wy < p.y + 16 && wy > p.y - (p.h || 70)) return true;
+      if (wy < p.y + 9) return false;
+      const plate = placeLabel(ctx, p);
+      return plate && Math.abs(p.x - wx) <= plate.width / 2 && wy <= p.y + 9 + plate.height;
+    });
+    if (hit && (sc.gallery || hit.action)) {
       // Browsing an exhibit never requires walking around intervening furniture.
       target = pendingOpen = null;
       keys.clear();
@@ -558,9 +612,9 @@
       return;
     }
     document.getElementById('hint').textContent = W < 700
-      ? sceneName === 'world' ? 'Tap to walk or sail · pinch to zoom' : 'Tap to walk · tap a place to explore'
+      ? sceneName === 'world' ? 'Tap to walk or sail · edges wrap around' : 'Tap to walk · tap a place to explore'
       : sceneName === 'world'
-        ? 'Walk or sail · Shift to run · E to interact · M to travel · scroll to zoom'
+        ? 'Walk or sail · all four edges connect · Shift to run · M to travel · scroll to zoom'
         : 'WASD / arrows to walk · Shift to run · E to interact · M to travel · scroll to zoom';
   }
   function fadeHint() {
@@ -569,13 +623,19 @@
     setTimeout(() => document.getElementById('hint').classList.add('is-faded'), 2500);
   }
 
+  function distanceFromPlayer(x, y) {
+    return sceneName === 'world' ? Math.hypot(GEO.delta(player.x, x, WORLD.w), GEO.delta(player.y, y, WORLD.h))
+      : Math.hypot(x - player.x, y - player.y);
+  }
+
   // ---------------------------------------------------------------- update
   const SPEED = 170;
   const RUN = 3; // running is three times walking speed
   let runToggle = false; // the on-screen Run button (touch)
   const dust = [];
   function walkableIn(sc, x, y) {
-    if (x < 20 || y < 20 || x > sc.world.w - 20 || y > sc.world.h - 20) return false;
+    if (sc === SCENES.world) { x = GEO.wrap(x, sc.world.w); y = GEO.wrap(y, sc.world.h); }
+    else if (x < 20 || y < 20 || x > sc.world.w - 20 || y > sc.world.h - 20) return false;
     // In The World, Hui takes a little boat across water instead of using
     // imaginary bridges between continents. Other scenes keep their shores.
     if (sc !== SCENES.world && !sc.islands.some((isl) => islandNorm(isl, x, y) < 0.95)
@@ -613,7 +673,7 @@
         fade = null;
       }
     }
-    if (travelDialog.open || fade) {
+    if (travelDialog.open || window.HuiHomeKeepsakes.isOpen() || fade) {
       keys.clear();
       target = null;
       pendingOpen = null;
@@ -626,11 +686,11 @@
     if (keys.has('u')) vy -= 1;
     if (keys.has('d')) vy += 1;
     if (!vx && !vy && target) {
-      const dx = target.x - player.x;
-      const dy = target.y - player.y;
+      const dx = sceneName === 'world' ? GEO.delta(player.x, target.x, WORLD.w) : target.x - player.x;
+      const dy = sceneName === 'world' ? GEO.delta(player.y, target.y, WORLD.h) : target.y - player.y;
       const d = Math.hypot(dx, dy);
       // close enough to a clicked place counts as arriving
-      const atPlace = pendingOpen && Math.hypot(pendingOpen.x - player.x, pendingOpen.y + 30 - player.y) < 40;
+      const atPlace = pendingOpen && distanceFromPlayer(pendingOpen.x, pendingOpen.y + 30) < 40;
       if (d < 6 || atPlace) {
         target = null;
         if (pendingOpen) {
@@ -656,12 +716,19 @@
       for (let i = 0; i < steps; i++) {
         const st = total / steps;
         let any = false;
-        if (walkable(player.x + vx * st, player.y)) {
-          player.x += vx * st;
+        const rawX = player.x + vx * st;
+        const nextX = sceneName === 'world' ? GEO.wrap(rawX, WORLD.w) : rawX;
+        if (walkable(nextX, player.y)) {
+          player.x = nextX;
+          // Shift the camera by the same whole-world offset; never pan across the globe.
+          if (sceneName === 'world') cam.x += nextX - rawX;
           any = true;
         }
-        if (walkable(player.x, player.y + vy * st)) {
-          player.y += vy * st;
+        const rawY = player.y + vy * st;
+        const nextY = sceneName === 'world' ? GEO.wrap(rawY, WORLD.h) : rawY;
+        if (walkable(player.x, nextY)) {
+          player.y = nextY;
+          if (sceneName === 'world') cam.y += nextY - rawY;
           any = true;
         }
         if (!any) break;
@@ -669,7 +736,7 @@
       }
       if (!moved && target) {
         // blocked: still open the place if we are standing right by it
-        if (pendingOpen && Math.hypot(pendingOpen.x - player.x, pendingOpen.y + 20 - player.y) < 96) interact(pendingOpen);
+        if (pendingOpen && distanceFromPlayer(pendingOpen.x, pendingOpen.y + 20) < 96) interact(pendingOpen);
         target = null;
         pendingOpen = null;
       }
@@ -703,13 +770,13 @@
     near = null;
     let best = 96;
     for (const p of nearby) {
-      const d = Math.hypot(p.x - player.x, p.y + 20 - player.y) - ((p.r || 26) - 26);
+      const d = distanceFromPlayer(p.x, p.y + 20) - ((p.r || 26) - 26);
       if (d < best) {
         best = d;
         near = p;
       }
     }
-    if (openPlace && !sc.gallery && !openPlace.embed && Math.hypot(openPlace.x - player.x, openPlace.y - player.y) > 220) closeCard();
+    if (openPlace && !sc.gallery && !openPlace.embed && distanceFromPlayer(openPlace.x, openPlace.y) > 220) closeCard();
 
     // Camera eases after the player
     cam.x += (player.x - cam.x) * Math.min(1, dt * 4);
@@ -771,20 +838,42 @@
   }
 
   function drawWater(c, view) {
+    if (sceneName === 'world') {
+      const gradient = c.createLinearGradient(0, 0, 0, WORLD.h);
+      gradient.addColorStop(0, '#c8dcd8'); gradient.addColorStop(.35, '#b6ced0');
+      gradient.addColorStop(.65, '#adc7cc'); gradient.addColorStop(1, '#c8dcd8');
+      c.fillStyle = gradient;
+      c.fillRect(view.x0, view.y0, view.x1 - view.x0, view.y1 - view.y0);
+      // A geographic grid and sparse wave marks remain readable at either map scale.
+      c.save(); c.strokeStyle = 'rgba(69, 111, 120, .13)'; c.lineWidth = Math.max(1, .5 / zoom); c.setLineDash([8 / zoom, 12 / zoom]);
+      for (let lng = -180; lng <= 180; lng += 30) {
+        const x = GEO.project(0, lng)[0] * SCENE_SCALE.world;
+        if (x >= view.x0 && x <= view.x1) { c.beginPath(); c.moveTo(x, Math.max(view.y0, 1440)); c.lineTo(x, Math.min(view.y1, WORLD.h - 1440)); c.stroke(); }
+      }
+      for (let lat = -60; lat <= 60; lat += 30) {
+        const y = GEO.project(lat, 0)[1] * SCENE_SCALE.world;
+        if (y >= view.y0 && y <= view.y1) { c.beginPath(); c.moveTo(Math.max(view.x0, 1440), y); c.lineTo(Math.min(view.x1, WORLD.w - 1440), y); c.stroke(); }
+      }
+      c.setLineDash([]); c.strokeStyle = 'rgba(75, 116, 125, .22)'; c.lineWidth = Math.max(1, .7 / zoom);
+      const step = zoom < .12 ? 1200 : 200, length = zoom < .12 ? 120 : 22;
+      for (let x = Math.floor(view.x0 / step) * step; x < view.x1 + step; x += step) {
+        for (let y = Math.floor(view.y0 / step) * step; y < view.y1 + step; y += step) {
+          const xx = x + Math.sin(y * .02) * step * .28, yy = y + Math.sin(x * .017) * step * .28;
+          c.beginPath(); c.moveTo(xx - length, yy); c.quadraticCurveTo(xx - length / 2, yy - length * .3, xx, yy);
+          c.quadraticCurveTo(xx + length / 2, yy + length * .3, xx + length, yy); c.stroke();
+        }
+      }
+      c.restore(); return;
+    }
     c.fillStyle = C.water;
     c.fillRect(view.x0, view.y0, view.x1 - view.x0, view.y1 - view.y0);
-    c.strokeStyle = C.waterLine;
-    c.lineWidth = 1.3;
-    c.lineCap = 'round';
-    const drift = Math.sin(clock * 0.8) * 3;
+    c.strokeStyle = C.waterLine; c.lineWidth = 1.3; c.lineCap = 'round';
+    const drift = Math.sin(clock * .8) * 3;
     for (const wv of decor.waves) {
       if (wv.x < view.x0 - 40 || wv.x > view.x1 + 40 || wv.y < view.y0 - 20 || wv.y > view.y1 + 20) continue;
       const x = wv.x + drift;
-      c.beginPath();
-      c.moveTo(x - wv.w / 2, wv.y);
-      c.quadraticCurveTo(x - wv.w / 4, wv.y - 4, x, wv.y);
-      c.quadraticCurveTo(x + wv.w / 4, wv.y + 4, x + wv.w / 2, wv.y);
-      c.stroke();
+      c.beginPath(); c.moveTo(x - wv.w / 2, wv.y); c.quadraticCurveTo(x - wv.w / 4, wv.y - 4, x, wv.y);
+      c.quadraticCurveTo(x + wv.w / 4, wv.y + 4, x + wv.w / 2, wv.y); c.stroke();
     }
   }
 
@@ -1880,10 +1969,16 @@
     c.translate(player.x, player.y);
     c.scale(1.2, 1.2);
     c.translate(-player.x, -player.y);
+    const sailing = sceneName === 'world' && !onLand(player.x, player.y);
+    if (sailing && boatArt.frames) {
+      drawHuiBoat(c);
+      c.restore();
+      return;
+    }
     drawHuiBody(c);
-    if (sceneName === 'world' && !onLand(player.x, player.y)) {
+    if (sailing) {
       // The hull covers Hui's feet; the same controls work on land and water.
-      const x = player.x, y = player.y + Math.sin(clock * 2) * 1.5;
+      const x = player.x, y = player.y + (quietMotion.matches ? 0 : Math.sin(clock * 2) * 1.5);
       c.fillStyle = '#cbb894';
       c.strokeStyle = C.ink;
       c.lineWidth = 1.5;
@@ -1901,7 +1996,46 @@
     c.restore();
   }
 
-  function drawHuiBody(c) {
+  function drawHuiBoat(c) {
+    const view = player.face === 'up' || player.face === 'down' ? player.face : 'right';
+    const f = boatArt.frames[view], scale = f.renderWidth / f.width;
+    const x = player.x, y = player.y, dir = view === 'right' ? player.dir : 1;
+    const bob = quietMotion.matches ? 0 : Math.sin(clock * 2) * 1.25;
+    const roll = quietMotion.matches ? 0 : Math.sin(clock * 1.6) * .014;
+    // Water stays flat while the boat and its passenger rock together.
+    c.fillStyle = 'rgba(58, 101, 111, .12)';
+    c.beginPath(); c.ellipse(x + dir * f.rippleX, y + f.rippleY, f.rippleRX, f.rippleRY, 0, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = 'rgba(245, 249, 239, .72)'; c.lineWidth = 1.25;
+    c.beginPath(); c.ellipse(x + dir * f.rippleX, y + f.rippleY + 1, f.rippleRX + 6, f.rippleRY + 2, 0, .12, Math.PI - .12); c.stroke();
+    if (player.moving && !quietMotion.matches) {
+      const dx = player.face === 'side' ? dir : 0, dy = player.face === 'up' ? -1 : player.face === 'down' ? 1 : 0;
+      for (let i = 0; i < 3; i++) {
+        const distance = (clock * 28 + i * 18) % 54;
+        c.strokeStyle = `rgba(245, 249, 239, ${.45 * (1 - distance / 60)})`;
+        c.beginPath();
+        const sternY = view === 'up' ? 48 : 40;
+        c.ellipse(x - dx * (35 + distance), y + 9 - dy * (sternY + distance), 8 + distance * .18, 2.5 + distance * .04, 0, 0, Math.PI);
+        c.stroke();
+      }
+    }
+    c.save(); c.translate(x, y + bob); c.rotate(roll); c.translate(-x, -y);
+    const boat = () => {
+      c.save(); c.translate(x, y); c.scale(dir, 1);
+      c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
+      c.drawImage(boatArt.images[view], -f.anchorX * scale, -f.anchorY * scale, f.width * scale, f.height * scale);
+      c.restore();
+    };
+    boat();
+    c.save(); c.beginPath();
+    c.rect(x - f.renderWidth, y - 100, f.renderWidth * 2, 102 + (f.foregroundY - f.anchorY) * scale);
+    c.clip(); c.translate(0, f.seatedOffsetY); drawHuiBody(c, true); c.restore();
+    // Repaint the near gunwale in front of Hui, hiding his legs inside the hull.
+    c.save(); c.beginPath(); c.rect(x - f.renderWidth, y + (f.foregroundY - f.anchorY) * scale, f.renderWidth * 2, f.height * scale);
+    c.clip(); boat(); c.restore();
+    c.restore();
+  }
+
+  function drawHuiBody(c, seated = false) {
     if (!huiSprite.frames) {
       drawHuiFallback(c);
       return;
@@ -1917,10 +2051,12 @@
       ? -Math.abs(Math.sin(player.phase)) * (player.running ? 2.5 : 1.2)
       : Math.sin(clock * 2) * 0.35;
 
-    c.fillStyle = C.inkFaint;
-    c.beginPath();
-    c.ellipse(player.x, player.y + 1, 12, 4, 0, 0, Math.PI * 2);
-    c.fill();
+    if (!seated) {
+      c.fillStyle = C.inkFaint;
+      c.beginPath();
+      c.ellipse(player.x, player.y + 1, 12, 4, 0, 0, Math.PI * 2);
+      c.fill();
+    }
     c.save();
     c.translate(player.x, player.y + bob);
     if (row === 1 && player.dir < 0) c.scale(-1, 1);
@@ -2101,6 +2237,13 @@
   }
 
   function drawHomeFurniture(c, p) {
+    const keepsake = keepsakeArt[p.sprite];
+    if (keepsake && keepsake.image.complete && keepsake.image.naturalWidth) {
+      const scale = p.h / keepsake.anchorY;
+      c.drawImage(keepsake.image, p.x - keepsake.anchorX * scale, p.y - p.h,
+        keepsake.image.naturalWidth * scale, keepsake.image.naturalHeight * scale);
+      return;
+    }
     const frame = homeArt.frames && homeArt.frames[p.sprite];
     if (!frame) {
       if (p.sprite === 'arcade') drawArcade(c, p);
@@ -2259,22 +2402,94 @@
     c.restore();
   }
 
-  function drawPlaceLabel(c, p) {
+  // Nameplates keep their painted corners and border thickness at every size.
+  // Cache the composed label so the game draws one sprite per name per frame.
+  const nameplateGraphemes = typeof Intl.Segmenter === 'function'
+    ? new Intl.Segmenter(undefined, { granularity: 'grapheme' }) : null;
+  function wrapNameplateText(c, text, maxWidth) {
+    const lines = [];
+    let line = '';
+    for (const word of text.split(/\s+/)) {
+      if (!word) continue;
+      const candidate = line ? line + ' ' + word : word;
+      if (c.measureText(candidate).width <= maxWidth) { line = candidate; continue; }
+      if (line) { lines.push(line); line = ''; }
+      if (c.measureText(word).width <= maxWidth) { line = word; continue; }
+      // Chinese names and long unbroken words can wrap without losing glyphs.
+      const glyphs = nameplateGraphemes ? Array.from(nameplateGraphemes.segment(word), item => item.segment) : Array.from(word);
+      for (const glyph of glyphs) {
+        if (line && c.measureText(line + glyph).width > maxWidth) { lines.push(line); line = ''; }
+        line += glyph;
+      }
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
+
+  function paintNameplate(c, width, height, baseHeight) {
+    const sheet = nameplateArt.sheet;
+    if (!sheet) {
+      c.fillStyle = '#f8efdd'; c.strokeStyle = '#a58c67'; c.lineWidth = 0.8;
+      roundRect(c, 0.5, 0.5, width - 0.5, height - 0.5, 4); c.fill(); c.stroke();
+      return;
+    }
+    const f = sheet.frame, inset = sheet.insets, scale = baseHeight / f.height;
+    const snap = value => Math.round(value * 3) / 3;
+    const sx = [f.x, f.x + inset.left, f.x + f.width - inset.right, f.x + f.width];
+    const sy = [f.y, f.y + inset.top, f.y + f.height - inset.bottom, f.y + f.height];
+    const dx = [0, snap(inset.left * scale), width - snap(inset.right * scale), width];
+    const dy = [0, snap(inset.top * scale), height - snap(inset.bottom * scale), height];
+    for (let row = 0; row < 3; row++) for (let col = 0; col < 3; col++) {
+      c.drawImage(nameplateArt.image, sx[col], sy[row], sx[col + 1] - sx[col], sy[row + 1] - sy[row],
+        dx[col], dy[row], dx[col + 1] - dx[col], dy[row + 1] - dy[row]);
+    }
+  }
+
+  function placeNameplate(c, text, small, maxWidth) {
+    const font = `400 ${small ? 14 : 17}px "Cormorant Garamond", Georgia, serif`;
+    const key = JSON.stringify([text, small, maxWidth]);
+    if (nameplateArt.cache.has(key)) return nameplateArt.cache.get(key);
+    c.save(); c.font = font;
+    const padX = small ? 12 : 14, padY = small ? 6 : 7, lineHeight = small ? 16 : 20;
+    const lines = wrapNameplateText(c, text, maxWidth - padX * 2);
+    const metrics = lines.map(line => c.measureText(line));
+    const width = Math.max(44, Math.ceil(Math.max(...metrics.map(m => m.width))) + padX * 2);
+    const height = lines.length * lineHeight + padY * 2;
+    const tile = document.createElement('canvas');
+    tile.width = width * 3; tile.height = height * 3;
+    const ink = tile.getContext('2d');
+    ink.scale(3, 3); ink.imageSmoothingQuality = 'high';
+    paintNameplate(ink, width, height, lineHeight + padY * 2);
+    ink.font = font; ink.textAlign = 'center'; ink.fillStyle = '#493c2d';
+    const ascent = Math.max(...metrics.map(m => m.actualBoundingBoxAscent || (small ? 11 : 13)));
+    const descent = Math.max(...metrics.map(m => m.actualBoundingBoxDescent || 0));
+    const baseline = padY + (lineHeight + ascent - descent) / 2;
+    lines.forEach((line, i) => ink.fillText(line, width / 2, baseline + i * lineHeight));
+    c.restore();
+    const result = { image: tile, width, height, lines };
+    if (nameplateArt.cache.size >= 512) nameplateArt.cache.delete(nameplateArt.cache.keys().next().value);
+    nameplateArt.cache.set(key, result);
+    return result;
+  }
+
+  function placeLabel(c, p) {
     if (p.noLabel) return;
     if (sceneName === 'world' && zoom < 0.16) return;
     if (sceneName === 'world' && zoom < 0.45 && p.type === 'visited' && p !== near) return;
-    c.save();
-    c.textAlign = 'center';
+    const text = String(p.label || p.title || '').replace(/\s+/g, ' ').trim();
+    if (!text) return;
     const small = !!p.small;
-    c.font = small ? '400 14px "Cormorant Garamond", Georgia, serif' : '400 17px "Cormorant Garamond", Georgia, serif';
-    let text = p.label || p.title;
-    if (small && text.length > 17) text = text.slice(0, 16).trim() + '…';
-    const w = c.measureText(text).width;
-    c.fillStyle = 'rgba(243, 238, 226, 0.78)';
-    c.fillRect(p.x - w / 2 - 5, p.y + 8, w + 10, small ? 17 : 20);
-    c.fillStyle = C.ink;
-    c.fillText(text, p.x, p.y + (small ? 21 : 24));
-    c.restore();
+    const limit = p.labelWidth || (small ? 216 : sceneName === 'home' ? 190 : 260);
+    const maxWidth = Math.max(80, Math.floor(Math.min(limit, (W - 32) / zoom)));
+    return placeNameplate(c, text, small, maxWidth);
+  }
+
+  function drawPlaceLabel(c, p) {
+    const plate = placeLabel(c, p);
+    if (!plate) return null;
+    const rect = { x: p.x - plate.width / 2, y: p.y + 9, w: plate.width, h: plate.height };
+    c.drawImage(plate.image, rect.x, rect.y, rect.w, rect.h);
+    return rect;
   }
 
   function drawPrompt(c, p) {
@@ -2323,7 +2538,7 @@
       miniFor = sceneName;
       const b = miniBase.getContext('2d');
       b.setTransform(1, 0, 0, 1, 0, 0);
-      b.fillStyle = sceneName === 'home' ? '#c3d8ed' : '#dde1da';
+      b.fillStyle = sceneName === 'home' ? '#c3d8ed' : sceneName === 'world' ? '#b6ced0' : '#dde1da';
       b.fillRect(0, 0, MM.w, MM.h);
       b.setTransform(k, 0, 0, k, ox, oy);
       if (sceneName === 'home') {
@@ -2362,7 +2577,11 @@
     const vh = (H / zoom) * sy;
     mctx.strokeStyle = 'rgba(42,39,35,0.6)';
     mctx.lineWidth = 1;
-    mctx.strokeRect(cam.x * sx - vw / 2, cam.y * sy - vh / 2, vw, vh);
+    const mx = sceneName === 'world' ? GEO.wrap(cam.x, WORLD.w) : cam.x;
+    const my = sceneName === 'world' ? GEO.wrap(cam.y, WORLD.h) : cam.y;
+    for (const dx of sceneName === 'world' ? [-WORLD.w, 0, WORLD.w] : [0]) {
+      for (const dy of sceneName === 'world' ? [-WORLD.h, 0, WORLD.h] : [0]) mctx.strokeRect((mx + dx) * sx - vw / 2, (my + dy) * sy - vh / 2, vw, vh);
+    }
     mctx.fillStyle = C.ink;
     mctx.beginPath();
     mctx.arc(player.x * sx, player.y * sy, 3, 0, Math.PI * 2);
@@ -2370,16 +2589,7 @@
   }
 
   // ---------------------------------------------------------------- frame
-  function render() {
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.setTransform(DPR * zoom, 0, 0, DPR * zoom, DPR * (W / 2 - cam.x * zoom), DPR * (H / 2 - cam.y * zoom));
-    const view = {
-      x0: cam.x - W / 2 / zoom,
-      y0: cam.y - H / 2 / zoom,
-      x1: cam.x + W / 2 / zoom,
-      y1: cam.y + H / 2 / zoom,
-    };
+  function renderFloor(view) {
     if (sceneName === 'home') {
       drawHomeSky(ctx, view);
       // Room, furniture, player and labels float together; collision stays in room coordinates.
@@ -2390,15 +2600,20 @@
       drawCollectionRoom(ctx, SCENES[sceneName], view);
     }
     else {
-      drawWater(ctx, view);
+      const tile = { x0: Math.max(0, view.x0), y0: Math.max(0, view.y0), x1: Math.min(WORLD.w, view.x1), y1: Math.min(WORLD.h, view.y1) };
+      ctx.save(); ctx.beginPath(); ctx.rect(tile.x0, tile.y0, tile.x1 - tile.x0, tile.y1 - tile.y0); ctx.clip();
+      drawWater(ctx, tile);
       drawIslands(ctx, view);
       drawStateBorders(ctx, view);
       drawTrails(ctx);
       drawZones(ctx);
       drawBridges(ctx);
       drawLabels(ctx);
+      ctx.restore();
     }
 
+  }
+  function renderContents(view) {
     // footprints
     const noteSteps = SCENES[sceneName].theme === 'music';
     for (const f of footprints) {
@@ -2464,7 +2679,7 @@
     // depth-sorted entities
     const inView = (x, y, m) => x > view.x0 - m && x < view.x1 + m && y > view.y0 - m && y < view.y1 + m + 80;
     const list = [];
-    if (sceneName !== 'world' || zoom >= 0.12) {
+    if (sceneName !== 'world') {
       decorIn(view.x0 - 60, view.y0 - 60, view.x1 + 60, view.y1 + 140, list);
     }
     const sc = SCENES[sceneName];
@@ -2480,9 +2695,27 @@
       else if (e.t === 'furniture') drawHomeFurniture(ctx, e.p);
       else if (e.t === 'place') {
         drawPlace(ctx, e.p);
-        drawPlaceLabel(ctx, e.p);
       }
       else drawHui(ctx);
+    }
+    // Labels are overlays, so a nearby bookcase or taller prop cannot hide a name.
+    const plates = [];
+    for (const e of list) {
+      if (e.t !== 'place') continue;
+      const r = drawPlaceLabel(ctx, e.p);
+      if (r) plates.push(r);
+    }
+    // ...but Hui walks in front of them: where a name plate overlaps Hui, draw Hui again,
+    // clipped to just those plates so props that should hide Hui still do elsewhere.
+    const hb = { x0: player.x - 22, x1: player.x + 22, y0: player.y - 80, y1: player.y + 8 };
+    const under = plates.filter((r) => r.x < hb.x1 && r.x + r.w > hb.x0 && r.y < hb.y1 && r.y + r.h > hb.y0);
+    if (under.length) {
+      ctx.save();
+      ctx.beginPath();
+      for (const r of under) ctx.rect(r.x, r.y, r.w, r.h);
+      ctx.clip();
+      drawHui(ctx);
+      ctx.restore();
     }
 
     // smoke + sparks
@@ -2524,11 +2757,22 @@
     }
 
 
-    // prompt above everything (screen-space transform again)
-    if (near && started) {
-      ctx.setTransform(DPR * zoom, 0, 0, DPR * zoom, DPR * (W / 2 - cam.x * zoom), DPR * (H / 2 - cam.y * zoom));
-      if (sceneName === 'home') ctx.translate(0, homeLift());
-      drawPrompt(ctx, near);
+    if (near && started) drawPrompt(ctx, near);
+  }
+  function render() {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = '#c8dcd8'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const view = { x0: cam.x - W / 2 / zoom, y0: cam.y - H / 2 / zoom,
+      x1: cam.x + W / 2 / zoom, y1: cam.y + H / 2 / zoom };
+    const fullAtlas = W / zoom >= WORLD.w && H / zoom >= WORLD.h;
+    const copies = sceneName === 'world' && !fullAtlas ? GEO.tiles(view, WORLD) : [[0, 0]];
+    for (const draw of [renderFloor, renderContents]) for (const [x, y] of copies) {
+      ctx.save();
+      ctx.setTransform(DPR * zoom, 0, 0, DPR * zoom, DPR * (W / 2 + (x - cam.x) * zoom), DPR * (H / 2 + (y - cam.y) * zoom));
+      if (sceneName === 'home' && draw === renderContents) ctx.translate(0, homeLift());
+      draw({ x0: view.x0 - x, y0: view.y0 - y, x1: view.x1 - x, y1: view.y1 - y });
+      ctx.restore();
     }
     drawMinimap();
     if (fade) {
@@ -2556,6 +2800,10 @@
 
   // ---------------------------------------------------------------- UI
   function clampCam(hw, hh) {
+    if (sceneName === 'world') {
+      if (hw * 2 >= WORLD.w && hh * 2 >= WORLD.h) { cam.x = WORLD.w / 2; cam.y = WORLD.h / 2; }
+      return;
+    }
     cam.x = hw * 2 >= WORLD.w ? WORLD.w / 2 : Math.max(hw, Math.min(WORLD.w - hw, cam.x));
     cam.y = hh * 2 >= WORLD.h ? WORLD.h / 2 : Math.max(hh, Math.min(WORLD.h - hh, cam.y));
   }
@@ -2579,6 +2827,13 @@
   document.getElementById('screenClose').addEventListener('click', closeScreen);
 
   function interact(p) {
+    if (p.action) {
+      closeCard();
+      keys.clear();
+      target = pendingOpen = null;
+      window.HuiHomeKeepsakes.open(p.action);
+      return;
+    }
     if (p.kind === 'computer') {
       openScreen(p);
       return;
@@ -2655,6 +2910,7 @@
     document.getElementById('sceneName').textContent = sceneTitle(name);
     document.body.dataset.lifeScene = sc.theme || name;
     document.body.dataset.lifeRoom = name;
+    document.getElementById('homeKeepsakeAccess').hidden = name !== 'home';
     document.getElementById('zoomMap').hidden = name !== 'world';
     updateHint();
     document.getElementById('journalBtn').hidden = name !== 'world';
@@ -2761,6 +3017,8 @@
     updateTravelLocation();
     renderTravelDestinations();
     travelDialog.showModal();
+    // focus the dialog itself, so the close button doesn't open with a focus ring
+    travelDialog.focus({ preventScroll: true });
     travelDestinations.scrollTop = 0;
     travelBtn.setAttribute('aria-expanded', 'true');
   }
@@ -3348,11 +3606,13 @@
       }
 
       worldPlaces = buildPlaces(list);
-      worldPlaces.push(computer(...GEO.project(33, -112), 'travel_map.html', 'Travel map (web)'));
+      // Hui arrives in The World at home, in front of the Hangzhou house
+      const home = worldPlaces.find((p) => p.name.startsWith('Hangzhou'));
+      const worldSpawn = home ? [home.x, home.y + 150] : [...GEO.start];
       SCENES.world = scaleScene(
         {
           world: { ...GEO.size }, islands: [...GEO.landforms(land), ...GEO.landforms(travelCountries.landingLand)], bridges: [], places: worldPlaces,
-          spawn: [...GEO.start], compass: GEO.project(-38, -120), extentScale: GEO.enlargement, open: true,
+          spawn: worldSpawn, compass: GEO.project(-38, -120), extentScale: GEO.enlargement, open: true,
           destinations: [
             ...travelCountries.features.map(({ properties: p }) => ({
               id: p.travel_id, kind: 'country', code: p.code, name: p.name, zh: p.name_zh,
@@ -3405,7 +3665,18 @@
   idle(() => ['games', 'music'].forEach((n) => ensureCatalog(n).catch(() => {})));
   let sharedSceneRequest = 0;
   async function followSharedScene() {
-    const name = location.hash.slice(1);
+    // giscus returns to its container ID after GitHub sign-in. Open the
+    // lazy-loaded widget on that route so it can consume the OAuth callback.
+    const guestbookReturn = location.hash === '#guestbookComments'
+      || new URLSearchParams(location.search).has('giscus');
+    const name = guestbookReturn ? 'guestbook' : location.hash.slice(1);
+    if (name === 'guestbook' || name === 'photos') {
+      ++sharedSceneRequest;
+      fade = null;
+      loadScene('home');
+      window.HuiHomeKeepsakes.open(name);
+      return;
+    }
     if (!name || (name !== 'home' && name !== 'world' && !CollectionRooms.parseRoute(name))) return;
     const request = ++sharedSceneRequest;
     try {

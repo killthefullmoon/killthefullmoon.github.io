@@ -1,0 +1,15 @@
+{
+  "mode": "built-in imagegen",
+  "transparent_background": true,
+  "reference": "../furniture.png",
+  "prompts": [
+    {
+      "id": "mailbox",
+      "prompt": "Use case: stylized-concept. Asset type: one isolated transparent PNG furniture sprite for a cozy hand-drawn top-down cottage game. The attached furniture atlas is STYLE REFERENCE ONLY. Make ONE charming standing LETTER BOX: a small muted terracotta-red postbox with gently rounded roof, honey-wood post and sturdy compact wooden foot/base, a thin dark letter slot and a small cream envelope symbol on the front (symbol only, no words). One cream envelope peeks from the slot, a small brass latch. Front view from slightly above, enough top surface visible to match elevated RPG furniture. Loose confident brown ink outlines and softly textured gouache/watercolor fills, handmade imperfect contour, muted warm terracotta, honey wood, warm ivory, subtle olive. Object should be a simple bold readable silhouette at 90–120 pixels in game, not ornate or cluttered. One self-contained object centered filling roughly 80% of a portrait canvas, generous transparent margins; whole base visible. No ground shadow, no floor, no scene, no text, no letters, no logo, no other objects, no 3D rendering. CRITICAL: genuinely transparent alpha outside the object, opaque painted interior. Match the quiet illustrated reference."
+    },
+    {
+      "id": "photo-album",
+      "prompt": "Use case: stylized-concept. Asset type: one isolated transparent PNG furniture sprite for a cozy hand-drawn top-down cottage game. The attached furniture atlas is STYLE REFERENCE ONLY. Make ONE photo album resting OPEN on a tiny low honey-wood reading table with four short legs. The album is the star, large and broad, with a dark muted sage cloth cover, warm ivory pages, and four tiny sepia blue-green landscape photo rectangles held with cream photo corners. A narrow dusty terracotta ribbon bookmark drapes down the table front. Elevated front view, looking down about 35 degrees so the open pages are very visible, matching cozy RPG furniture. Loose confident warm brown ink contours, softly textured gouache/watercolor, warm honey wood, olive/sage cloth, ivory paper, natural handmade asymmetry. At small in-game scale it must clearly read as an OPEN PHOTO ALBUM ON A TABLE, not a bookcase or a pile of books. Entire table and legs visible, compact simple silhouette, centered and roughly 80% of a square canvas with transparent margins. No ground shadow, no floor, room, scenery, text, logos, watermarks, no extra camera, no 3D. CRITICAL: true transparent alpha around the object, opaque paint interiors."
+    }
+  ]
+}

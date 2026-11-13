@@ -14,6 +14,22 @@
     return [frame.x + (lng + 180) / 360 * frame.w, frame.y + (90 - lat) / 180 * frame.h];
   }
 
+  // The walking map joins opposite edges in both directions (a game-world torus).
+  function wrap(value, extent) {
+    return value >= 0 && value < extent ? value : ((value % extent) + extent) % extent;
+  }
+  function delta(from, to, extent) {
+    const d = to - from;
+    return d - Math.round(d / extent) * extent;
+  }
+  function tiles(view, world = size) {
+    const offsets = [];
+    for (let x = Math.floor(view.x0 / world.w); x <= Math.floor((view.x1 - 1e-6) / world.w); x++) {
+      for (let y = Math.floor(view.y0 / world.h); y <= Math.floor((view.y1 - 1e-6) / world.h); y++) offsets.push([x * world.w, y * world.h]);
+    }
+    return offsets;
+  }
+
   function landforms(data) {
     const polygons = data.features.flatMap((f) =>
       (f.geometry.type === 'MultiPolygon' ? f.geometry.coordinates : [f.geometry.coordinates])
@@ -46,10 +62,11 @@
     ['Europe', 57, 22], ['Africa', 4, 20], ['Asia', 52, 88],
     ['Australia', -25, 134], ['Antarctica', -79, 10],
     ['Pacific Ocean', 7, -140, true], ['Atlantic Ocean', 12, -36, true],
-    ['Indian Ocean', -24, 77, true],
+    ['Indian Ocean', -24, 77, true], ['Arctic Ocean', 81, 0, true],
+    ['Southern Ocean', -61, 40, true], ['Pacific Ocean', 1, 164, true],
   ].map(([text, lat, lng, ocean]) => ({ text, point: project(lat, lng), ocean: !!ocean }));
 
-  const api = { size, frame, enlargement, project, landforms, contains, labels, start: project(39, -103) };
+  const api = { size, frame, enlargement, project, wrap, delta, tiles, landforms, contains, labels, start: project(39, -103) };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.HuiWorldGeography = api;
 })(typeof window === 'undefined' ? globalThis : window);

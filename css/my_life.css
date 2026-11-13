@@ -731,3 +731,6 @@ body[data-page="my_life"] .navbar-brand {
   border-radius: 4px;
   background: #f3f1ec;
 }
+
+/* Dialogs take focus themselves when opened; no outline on the dialog box */
+.life-keepsake:focus, .life-travel:focus { outline: none; }

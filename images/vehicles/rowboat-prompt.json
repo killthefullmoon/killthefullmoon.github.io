@@ -1,0 +1,22 @@
+{
+  "mode": "built-in imagegen",
+  "transparent_background": true,
+  "reference": "Previous rowboat illustration; same hull, palette and ink style",
+  "prompts": [
+    {
+      "id": "right",
+      "prompt": "Use case: precise-object-edit. Edit the attached boat PNG. Remove ONLY both wooden oars AND both oarlock/mounting blocks. Reconstruct the small covered parts of the gunwale, planks and painted hull to make them clean and uninterrupted. Keep the exact same boat design, wood colors, sage paint, rope coil, bench, right-pointing bow, left stern, three-quarter elevated view, canvas proportions and placement. Do not zoom, recenter or redraw the entire boat. Same cozy hand-inked gray-sage wooden dinghy, honey-oak interior and gunwale, ONE transverse seat, small coiled rope in the bow, irregular dark brown sketch contours and muted gouache texture. Preserve these exact design details and colors. No people, cabin, mast, sail, engine, text or symbols. NO oars, paddles, oarlocks, rowlocks, mounting blocks or protruding handles at all. The gunwale must be clean and continuous. Real transparent alpha outside the boat, opaque hull/interior, no water, ground, shadows, scenery or checkerboard.",
+      "asset": "rowboat.png"
+    },
+    {
+      "id": "up",
+      "prompt": "Use case: stylized-concept. Create a NORTH-FACING directional sprite of exactly the boat in the reference. The reference is a boat-design and style reference. Rotate the BOAT IN THE HORIZONTAL WATER PLANE so its pointed bow faces straight UP / NORTH on the screen and its broad flat stern faces DOWN / SOUTH toward the viewer. Keep the camera upright in the same gently elevated orthographic RPG view. Do NOT rotate the bitmap on the picture plane: show the proper rear view with the visible outer face of the stern nearest the viewer and the interior beyond it. Centerline exactly vertical, balanced port/starboard sides, no diagonal heading. The boat interior must be open with a visible empty middle seat for a separate character. Full isolated boat, centered on a portrait or square transparent canvas, modest transparent margins. The silhouette should be about 1.5–1.7 times taller than wide (moderate perspective foreshortening). Same cozy hand-inked gray-sage wooden dinghy, honey-oak interior and gunwale, ONE transverse seat, small coiled rope in the bow, irregular dark brown sketch contours and muted gouache texture. Preserve these exact design details and colors. No people, cabin, mast, sail, engine, text or symbols. NO oars, paddles, oarlocks, rowlocks, mounting blocks or protruding handles at all. The gunwale must be clean and continuous. Real transparent alpha outside the boat, opaque hull/interior, no water, ground, shadows, scenery or checkerboard.",
+      "asset": "rowboat-up.png"
+    },
+    {
+      "id": "down",
+      "prompt": "Use case: stylized-concept. Create a SOUTH-FACING directional sprite of exactly the boat in the reference. The reference is a boat-design and style reference. Rotate the BOAT IN THE HORIZONTAL WATER PLANE so its pointed bow faces straight DOWN / SOUTH toward the viewer and its broad flat stern faces UP / NORTH away from the viewer. Keep the camera upright in the same gently elevated orthographic RPG view. Do NOT rotate the bitmap on the picture plane: show the proper front view with the pointed outer bow nearest the viewer, and the wooden interior and wide transom behind it. Centerline exactly vertical, balanced port/starboard sides, no diagonal heading. Keep the central seat empty for a separate character. Full isolated boat, centered on a portrait or square transparent canvas, modest transparent margins. The silhouette should be about 1.5–1.7 times taller than wide (moderate perspective foreshortening). Same cozy hand-inked gray-sage wooden dinghy, honey-oak interior and gunwale, ONE transverse seat, small coiled rope in the bow, irregular dark brown sketch contours and muted gouache texture. Preserve these exact design details and colors. No people, cabin, mast, sail, engine, text or symbols. NO oars, paddles, oarlocks, rowlocks, mounting blocks or protruding handles at all. The gunwale must be clean and continuous. Real transparent alpha outside the boat, opaque hull/interior, no water, ground, shadows, scenery or checkerboard.",
+      "asset": "rowboat-down.png"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+/* Two keepsakes from the flying cottage: letters and photographs. */
+.life-keepsake-access { position: absolute; top: 145px; right: 32px; z-index: 6; }
+.life-keepsake-access:not(:focus-within) { clip-path: inset(50%); width: 1px; height: 1px; overflow: hidden; }
+.life-keepsake-access button { display: block; margin: 6px; padding: 10px; background: #faf6eb; border: 1px solid #a99b81; }
+.life-keepsake {
+  position: fixed; inset: 0; margin: auto; padding: 30px 36px 22px;
+  width: min(760px, calc(100vw - 40px)); max-width: none;
+  max-height: calc(100dvh - 60px); box-sizing: border-box; overflow: auto;
+  overscroll-behavior: contain; color: #342f28; background: #f7f3e9;
+  border: 1px solid #b7aa91; border-radius: 7px;
+  box-shadow: 0 5px 0 #d7cdb8, 0 8px 0 #eee7d9, 0 30px 90px #29282345;
+  font-family: var(--font-sans); user-select: text; -webkit-user-select: text;
+}
+.life-keepsake::backdrop { background: #32393361; backdrop-filter: blur(3px); }
+.life-keepsake [hidden] { display: none !important; }
+.life-keepsake button, .life-keepsake a { -webkit-tap-highlight-color: transparent; }
+.life-keepsake button:focus-visible, .life-keepsake a:focus-visible { outline: 2px solid #9b4f37; outline-offset: 4px; }
+.life-keepsake__close { position: absolute; top: 12px; right: 14px; width: 36px; height: 36px; border: 0; background: transparent; color: #746650; font-size: 27px; line-height: 1; cursor: pointer; }
+.life-keepsake__close:hover { color: #9b3d2b; }
+.life-keepsake__header { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 0 24px 22px 0; }
+.life-keepsake__eyebrow { margin: 0 0 9px; font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: #877a63; }
+.life-keepsake h2 { margin: 0; font: italic 48px/1.08 var(--font-serif); letter-spacing: -.025em; }
+.life-keepsake__header p:last-child:not(:first-child) { margin: 10px 0 0; color: #7c725f; font-size: 12px; line-height: 1.7; }
+.life-keepsake__status { font-size: 13px; line-height: 1.8; color: #7e6d52; }
+.life-keepsake__status:empty { display: none; }
+.life-keepsake__button { padding: 9px 13px; min-height: 40px; border: 1px solid #c9bda6; border-radius: 3px; background: #fffcf4; color: #5c513f; font: 11px/1.5 var(--font-sans); cursor: pointer; }
+.life-keepsake__button:hover:not(:disabled) { background: #ece4d2; border-color: #9a8664; }
+.life-keepsake__button:disabled { opacity: .38; cursor: default; }
+.life-letterbox__stamp { width: 70px; height: 100px; object-fit: contain; transform: rotate(5deg); }
+.life-letterbox__paper { padding: 20px 22px; border: 1px solid #ded5c3; background: #fffdf7; border-radius: 4px; min-height: 180px; }
+.life-letterbox__signin { font-size: 11px; line-height: 1.7; color: #83765f; margin-bottom: 20px; padding-bottom: 13px; border-bottom: 1px dashed #d6cab3; }
+.life-letterbox .giscus, .life-letterbox .giscus-frame { width: 100%; }
+.life-letterbox__setup { margin: 12px 0 18px; padding: 15px; border-left: 2px solid #b69b73; background: #f7f3e9; font-size: 12px; line-height: 1.8; color: #74654f; }
+.life-letterbox__setup p { margin: 0 0 10px; }
+.life-letterbox__setup p:last-child { margin: 10px 0 0; }
+.life-letterbox__footer { display: flex; justify-content: space-between; gap: 12px; padding-top: 20px; font-size: 10px; color: #877b67; }
+.life-letterbox__footer > span { font: italic 20px/1 var(--font-serif); }
+.life-keepsake a { color: #896146; text-decoration-color: #b6a088; text-underline-offset: 4px; }
+.life-album { width: min(990px, calc(100vw - 40px)); border-left: 7px solid #6f795c; padding-left: 32px; }
+.life-album > .life-keepsake__close { position: sticky; top: 0; float: right; margin-top: -18px; margin-right: -22px; z-index: 2; border-radius: 50%; background: #f7f3e9ed; }
+.life-album__edition { flex-shrink: 0; font: italic 18px/1.1 var(--font-serif); color: #8d9277; text-align: right; }
+.life-album__indexbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #d9d0bd; padding: 16px 0 21px; }
+.life-album__filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.life-album__filters button { background: transparent; border: 1px solid transparent; border-radius: 30px; padding: 7px 13px; color: #7d755f; font: 11px/1.5 var(--font-sans); cursor: pointer; }
+.life-album__filters button[aria-pressed="true"] { background: #e5e8da; border-color: #b7bda4; color: #4f5b43; }
+.life-album__filters button:hover { background: #e9e4d6; }
+.life-album output { font: 10px/1.5 var(--font-sans); color: #8c806c; white-space: nowrap; }
+.life-album__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 23px 21px; padding: 4px 4px 14px; }
+.life-album__photo { position: relative; width: 100%; padding: 9px 9px 13px; border: 1px solid #e0d9cb; border-radius: 1px; background: #fffef9; color: #665c4b; box-shadow: 1px 3px 7px #3e301314; cursor: pointer; text-align: left; transform: rotate(-1deg); transition: transform 150ms ease, box-shadow 150ms ease; }
+.life-album__photo:nth-child(3n + 2) { transform: rotate(1deg); }
+.life-album__photo:nth-child(3n) { transform: rotate(-.4deg); }
+.life-album__photo:hover, .life-album__photo:focus-visible { transform: translateY(-3px); box-shadow: 1px 6px 12px #3e301321; }
+.life-album__photo::before { content: ''; position: absolute; width: 43px; height: 13px; left: calc(50% - 21px); top: -7px; background: #c5c3a765; transform: rotate(-4deg); }
+.life-album__photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #ebe6da; font-size: 11px; }
+.life-album__photo .life-album__caption { display: flex; align-items: center; gap: 7px; padding: 10px 3px 0; font: italic 20px/1.1 var(--font-serif); }
+.life-album__place { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.life-album__year { display: inline-block; flex-shrink: 0; padding: 3px 5px; border: 1px solid #e1d8c5; border-radius: 3px; background: #f8f4ea; color: #87785f; font: 10px/1 var(--font-sans); vertical-align: middle; }
+.life-album__photo small { flex-shrink: 0; margin-left: auto; font: 9px/1 var(--font-sans); color: #a79b84; }
+.life-album__pagination { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 17px; margin-top: 6px; border-top: 1px solid #ded6c4; }
+.life-album__viewerbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 14px; font-size: 11px; }
+.life-album__viewer figure { margin: 0; padding: 12px 12px 15px; background: #fffef9; border: 1px solid #ded6c4; }
+.life-album__imagewell { display: flex; align-items: center; justify-content: center; height: clamp(170px, 49dvh, 600px); background: #f0ece2; }
+.life-album__imagewell img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.life-album__viewer figcaption { padding-top: 13px; text-align: center; font: italic 21px/1.2 var(--font-serif); }
+.life-album__viewer .life-album__year { margin-left: 8px; }
+@media (max-width: 600px) {
+  .life-keepsake { width: calc(100vw - 24px); max-height: calc(100dvh - 30px); padding: 24px 18px 18px; }
+  .life-keepsake__header { gap: 8px; padding-right: 18px; padding-bottom: 19px; }
+  .life-keepsake h2 { font-size: 37px; }
+  .life-keepsake__eyebrow { font-size: 8px; letter-spacing: .08em; }
+  .life-keepsake__header p:last-child:not(:first-child) { font-size: 11px; }
+  .life-letterbox__stamp { width: 49px; height: 80px; }
+  .life-letterbox__paper { padding: 14px 10px; }
+  .life-album { border-left-width: 5px; }
+  .life-album > .life-keepsake__close { margin-top: -12px; margin-right: -12px; }
+  .life-album__edition { display: none; }
+  .life-album__indexbar { align-items: flex-start; flex-direction: column; gap: 6px; }
+  .life-album__filters button { padding: 7px 11px; }
+  .life-album__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 12px; }
+  .life-album__photo { padding: 6px 6px 10px; }
+  .life-album__photo .life-album__caption { gap: 4px; font-size: 18px; padding-left: 1px; padding-right: 1px; }
+  .life-album__photo .life-album__year { padding: 3px 4px; font-size: 9px; }
+  .life-album__pagination .life-keepsake__button { padding: 9px 8px; font-size: 10px; }
+  .life-album__viewer figure { padding: 7px 7px 13px; }
+}
+@media (max-width: 360px) {
+  .life-album__photo .life-album__caption { gap: 3px; font-size: 16px; }
+  .life-album__photo small { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .life-album__photo { transition: none; } }

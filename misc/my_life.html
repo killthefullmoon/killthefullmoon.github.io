@@ -7,6 +7,7 @@
   <title>My Life · Hui Shen</title>
   <meta name="description"
     content="My Life: a small hand-drawn, top-down walking game through the places Hui Shen has lived, studied, worked and visited.">
+  <meta name="giscus:backlink" content="https://killthefullmoon.github.io/misc/my_life.html#guestbook">
 
   <link rel="icon" type="image/x-icon" href="../images/favicons/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,6 +24,7 @@
   <link rel="stylesheet" href="../css/bootstrap.min.css">
   <link rel="stylesheet" href="../stylesheet.css">
   <link rel="stylesheet" href="../css/my_life.css">
+  <link rel="stylesheet" href="../css/home_keepsakes.css?v=20261113-photo-years-3">
 </head>
 
 <body data-root-path=".." data-page="my_life">
@@ -32,6 +34,79 @@
 
   <main class="life" aria-label="My Life, a walking game">
     <canvas id="world" tabindex="0" aria-label="Hand-drawn map. Walk Hui around to discover places."></canvas>
+
+    <nav id="homeKeepsakeAccess" class="life-keepsake-access" aria-label="Home keepsakes">
+      <button type="button" data-keepsake="guestbook" aria-haspopup="dialog" aria-controls="guestbookDialog">Open the letter box</button>
+      <button type="button" data-keepsake="photos" aria-haspopup="dialog" aria-controls="photoAlbumDialog">Open the photo album</button>
+    </nav>
+
+    <dialog class="life-keepsake life-letterbox" id="guestbookDialog" tabindex="-1" aria-labelledby="guestbookTitle" aria-describedby="guestbookIntro">
+      <button type="button" class="life-keepsake__close" data-close-keepsake aria-label="Close the letter box">×</button>
+      <header class="life-keepsake__header">
+        <div>
+          <p class="life-keepsake__eyebrow">A letter to this little home</p>
+          <h2 id="guestbookTitle">Letters to Hui</h2>
+          <p id="guestbookIntro">Say hello, share a thought, or leave a memory.</p>
+        </div>
+        <img src="../images/home/keepsakes/mailbox.png" alt="" class="life-letterbox__stamp">
+      </header>
+      <div class="life-letterbox__paper">
+        <p class="life-letterbox__signin">Sign in with GitHub below to leave a public note.</p>
+        <div id="guestbookStatus" class="life-keepsake__status" role="status"></div>
+        <div id="guestbookSetup" class="life-letterbox__setup" hidden>
+          <p>To enable comments, install giscus for <strong>killthefullmoon.github.io</strong> on GitHub. Select <strong>Only select repositories</strong> and choose this repository.</p>
+          <a href="https://github.com/apps/giscus/installations/new" target="_blank" rel="noopener noreferrer">Install giscus on GitHub ↗</a>
+          <p>Come back here after installing. The letter box will reconnect automatically.</p>
+        </div>
+        <div id="guestbookComments" class="giscus"></div>
+        <button type="button" id="guestbookRetry" class="life-keepsake__button" hidden>Try again</button>
+      </div>
+      <footer class="life-letterbox__footer">
+        <span>Thanks for stopping by.</span>
+        <a id="guestbookGithub" href="https://github.com/killthefullmoon/killthefullmoon.github.io/discussions/categories/announcements" target="_blank" rel="noopener noreferrer">View on GitHub ↗</a>
+      </footer>
+    </dialog>
+
+    <dialog class="life-keepsake life-album" id="photoAlbumDialog" tabindex="-1" aria-labelledby="photoAlbumTitle">
+      <button type="button" class="life-keepsake__close" data-close-keepsake aria-label="Close the photo album">×</button>
+      <header class="life-keepsake__header">
+        <div>
+          <p class="life-keepsake__eyebrow">Places, people &amp; little moments</p>
+          <h2 id="photoAlbumTitle">Photo Album</h2>
+          <p>A few memories, kept between the pages.</p>
+        </div>
+        <span class="life-album__edition">Hui’s<br>photographs</span>
+      </header>
+      <p id="photoAlbumStatus" class="life-keepsake__status" role="status"></p>
+      <button type="button" id="photoAlbumRetry" class="life-keepsake__button" hidden>Try again</button>
+      <section id="photoAlbumIndex" aria-label="Photo collection">
+        <div class="life-album__indexbar">
+          <div id="photoAlbumFilters" class="life-album__filters" role="group" aria-label="Filter photos by category"></div>
+          <output id="photoAlbumCount" aria-live="polite"></output>
+        </div>
+        <div id="photoAlbumGrid" class="life-album__grid"></div>
+        <footer class="life-album__pagination">
+          <button type="button" id="photoAlbumPrevPage" class="life-keepsake__button">← Previous page</button>
+          <output id="photoAlbumPage" aria-live="polite"></output>
+          <button type="button" id="photoAlbumNextPage" class="life-keepsake__button">Next page →</button>
+        </footer>
+      </section>
+      <section id="photoAlbumViewer" class="life-album__viewer" aria-label="Full photograph" hidden>
+        <div class="life-album__viewerbar">
+          <button type="button" id="photoAlbumBack" class="life-keepsake__button">← Back to album</button>
+          <a id="photoAlbumOriginal" target="_blank" rel="noopener noreferrer">Original ↗</a>
+        </div>
+        <figure>
+          <div class="life-album__imagewell"><img id="photoAlbumImage" alt=""></div>
+          <figcaption id="photoAlbumCaption"></figcaption>
+        </figure>
+        <footer class="life-album__pagination">
+          <button type="button" id="photoAlbumPrev" class="life-keepsake__button" aria-label="Previous photograph">← Previous</button>
+          <output id="photoAlbumPosition" aria-live="polite"></output>
+          <button type="button" id="photoAlbumNext" class="life-keepsake__button" aria-label="Next photograph">Next →</button>
+        </footer>
+      </section>
+    </dialog>
 
     <svg class="life-symbols" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
       <symbol id="helicopter" viewBox="0 0 80 60">
@@ -89,8 +164,8 @@
       <span class="life-travel-launcher__caption">Fast travel <span aria-hidden="true">↗</span></span>
     </button>
 
-    <dialog class="life-travel" id="travelDialog" aria-labelledby="travelTitle" aria-describedby="travelIntro">
-      <button type="button" class="life-card__close" id="travelClose" aria-label="Close fast travel" autofocus>×</button>
+    <dialog class="life-travel" id="travelDialog" tabindex="-1" aria-labelledby="travelTitle" aria-describedby="travelIntro">
+      <button type="button" class="life-card__close" id="travelClose" aria-label="Close fast travel">×</button>
       <header class="life-travel__head">
         <div>
           <p class="life-travel__eyebrow">Helicopter travel</p>
@@ -159,9 +234,10 @@
 
   </main>
 
-  <script src="../js/world_geography.js"></script>
+  <script src="../js/world_geography.js?v=20261113-plain-world"></script>
   <script src="../js/collection_rooms.js"></script>
-  <script src="../js/my_life.js"></script>
+  <script src="../js/home_keepsakes.js?v=20261113-photo-years"></script>
+  <script src="../js/my_life.js?v=20261113-nameplates-2"></script>
   <script src="../js/bootstrap.bundle.min.js" defer></script>
 </body>
 
