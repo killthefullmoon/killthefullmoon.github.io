@@ -1,0 +1,62 @@
+{
+  "width": 1536,
+  "height": 1024,
+  "names": [
+    "door",
+    "arcade",
+    "records",
+    "sofa",
+    "bookcase",
+    "plant"
+  ],
+  "frames": [
+    {
+      "x": 104,
+      "y": 12,
+      "width": 361,
+      "height": 471,
+      "anchorX": 180,
+      "anchorY": 467
+    },
+    {
+      "x": 647,
+      "y": 69,
+      "width": 243,
+      "height": 414,
+      "anchorX": 121,
+      "anchorY": 410
+    },
+    {
+      "x": 1072,
+      "y": 51,
+      "width": 348,
+      "height": 432,
+      "anchorX": 173.5,
+      "anchorY": 428
+    },
+    {
+      "x": 60,
+      "y": 673,
+      "width": 456,
+      "height": 301,
+      "anchorX": 227.5,
+      "anchorY": 297
+    },
+    {
+      "x": 618,
+      "y": 521,
+      "width": 288,
+      "height": 454,
+      "anchorX": 143.5,
+      "anchorY": 450
+    },
+    {
+      "x": 1100,
+      "y": 553,
+      "width": 290,
+      "height": 424,
+      "anchorX": 144.5,
+      "anchorY": 420
+    }
+  ]
+}

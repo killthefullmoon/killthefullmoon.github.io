@@ -1,0 +1,131 @@
+{
+  "width": 1254,
+  "height": 1254,
+  "rows": [
+    "front",
+    "right",
+    "back"
+  ],
+  "columns": [
+    "idle",
+    "walk-a",
+    "walk-b",
+    "blink"
+  ],
+  "frames": [
+    [
+      {
+        "x": 64,
+        "y": 33,
+        "width": 201,
+        "height": 353,
+        "anchorX": 102,
+        "anchorY": 349,
+        "bodyHeight": 347
+      },
+      {
+        "x": 375,
+        "y": 33,
+        "width": 202,
+        "height": 354,
+        "anchorX": 96,
+        "anchorY": 350,
+        "bodyHeight": 348
+      },
+      {
+        "x": 685,
+        "y": 33,
+        "width": 203,
+        "height": 356,
+        "anchorX": 103,
+        "anchorY": 352,
+        "bodyHeight": 350
+      },
+      {
+        "x": 997,
+        "y": 33,
+        "width": 202,
+        "height": 353,
+        "anchorX": 100.5,
+        "anchorY": 349,
+        "bodyHeight": 347
+      }
+    ],
+    [
+      {
+        "x": 59,
+        "y": 447,
+        "width": 184,
+        "height": 358,
+        "anchorX": 108,
+        "anchorY": 354,
+        "bodyHeight": 352
+      },
+      {
+        "x": 372,
+        "y": 447,
+        "width": 188,
+        "height": 351,
+        "anchorX": 104,
+        "anchorY": 347,
+        "bodyHeight": 345
+      },
+      {
+        "x": 685,
+        "y": 447,
+        "width": 191,
+        "height": 352,
+        "anchorX": 105,
+        "anchorY": 348,
+        "bodyHeight": 346
+      },
+      {
+        "x": 999,
+        "y": 447,
+        "width": 184,
+        "height": 358,
+        "anchorX": 101.5,
+        "anchorY": 354,
+        "bodyHeight": 352
+      }
+    ],
+    [
+      {
+        "x": 61,
+        "y": 864,
+        "width": 198,
+        "height": 360,
+        "anchorX": 101.5,
+        "anchorY": 356,
+        "bodyHeight": 354
+      },
+      {
+        "x": 372,
+        "y": 864,
+        "width": 198,
+        "height": 361,
+        "anchorX": 102.5,
+        "anchorY": 357,
+        "bodyHeight": 355
+      },
+      {
+        "x": 686,
+        "y": 864,
+        "width": 196,
+        "height": 360,
+        "anchorX": 99,
+        "anchorY": 356,
+        "bodyHeight": 354
+      },
+      {
+        "x": 998,
+        "y": 864,
+        "width": 199,
+        "height": 360,
+        "anchorX": 99.5,
+        "anchorY": 356,
+        "bodyHeight": 354
+      }
+    ]
+  ]
+}

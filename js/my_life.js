@@ -1,6 +1,6 @@
 /* My Life — a small hand-drawn, top-down walking game.
  *
- * Home Island has three doors, each into its own world:
+ * Home is a hand-drawn cottage with three doors into the other worlds:
  *   The Arcade      -> Save Point       (every game from game.html)
  *   The Gramophone  -> Album Collection (every album from music.html)
  *   The portal      -> The World        (places from ../travel_notes/visited.json)
@@ -61,9 +61,15 @@
     for (let k = 2; k <= 7; k++) waves.push({ k, a: rr(0.012, 0.035) * (k < 4 ? 1.6 : 1), p: rr(0, Math.PI * 2) });
     return Object.assign(o, { waves });
   }
-  const HOME_ISLANDS = [makeIsland({ id: 'home', name: 'Home Island', cx: 900, cy: 690, rx: 640, ry: 460 })];
+  // The walking polygon follows the floor in the generated cutaway-room plate.
+  const HOME_ROOM = { x: 100, y: 100, w: 1600, h: 1600 * 2 / 3 };
+  const roomPoint = ([x, y]) => [HOME_ROOM.x + x * HOME_ROOM.w / 1536, HOME_ROOM.y + y * HOME_ROOM.h / 1024];
+  const HOME_FLOOR = [{
+    id: 'home', name: 'Home', cx: 900, cy: 850, rx: 760, ry: 300,
+    rings: [[[174, 500], [1362, 500], [1438, 944], [91, 944], [174, 500]].map(roomPoint)],
+  }];
   // The scene currently being walked (swapped by loadScene)
-  let ISLANDS = HOME_ISLANDS;
+  let ISLANDS = HOME_FLOOR;
 
   function edge(isl, theta) {
     let f = 1;
@@ -129,24 +135,19 @@
 
   const WORLD_PORTAL = {
     name: 'Portal home', type: 'portal', fixed: GEO.project(43, -108),
-    chapter: { kind: 'portal', kicker: 'Portal', body: '' }, title: 'Home Island', to: 'home',
+    chapter: { kind: 'portal', kicker: 'Portal', body: '' }, title: 'Home', to: 'home',
   };
 
-  // Home Island: three places to wander into, plus the way out to the world
+  // House furniture doubles as the three familiar world entrances.
   const HOME_PLACES = [
-    { id: 'h-arcade', name: 'The Arcade', title: 'The Arcade', kind: 'arcade', x: 640, y: 640, r: 34, h: 112, to: 'games' },
-    { id: 'h-gramophone', name: 'The Gramophone', title: 'The Gramophone', kind: 'gramophone', x: 1210, y: 640, r: 40, h: 118, to: 'music' },
-    {
-      id: 'h-portal', name: 'Portal to the world', title: 'The World', kind: 'portal', type: 'portal', x: 900, y: 1010, r: 34, h: 112,
-      to: 'world',
-    },
+    { id: 'h-arcade', name: 'The Arcade', title: 'Save Point', kind: 'home-prop', sprite: 'arcade', x: 500, y: 700, r: 38, depth: 32, h: 136, to: 'games' },
+    { id: 'h-gramophone', name: 'The Gramophone', title: 'Album Collection', kind: 'home-prop', sprite: 'records', x: 1290, y: 710, r: 52, depth: 30, h: 142, to: 'music' },
+    { id: 'h-door', name: 'The front door', title: 'The World', kind: 'home-prop', sprite: 'door', type: 'portal', x: 900, y: 625, r: 54, depth: 18, h: 206, to: 'world' },
   ];
-
-  // Dirt trails from the clearing to each building on Home Island
-  const HOME_TRAILS = [
-    [[900, 790], [770, 720], [640, 676]],
-    [[900, 790], [1060, 720], [1210, 676]],
-    [[900, 790], [904, 900], [900, 1046]],
+  const HOME_FURNITURE = [
+    { sprite: 'sofa', x: 420, y: 1000, r: 76, depth: 42, h: 104 },
+    { sprite: 'bookcase', x: 1450, y: 800, r: 49, depth: 24, h: 168 },
+    { sprite: 'plant', x: 1420, y: 1025, r: 23, depth: 24, h: 114 },
   ];
   let TRAILS = [];
   function nearTrail(x, y, d) {
@@ -271,6 +272,7 @@
   }
 
   function buildDecor(sc) {
+    if (sc.room) return { items: [], waves: [], grid: new Map() };
     const { places, islands, bridges } = sc;
     // A larger map needs breathing room, not 100 times as many objects.
     const density = Math.pow(sc.extentScale || 1, 1.5);
@@ -337,6 +339,40 @@
   const ctx = canvas.getContext('2d');
   const mini = document.getElementById('minimap');
   const mctx = mini.getContext('2d');
+  const homeArt = { room: new Image(), furniture: new Image(), sky: new Image(), clouds: new Image(), frames: null };
+  homeArt.room.src = '../images/home/room.png';
+  homeArt.furniture.src = '../images/home/furniture.png';
+  homeArt.sky.src = '../images/home/cloud-sea.png';
+  homeArt.clouds.src = '../images/home/cloud-cradle.png';
+  for (const art of [homeArt.room, homeArt.sky, homeArt.clouds]) {
+    art.decode().then(() => { miniFor = null; }).catch(() => {});
+  }
+  Promise.all([
+    homeArt.furniture.decode(),
+    fetch('../images/home/furniture.json').then((r) => {
+      if (!r.ok) throw new Error('Home furniture unavailable');
+      return r.json();
+    }),
+  ]).then(([, sheet]) => {
+    homeArt.frames = Object.fromEntries(sheet.names.map((name, i) => [name, sheet.frames[i]]));
+  }).catch(() => {});
+  const huiSprite = { image: new Image(), frames: null };
+  const quietMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  huiSprite.image.decoding = 'async';
+  huiSprite.image.src = '../images/characters/hui-sprite.png';
+  Promise.all([
+    huiSprite.image.decode(),
+    fetch('../images/characters/hui-sprite.json').then((r) => {
+      if (!r.ok) throw new Error('Character frames unavailable');
+      return r.json();
+    }),
+  ]).then(([, sheet]) => {
+    if (sheet.width !== huiSprite.image.naturalWidth || sheet.height !== huiSprite.image.naturalHeight
+      || sheet.frames.length !== 3 || sheet.frames.some((row) => row.length !== 4)) {
+      throw new Error('Character atlas dimensions do not match');
+    }
+    huiSprite.frames = sheet.frames;
+  }).catch(() => { /* The original canvas character remains usable if the art cannot load. */ });
   let W = 0;
   let H = 0;
   let DPR = 1;
@@ -483,7 +519,7 @@
       return;
     }
     const wx = (e.clientX - W / 2) / zoom + cam.x;
-    const wy = (e.clientY - H / 2) / zoom + cam.y;
+    const wy = (e.clientY - H / 2) / zoom + cam.y - (sceneName === 'home' ? homeLift() : 0);
     const hit = places.find((p) => Math.abs(p.x - wx) < (p.r || 26) + 12 && wy < p.y + 16 && wy > p.y - (p.h || 70));
     if (hit) {
       target = { x: hit.x, y: hit.y + 34 };
@@ -526,8 +562,8 @@
       if (dx > 14 || dx < -14) continue;
       if (Math.hypot(dx, (it.y - y) * 1.6) < 11 * it.s) return false;
     }
-    for (const p of sc.places) {
-      if (Math.abs(p.x - x) < (p.r || 26) && y < p.y + 6 && y > p.y - 26) return false;
+    for (const p of [...sc.places, ...(sc.furniture || [])]) {
+      if (Math.abs(p.x - x) < (p.r || 26) && y < p.y + 6 && y > p.y - (p.depth || 26)) return false;
     }
     return true;
   }
@@ -616,11 +652,11 @@
       player.face = Math.abs(vy) > Math.abs(vx) ? (vy < 0 ? 'up' : 'down') : 'side';
       player.phase += dt * (player.running ? 19 : 11);
       const sailing = sceneName === 'world' && !onLand(player.x, player.y);
-      if (player.running && !sailing && rand() < dt * 22) {
+      if (player.running && !sailing && sceneName !== 'home' && rand() < dt * 22) {
         dust.push({ x: player.x - vx * 8 + rr(-4, 4), y: player.y + rr(-1, 2), r: rr(2, 3.5), life: 0.5 });
       }
 
-      if (!sailing && Math.hypot(player.x - lastPrint.x, player.y - lastPrint.y) > (player.running ? 30 : 17)) {
+      if (!sailing && sceneName !== 'home' && Math.hypot(player.x - lastPrint.x, player.y - lastPrint.y) > (player.running ? 30 : 17)) {
         lastPrint = { x: player.x, y: player.y, side: -lastPrint.side };
         footprints.push({ x: player.x + lastPrint.side * 4, y: player.y + 1, life: 6, glyph: rand() < 0.5 ? 1 : 2 });
         if (footprints.length > 80) footprints.shift();
@@ -1238,7 +1274,7 @@
     c.fill();
   }
 
-  // ---- Home Island buildings
+  // ---- Home buildings
   function shadow(c, x, y, rx, ry) {
     c.fillStyle = C.inkFaint;
     c.beginPath();
@@ -1786,7 +1822,7 @@
     c.restore();
   }
 
-  // Hui, after his own hand-drawn self-portrait: long bob, round glasses, dark top
+  // Hui's homepage self-portrait, drawn as a three-direction character atlas.
   function drawHui(c) {
     c.save();
     c.translate(player.x, player.y);
@@ -1814,6 +1850,39 @@
   }
 
   function drawHuiBody(c) {
+    if (!huiSprite.frames) {
+      drawHuiFallback(c);
+      return;
+    }
+    const sailing = sceneName === 'world' && !onLand(player.x, player.y);
+    const walking = player.moving && !sailing;
+    const row = player.face === 'up' ? 2 : player.face === 'side' ? 1 : 0;
+    const blink = !quietMotion.matches && clock % 4.2 < 0.14;
+    const column = walking ? [0, 1, 0, 2][Math.floor(player.phase * 2 / Math.PI) % 4] : blink ? 3 : 0;
+    const pose = huiSprite.frames[row][column];
+    const scale = 64 / pose.bodyHeight;
+    const bob = quietMotion.matches ? 0 : walking
+      ? -Math.abs(Math.sin(player.phase)) * (player.running ? 2.5 : 1.2)
+      : Math.sin(clock * 2) * 0.35;
+
+    c.fillStyle = C.inkFaint;
+    c.beginPath();
+    c.ellipse(player.x, player.y + 1, 12, 4, 0, 0, Math.PI * 2);
+    c.fill();
+    c.save();
+    c.translate(player.x, player.y + bob);
+    if (row === 1 && player.dir < 0) c.scale(-1, 1);
+    if (walking && player.running && row === 1 && !quietMotion.matches) c.rotate(0.06);
+    c.imageSmoothingEnabled = true;
+    c.imageSmoothingQuality = 'high';
+    // Each frame is measured from its soles so changes of pose cannot shift
+    // the character's collision point or make it slide across the map.
+    c.drawImage(huiSprite.image, pose.x, pose.y, pose.width, pose.height,
+      -pose.anchorX * scale, -pose.anchorY * scale, pose.width * scale, pose.height * scale);
+    c.restore();
+  }
+
+  function drawHuiFallback(c) {
     const run = player.running;
     // leaning into the run
     const lean = run && player.face === 'side' ? player.dir * 2.5 : 0;
@@ -1942,6 +2011,60 @@
     c.stroke();
   }
 
+  const homeLift = () => quietMotion.matches ? 0 : Math.sin(clock * 0.55) * 2.8;
+
+  function drawHomeSky(c, view, animate = true) {
+    const width = view.x1 - view.x0;
+    const height = view.y1 - view.y0;
+    c.fillStyle = '#c3d8ed';
+    c.fillRect(view.x0, view.y0, width, height);
+    if (!homeArt.sky.complete || !homeArt.sky.naturalWidth) return;
+    // Cover the viewport at every zoom; extra bleed leaves room for slow drift.
+    const scale = Math.max(width / homeArt.sky.naturalWidth, height / homeArt.sky.naturalHeight) * 1.12;
+    const w = homeArt.sky.naturalWidth * scale;
+    const h = homeArt.sky.naturalHeight * scale;
+    const moving = animate && !quietMotion.matches;
+    const driftX = moving ? Math.sin(clock * 0.035) * w * 0.012 : 0;
+    const driftY = moving ? Math.sin(clock * 0.025) * h * 0.008 : 0;
+    const parallaxX = moving ? Math.max(-w * 0.01, Math.min(w * 0.01, (cam.x - WORLD.w / 2) * -0.03)) : 0;
+    const parallaxY = moving ? Math.max(-h * 0.01, Math.min(h * 0.01, (cam.y - WORLD.h / 2) * -0.03)) : 0;
+    c.drawImage(homeArt.sky, view.x0 + (width - w) / 2 + driftX + parallaxX,
+      view.y0 + (height - h) / 2 + driftY + parallaxY, w, h);
+  }
+
+  function drawHomeRoom(c) {
+    const room = SCENES.home.room;
+    if (homeArt.clouds.complete && homeArt.clouds.naturalWidth) {
+      // The cloud cushion is behind the floor, leaving its soft lower edge visible.
+      c.drawImage(homeArt.clouds, room.x - room.w * 0.08, room.y + room.h * 0.48,
+        room.w * 1.16, room.w * 1.16 * homeArt.clouds.naturalHeight / homeArt.clouds.naturalWidth);
+    }
+    if (homeArt.room.complete && homeArt.room.naturalWidth) {
+      c.drawImage(homeArt.room, room.x, room.y, room.w, room.h);
+    } else {
+      // A simple floor during loading; geometry and entrances remain usable.
+      c.fillStyle = '#ddbd8c';
+      for (const floor of ISLANDS) c.fill(coast(floor, 1, 80));
+    }
+  }
+
+  function drawHomeFurniture(c, p) {
+    const frame = homeArt.frames && homeArt.frames[p.sprite];
+    if (!frame) {
+      if (p.sprite === 'arcade') drawArcade(c, p);
+      else if (p.sprite === 'records') drawGramophone(c, p);
+      else if (p.sprite === 'door') drawPortal(c, p);
+      return;
+    }
+    const scale = p.h / frame.anchorY;
+    c.save();
+    c.imageSmoothingEnabled = true;
+    c.imageSmoothingQuality = 'high';
+    c.drawImage(homeArt.furniture, frame.x, frame.y, frame.width, frame.height,
+      p.x - frame.anchorX * scale, p.y - frame.anchorY * scale, frame.width * scale, frame.height * scale);
+    c.restore();
+  }
+
   function drawPlace(c, p) {
     c.save();
     if (p.mapScale) {
@@ -1950,7 +2073,8 @@
       c.translate(-p.x, -p.y);
     }
     const seen = visited.has(p.name);
-    if (p.kind === 'house') drawHouse(c, p, seen);
+    if (p.kind === 'home-prop') drawHomeFurniture(c, p);
+    else if (p.kind === 'house') drawHouse(c, p, seen);
     else if (p.kind === 'hall') drawHall(c, p, seen);
     else if (p.kind === 'office') drawOffice(c, p, seen);
     else if (p.kind === 'camp') drawCamp(c, p);
@@ -1985,7 +2109,7 @@
   }
 
   function drawPrompt(c, p) {
-    const lift = Math.sin(clock * 4) * 2;
+    const lift = quietMotion.matches ? 0 : Math.sin(clock * 4) * 2;
     const y = p.y - (p.h || 80) + lift;
     c.save();
     c.font = '500 11px Inter, sans-serif';
@@ -2030,10 +2154,13 @@
       miniFor = sceneName;
       const b = miniBase.getContext('2d');
       b.setTransform(1, 0, 0, 1, 0, 0);
-      b.fillStyle = '#dde1da';
+      b.fillStyle = sceneName === 'home' ? '#c3d8ed' : '#dde1da';
       b.fillRect(0, 0, MM.w, MM.h);
       b.setTransform(k, 0, 0, k, ox, oy);
-      for (const isl of ISLANDS) {
+      if (sceneName === 'home') {
+        drawHomeSky(b, { x0: -ox / k, y0: -oy / k, x1: (MM.w - ox) / k, y1: (MM.h - oy) / k }, false);
+        drawHomeRoom(b);
+      } else for (const isl of ISLANDS) {
         b.fillStyle = isl.polar ? '#f1eee5' : C.land;
         b.fill(coast(isl, 1, 80));
         b.strokeStyle = C.ink;
@@ -2079,13 +2206,21 @@
       x1: cam.x + W / 2 / zoom,
       y1: cam.y + H / 2 / zoom,
     };
-    drawWater(ctx, view);
-    drawIslands(ctx, view);
-    drawStateBorders(ctx, view);
-    drawTrails(ctx);
-    drawZones(ctx);
-    drawBridges(ctx);
-    drawLabels(ctx);
+    if (sceneName === 'home') {
+      drawHomeSky(ctx, view);
+      // Room, furniture, player and labels float together; collision stays in room coordinates.
+      ctx.translate(0, homeLift());
+      drawHomeRoom(ctx);
+    }
+    else {
+      drawWater(ctx, view);
+      drawIslands(ctx, view);
+      drawStateBorders(ctx, view);
+      drawTrails(ctx);
+      drawZones(ctx);
+      drawBridges(ctx);
+      drawLabels(ctx);
+    }
 
     // footprints
     const noteSteps = sceneName === 'music';
@@ -2156,12 +2291,14 @@
       decorIn(view.x0 - 60, view.y0 - 60, view.x1 + 60, view.y1 + 140, list);
     }
     for (const p of places) if (inView(p.x, p.y, 120)) list.push({ t: 'place', y: p.y, p });
+    for (const p of SCENES[sceneName].furniture || []) if (inView(p.x, p.y, 190)) list.push({ t: 'furniture', y: p.y, p });
     list.push({ t: 'hui', y: player.y });
     list.sort((a, b) => a.y - b.y);
     for (const e of list) {
       if (e.t === 'tree') drawTree(ctx, e);
       else if (e.t === 'tuft') { if (sceneName !== 'world' || zoom >= 0.3) drawTuft(ctx, e); }
       else if (e.t === 'rock') drawRock(ctx, e);
+      else if (e.t === 'furniture') drawHomeFurniture(ctx, e.p);
       else if (e.t === 'place') {
         drawPlace(ctx, e.p);
         drawPlaceLabel(ctx, e.p);
@@ -2211,6 +2348,7 @@
     // prompt above everything (screen-space transform again)
     if (near && started) {
       ctx.setTransform(DPR * zoom, 0, 0, DPR * zoom, DPR * (W / 2 - cam.x * zoom), DPR * (H / 2 - cam.y * zoom));
+      if (sceneName === 'home') ctx.translate(0, homeLift());
       drawPrompt(ctx, near);
     }
     drawMinimap();
@@ -2298,7 +2436,7 @@
     return [x, y];
   }
 
-  const SCENE_TITLES = { home: 'Home Island', world: 'The World', games: 'Save Point', music: 'Album Collection' };
+  const SCENE_TITLES = { home: 'Home', world: 'The World', games: 'Save Point', music: 'Album Collection' };
 
   function loadScene(name, from, arrival) {
     const sc = SCENES[name];
@@ -2336,7 +2474,10 @@
     document.getElementById('journalBtn').hidden = name !== 'world';
     if (name !== 'world') toggleJournal(false);
     // arriving in the world: pull back a little so it reads as a map
-    if (started) setZoom(name === 'world' ? (W < 700 ? 0.55 : 0.7) : (W < 700 ? 0.78 : 1));
+    if (started) {
+      const homeZoom = W < 700 ? Math.max(0.4, Math.min(0.6, (W - 40) / 640)) : 1;
+      setZoom(name === 'world' ? (W < 700 ? 0.55 : 0.7) : name === 'home' ? homeZoom : (W < 700 ? 0.78 : 1));
+    }
     updateTravelLocation();
   }
 
@@ -2647,13 +2788,14 @@
       isl.paths = null;
     }
     sc.bridges = sc.bridges.map((b) => ({ a: b.a.map(sx), b: b.b.map(sx) }));
-    for (const p of sc.places) {
+    for (const p of [...sc.places, ...(sc.furniture || [])]) {
       p.x *= k;
       p.y *= k;
       if (p.anchor) p.anchor = p.anchor.map(sx);
     }
     if (sc.trails) sc.trails = sc.trails.map((t) => t.map((pt) => pt.map(sx)));
     if (sc.spawn) sc.spawn = sc.spawn.map(sx);
+    if (sc.room) sc.room = Object.fromEntries(Object.entries(sc.room).map(([key, value]) => [key, value * k]));
     if (sc.compass) sc.compass = sc.compass.map(sx);
     if (sc.mapLabels) sc.mapLabels = sc.mapLabels.map((l) => ({ ...l, point: l.point.map(sx) }));
     if (sc.destinations) sc.destinations = sc.destinations.map((d) => ({ ...d, point: d.point.map(sx) }));
@@ -2685,7 +2827,7 @@
     return { id: 'pc-' + url, name: title, title, kind: 'computer', type: 'device', x, y, r: 30, h: 84, url, small: true };
   }
   function backPortal(x, y) {
-    return { id: 'portal-home', name: 'Portal home', title: 'Home Island', kind: 'portal', type: 'portal', x, y, r: 34, h: 112, to: 'home' };
+    return { id: 'portal-home', name: 'Portal home', title: 'Home', kind: 'portal', type: 'portal', x, y, r: 34, h: 112, to: 'home' };
   }
 
   // Genre and studio for each game (game.html lists platform and status, not these).
@@ -3019,9 +3161,10 @@
     return pendingScenes[name];
   }
 
-  // Home Island needs no data: draw it right away (labels re-render once fonts arrive)
+  // Home geometry is ready immediately; the generated artwork loads alongside it.
   SCENES.home = scaleScene(
-    { world: { w: 1800, h: 1380 }, islands: HOME_ISLANDS, bridges: [], places: HOME_PLACES, trails: HOME_TRAILS, spawn: [900, 800] },
+    { world: { w: 1800, h: 1380 }, islands: HOME_FLOOR, bridges: [], places: HOME_PLACES,
+      furniture: HOME_FURNITURE, room: { ...HOME_ROOM }, bare: true, spawn: [900, 850] },
     SCENE_SCALE.home,
   );
   loadScene('home');
@@ -3128,7 +3271,7 @@
       idle(() => {
         if (!SCENES.world.decor) SCENES.world.decor = buildDecor(SCENES.world);
       });
-      // A direct link for sharing/previewing The World; normal entry stays on Home Island.
+      // A direct link for sharing/previewing The World; normal entry stays on Home.
       if (location.hash === '#world') loadScene('world', 'home');
     });
   worldReady.catch(() => {
@@ -3138,6 +3281,6 @@
       document.getElementById('hint').textContent = 'The world map could not load. Please refresh to try again.';
     }
   });
-  // Warm up the three page-backed worlds while Hui is still on the island
+  // Warm up the three page-backed worlds while Hui is still at home
   idle(() => ['games', 'music'].forEach((n) => ensureScene(n).catch(() => {})));
 })();
